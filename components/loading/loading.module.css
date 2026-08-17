@@ -1,0 +1,158 @@
+.root {
+  --oh-green: #3fcf6e;
+  --oh-teal: #25c5c0;
+  --oh-blue: #1fb6e8;
+  --oh-ink: #152546;
+  --oh-ink-soft: #6b7a96;
+
+  position: relative;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: #ffffff;
+  color: var(--oh-ink);
+  font-family: var(--font-sans, "Poppins", "Montserrat", system-ui, -apple-system, sans-serif);
+}
+
+.fullscreen {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  min-height: 100dvh;
+}
+
+.blob {
+  position: absolute;
+  width: 46vmax;
+  height: 46vmax;
+  filter: blur(6px);
+  pointer-events: none;
+}
+
+.blob1 {
+  background: #fbe7d2;
+  top: -18vmax;
+  left: -16vmax;
+  border-radius: 44% 56% 60% 40% / 50% 45% 55% 50%;
+}
+.blob2 {
+  background: #d7ebf9;
+  top: -20vmax;
+  right: -18vmax;
+  border-radius: 58% 42% 45% 55% / 48% 58% 42% 52%;
+}
+.blob3 {
+  background: #e7e1f6;
+  bottom: -20vmax;
+  left: -18vmax;
+  border-radius: 55% 45% 52% 48% / 58% 42% 58% 42%;
+}
+.blob4 {
+  background: #d6f2e4;
+  bottom: -18vmax;
+  right: -16vmax;
+  border-radius: 44% 56% 60% 40% / 50% 45% 55% 50%;
+}
+
+.stage {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 34px;
+  padding: 24px;
+}
+
+.badge {
+  width: min(78vw, 340px);
+  height: min(78vw, 340px);
+  animation: ohBreathe 3.2s ease-in-out infinite;
+}
+
+.ring {
+  transition: stroke-dashoffset 0.3s ease-out;
+}
+
+.ringText {
+  transform-box: view-box;
+  transform-origin: 160px 160px;
+  animation: ohSpin 26s linear infinite;
+}
+
+.ringText text {
+  font-family: inherit;
+  font-size: 23px;
+  font-weight: 700;
+  letter-spacing: 2.2px;
+  fill: var(--oh-ink);
+}
+
+.meter {
+  width: min(78vw, 340px);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.percent {
+  font-size: 34px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  font-variant-numeric: tabular-nums;
+}
+
+.label {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--oh-ink-soft);
+  text-align: right;
+}
+
+.track {
+  height: 8px;
+  border-radius: 99px;
+  background: #eaf0f6;
+  overflow: hidden;
+}
+
+.fill {
+  height: 100%;
+  border-radius: 99px;
+  background: linear-gradient(90deg, var(--oh-green), var(--oh-teal) 55%, var(--oh-blue));
+  transition: width 0.25s ease-out;
+}
+
+@keyframes ohBreathe {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.025);
+  }
+}
+
+@keyframes ohSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .badge,
+  .ringText {
+    animation: none;
+  }
+  .fill,
+  .ring {
+    transition: none;
+  }
+}

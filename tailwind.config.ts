@@ -53,15 +53,17 @@ const config: Config = {
           "0%,100%": { transform: "translate3d(0,0,0) rotate(0deg)" },
           "50%": { transform: "translate3d(0,-14px,0) rotate(-3deg)" },
         },
-        dash: {
-          to: { strokeDashoffset: "-40" },
+        liquid: {
+          "0%, 100%": { transform: "translate(0,0) scale(1)" },
+          "33%": { transform: "translate(3px,-5px) scale(1.08)" },
+          "66%": { transform: "translate(-3px,4px) scale(0.92)" },
         },
       },
       animation: {
         rise: "rise .8s cubic-bezier(.22,.9,.3,1) both",
         floaty: "floaty 6s ease-in-out infinite",
         drift: "drift 9s ease-in-out infinite",
-        dash: "dash 3s linear infinite",
+        liquid: "liquid 5s ease-in-out infinite",
       },
     },
   },

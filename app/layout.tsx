@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Manrope, Inter } from "next/font/google";
+import PageLoadGate from "@/components/loading/PageLoadGate";
 import "./globals.css";
 
 const display = Manrope({
@@ -29,7 +30,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="uz" className={`${display.variable} ${body.variable}`}>
-      <body>{children}</body>
+      <body>
+        <PageLoadGate>{children}</PageLoadGate>
+      </body>
     </html>
   );
 }

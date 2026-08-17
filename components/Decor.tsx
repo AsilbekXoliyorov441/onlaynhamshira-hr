@@ -180,10 +180,10 @@ export function DashedLinks(props: SVGProps<SVGSVGElement>) {
         strokeDasharray="5 8"
         opacity=".55"
       >
-        <path d="M74 96C132 118 158 168 150 214" className="animate-dash" />
-        <path d="M150 236c-34 26-56 52-62 92" className="animate-dash" />
-        <path d="M300 208c56-14 96 6 118 44" className="animate-dash" />
-        <path d="M318 402c58 10 96 40 108 82" className="animate-dash" />
+        <path d="M74 96C132 118 158 168 150 214" />
+        <path d="M150 236c-34 26-56 52-62 92" />
+        <path d="M300 208c56-14 96 6 118 44" />
+        <path d="M318 402c58 10 96 40 108 82" />
       </g>
     </svg>
   );

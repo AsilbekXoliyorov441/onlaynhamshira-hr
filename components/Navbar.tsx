@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { LogoMark } from "./Icons";
 
 const NAV = [
@@ -11,14 +11,14 @@ const NAV = [
   { label: "Savol-javob", href: "#faq" },
 ];
 
-export default function Navbar() {
+function HeaderBar() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="relative z-40">
+    <>
       <nav className="mx-auto flex h-[74px] max-w-[1240px] items-center justify-between px-5 sm:px-8">
         {/* Logotip */}
-        <a href="#" className="flex shrink-0 items-center">
+        <a href="#" className="flex shrink-0 items-center transition-transform duration-300 hover:scale-105">
           <LogoMark className="h-[42px] w-auto" />
         </a>
 
@@ -28,13 +28,12 @@ export default function Navbar() {
             <li key={item.label}>
               <a
                 href={item.href}
-                className="text-[15px] font-medium text-[#395145] transition-colors hover:text-ink"
+                className="relative text-[15px] font-medium text-[#395145] transition-colors after:absolute after:-bottom-1 after:left-0 after:h-[2px] after:w-0 after:rounded-full after:bg-brand-500 after:transition-all after:duration-300 hover:text-ink hover:after:w-full"
               >
                 {item.label}
               </a>
             </li>
           ))}
-          
         </ul>
 
         {/* Oʻng tomon */}
@@ -98,6 +97,56 @@ export default function Navbar() {
           </a>
         </div>
       )}
-    </header>
+    </>
+  );
+}
+
+export default function Navbar() {
+  const [showFixed, setShowFixed] = useState(false);
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    const onScroll = () => {
+      setShowFixed(window.scrollY > 80);
+      const docHeight =
+        document.documentElement.scrollHeight - window.innerHeight;
+      setProgress(docHeight > 0 ? (window.scrollY / docHeight) * 100 : 0);
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
+  }, []);
+
+  return (
+    <>
+      {/* Sahifa qancha scroll qilinganini koʻrsatuvchi chiziq */}
+      <div className="fixed inset-x-0 top-0 z-[60] h-[3px] bg-transparent">
+        <div
+          className="h-full bg-[linear-gradient(90deg,#4FD189,#1BA463)] transition-[width] duration-150 ease-out"
+          style={{ width: `${progress}%` }}
+        />
+      </div>
+
+      {/* Asosiy header — sahifa boshida oddiy oqimda */}
+      <header className="relative z-40">
+        <HeaderBar />
+      </header>
+
+      {/* Scroll qilinganda sekin animatsiya bilan chiqadigan fixed header */}
+      <header
+        aria-hidden={!showFixed}
+        className={`fixed inset-x-0 top-0 z-50 bg-white/50 shadow-nav backdrop-blur-[8px] transition-all duration-500 ease-out ${
+          showFixed
+            ? "translate-y-0 opacity-100"
+            : "pointer-events-none -translate-y-full opacity-0"
+        }`}
+      >
+        <HeaderBar />
+      </header>
+    </>
   );
 }
