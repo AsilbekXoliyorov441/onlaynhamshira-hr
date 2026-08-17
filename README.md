@@ -65,3 +65,4 @@ uchun ham ishlaydi.
 - Klaviatura fokusi koʻrinadi (`:focus-visible`).
 - `prefers-reduced-motion: reduce` boʻlsa barcha animatsiyalar oʻchadi.
 - Dekorativ elementlarda `aria-hidden`, shuning uchun skrinrider matnni toza oʻqiydi.
+# onlaynhamshira-hr
