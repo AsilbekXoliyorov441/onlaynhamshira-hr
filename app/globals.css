@@ -1,0 +1,161 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    @apply bg-white text-body font-sans;
+  }
+
+  ::selection {
+    background: #b6ecc6;
+    color: #0b2b1c;
+  }
+
+  :focus-visible {
+    outline: 2px solid #1ba463;
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+}
+
+@layer components {
+  /* Sahifa foni: chapdan yashil nur, oʻngdan moviy-siyoh tuman */
+  .hero-canvas {
+    background-color: #fbfdfb;
+    background-image:
+      radial-gradient(
+        62% 78% at 4% 26%,
+        rgba(122, 226, 152, 0.62) 0%,
+        rgba(122, 226, 152, 0) 62%
+      ),
+      radial-gradient(
+        46% 52% at 24% 2%,
+        rgba(196, 245, 208, 0.72) 0%,
+        rgba(196, 245, 208, 0) 70%
+      ),
+      radial-gradient(
+        44% 60% at 96% 8%,
+        rgba(214, 244, 224, 0.7) 0%,
+        rgba(214, 244, 224, 0) 68%
+      ),
+      radial-gradient(
+        48% 55% at 74% 62%,
+        rgba(219, 236, 252, 0.75) 0%,
+        rgba(219, 236, 252, 0) 70%
+      ),
+      radial-gradient(
+        40% 46% at 99% 96%,
+        rgba(170, 230, 244, 0.6) 0%,
+        rgba(170, 230, 244, 0) 70%
+      ),
+      radial-gradient(
+        34% 40% at 6% 96%,
+        rgba(206, 240, 214, 0.55) 0%,
+        rgba(206, 240, 214, 0) 70%
+      );
+  }
+
+  /* Sarlavha ortidagi yumshoq yashil yorugʻlik */
+  .hero-glow {
+    background: radial-gradient(
+      50% 50% at 50% 50%,
+      rgba(105, 220, 140, 0.55) 0%,
+      rgba(105, 220, 140, 0) 70%
+    );
+    filter: blur(30px);
+  }
+
+  .glass-panel {
+    background: linear-gradient(
+      145deg,
+      rgba(255, 255, 255, 0.55),
+      rgba(255, 255, 255, 0.12)
+    );
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(6px);
+  }
+
+  /* Asosiy CTA: yumshoq hajmli (soft 3D) — ichki yorugʻlik + ichki soya + tashqi nur */
+  .btn-primary {
+    background-image: linear-gradient(
+      104deg,
+      #b9f3ca 0%,
+      #7fe7b4 45%,
+      #46d9a3 100%
+    );
+    box-shadow:
+      inset 0 3px 6px rgba(255, 255, 255, 0.7),
+      inset 0 -3px 6px rgba(0, 0, 0, 0.15),
+      0 15px 30px -10px rgba(52, 211, 153, 0.6);
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+  }
+  .btn-primary:hover {
+    box-shadow:
+      inset 0 3px 6px rgba(255, 255, 255, 0.7),
+      inset 0 -3px 6px rgba(0, 0, 0, 0.15),
+      0 20px 42px -8px rgba(52, 211, 153, 0.75);
+  }
+  .btn-primary:active {
+    box-shadow:
+      inset 0 3px 8px rgba(0, 0, 0, 0.18),
+      inset 0 -1px 3px rgba(255, 255, 255, 0.5),
+      0 10px 20px -10px rgba(52, 211, 153, 0.5);
+  }
+
+  /* Ikkinchi darajali CTA: oq, yumshoq hajmli */
+  .btn-secondary {
+    background-color: #fff;
+    box-shadow:
+      inset 0 3px 6px rgba(255, 255, 255, 1),
+      inset 0 -3px 6px rgba(0, 0, 0, 0.05),
+      0 10px 25px -5px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+  }
+  .btn-secondary:hover {
+    box-shadow:
+      inset 0 3px 6px rgba(255, 255, 255, 1),
+      inset 0 -3px 6px rgba(0, 0, 0, 0.05),
+      0 14px 32px -5px rgba(0, 0, 0, 0.14);
+  }
+  .btn-secondary:active {
+    box-shadow:
+      inset 0 3px 7px rgba(0, 0, 0, 0.08),
+      inset 0 -1px 3px rgba(255, 255, 255, 0.6),
+      0 6px 16px -6px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Toʻyingan variant: oq matn kerak boʻlgan joylarda (telefon ekrani, mobil menyu) */
+  .btn-solid {
+    background-image: linear-gradient(
+      100deg,
+      #5cd79a 0%,
+      #2cbb7b 55%,
+      #17a468 100%
+    );
+  }
+
+  .badge-pill {
+    background: linear-gradient(
+      100deg,
+      rgba(220, 248, 228, 0.95),
+      rgba(238, 252, 242, 0.7)
+    );
+    border: 1px solid rgba(255, 255, 255, 0.9);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
