@@ -34,6 +34,7 @@ export default function Navbar() {
               </a>
             </li>
           ))}
+          
         </ul>
 
         {/* Oʻng tomon */}
