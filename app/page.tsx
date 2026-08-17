@@ -1,13 +1,19 @@
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import About from "@/components/About";
+import Prefers from "@/components/Prefers";
+import PartnerTimeline from "@/components/partner/PartnerTimeline";
 
 export default function Page() {
   return (
-    <main className="hero-canvas relative min-h-screen w-full overflow-hidden">
-      <Navbar />
-      <Hero />
+    <main className="relative min-h-screen w-full overflow-hidden bg-[#fbfdfb]">
+      <div className="hero-canvas relative">
+        <Navbar />
+        <Hero />
+      </div>
       <About />
+      <Prefers />
+      <PartnerTimeline />
     </main>
   );
 }

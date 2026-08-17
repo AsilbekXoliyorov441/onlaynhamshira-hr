@@ -78,7 +78,12 @@ export default function About() {
     <section
       id="platforma-haqida"
       className="relative scroll-mt-24 overflow-hidden py-14 sm:py-20"
->
+      style={{
+        backgroundColor: "#fbfdfb",
+        backgroundImage:
+          "linear-gradient(to bottom, #fbfdfb 0%, rgba(251,253,253,0) 10%, rgba(251,253,253,0) 90%, #fbfdfb 100%)",
+      }}
+    >
       {/* Fon nurlari — tarqoq yashil glow'lar */}
       <div
         aria-hidden
@@ -130,6 +135,17 @@ export default function About() {
         aria-hidden
         className="pointer-events-none absolute top-[4%] right-[16%] h-5 w-5 animate-liquid rounded-full bg-[radial-gradient(circle_at_32%_28%,rgba(255,255,255,0.85)_0%,rgba(190,230,60,0.45)_38%,rgba(79,209,137,0.45)_78%)] shadow-[0_2px_6px_rgba(11,43,28,0.14)] blur-[1px]"
         style={{ animationDelay: "3.2s", animationDuration: "6.5s" }}
+      />
+
+      {/* Yuqori/pastki chetlarni bazaviy rangga tekislaydi — qoʻshni
+          boʻlimlar bilan qattiq chiziqsiz tutashishi uchun */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 top-0 h-[140px] bg-gradient-to-b from-[#fbfdfb] to-transparent"
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-[140px] bg-gradient-to-t from-[#fbfdfb] to-transparent"
       />
 
       <div className="relative mx-auto max-w-[1240px] px-5 sm:px-8">
