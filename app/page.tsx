@@ -3,6 +3,8 @@ import Hero from "@/components/Hero";
 import About from "@/components/About";
 import Prefers from "@/components/Prefers";
 import PartnerTimeline from "@/components/partner/PartnerTimeline";
+import ServiceSection from "@/components/service/ServiceSection";
+import Requirements from "@/components/requirements/Requirements";
 
 export default function Page() {
   return (
@@ -14,6 +16,10 @@ export default function Page() {
       <About />
       <Prefers />
       <PartnerTimeline />
+      {/* Demand boʻlimi qoʻshilgach, ServiceSection oʻsha boʻlimdan keyin turadi */}
+            <Requirements />
+
+      <ServiceSection />
     </main>
   );
 }

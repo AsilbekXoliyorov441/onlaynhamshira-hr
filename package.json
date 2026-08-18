@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "icons:requirements": "node scripts/gen-requirement-icons.mjs"
   },
   "dependencies": {
     "framer-motion": "^13.1.0",
