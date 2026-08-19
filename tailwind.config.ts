@@ -44,8 +44,10 @@ const config: Config = {
         },
       },
       fontFamily: {
-        display: ["var(--font-display)", "system-ui", "sans-serif"],
-        sans: ["var(--font-body)", "system-ui", "sans-serif"],
+        /* Kirill varianti stack'da ikkinchi turadi — brauzer unicode-range
+           asosida faqat kerakli harflar uchun oʻsha faylni yuklaydi */
+        display: ["var(--font-display)", "var(--font-display-cyr)", "system-ui", "sans-serif"],
+        sans: ["var(--font-body)", "var(--font-body-cyr)", "system-ui", "sans-serif"],
       },
       borderRadius: {
         pill: "999px",

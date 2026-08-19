@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import { AnimatePresence, m } from "framer-motion";
-import { LOCALES, LOCALE_META } from "./config";
+import { DEFAULT_LOCALE, LOCALES, LOCALE_META } from "./config";
 import { useLanguage } from "./LanguageProvider";
 
 /**
@@ -16,7 +17,7 @@ export default function LanguageSwitcher({
   tone?: "light" | "dark";
   className?: string;
 }) {
-  const { locale, setLocale, t } = useLanguage();
+  const { locale, t } = useLanguage();
   const [open, setOpen] = useState(false);
   const boxRef = useRef<HTMLDivElement>(null);
 
@@ -98,14 +99,17 @@ export default function LanguageSwitcher({
               const active = code === locale;
               return (
                 <li key={code}>
-                  <button
-                    type="button"
+                  {/* Til endi alohida manzilda yashaydi (`/`, `/ru`, `/cy`) —
+                      shu bois oddiy havola. `prefetch` tufayli oʻtish
+                      deyarli bir zumda, `scroll={false}` esa sahifani
+                      tepaga otib yubormaydi. */}
+                  <Link
+                    href={code === DEFAULT_LOCALE ? "/" : `/${code}`}
                     role="option"
                     aria-selected={active}
-                    onClick={() => {
-                      setLocale(code);
-                      setOpen(false);
-                    }}
+                    hrefLang={LOCALE_META[code].htmlLang}
+                    scroll={false}
+                    onClick={() => setOpen(false)}
                     className={`flex w-full items-center justify-between gap-3 rounded-[11px] px-3 py-2 text-left text-[14px] font-semibold transition-colors duration-200 ${
                       dark
                         ? active
@@ -120,7 +124,7 @@ export default function LanguageSwitcher({
                     <span className={`text-[12px] ${dark ? "text-[#7FB79C]" : "text-mute"}`}>
                       {LOCALE_META[code].short}
                     </span>
-                  </button>
+                  </Link>
                 </li>
               );
             })}

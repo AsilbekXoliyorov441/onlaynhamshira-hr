@@ -1,72 +1,44 @@
 "use client";
 
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-  type ReactNode,
-} from "react";
-import { DEFAULT_LOCALE, LOCALE_META, STORAGE_KEY, isLocale, type Locale } from "./config";
+import { createContext, useContext, type ReactNode } from "react";
+import type { Locale } from "./config";
 import type { Dictionary } from "./types";
-import { uz } from "./dictionaries/uz";
-import { ru } from "./dictionaries/ru";
-import { cy } from "./dictionaries/cy";
 
 export type { Dictionary };
 
-const DICTIONARIES: Record<Locale, Dictionary> = { uz, ru, cy };
-
+/*
+ * Tanlangan til endi URL orqali aniqlanadi (`/`, `/ru`, `/cy`), lugʻat esa
+ * server tomonda tanlanib, shu provider'ga tayyor holda beriladi.
+ *
+ * Shu sabab brauzerga:
+ *   — uchala tilning matni emas, faqat bittasi keladi;
+ *   — tilni aniqlash/localStorage mantiqi umuman yuborilmaydi;
+ *   — birinchi render'da til "sakramaydi" (avval uz chizilib, keyin ru'ga
+ *     almashish holati yoʻqoldi).
+ */
 type Ctx = {
   locale: Locale;
-  setLocale: (next: Locale) => void;
   t: Dictionary;
 };
 
 const LanguageContext = createContext<Ctx | null>(null);
 
-export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [locale, setLocaleState] = useState<Locale>(DEFAULT_LOCALE);
-
-  // Avval tanlangan til (yoki brauzer tili) tiklanadi
-  useEffect(() => {
-    let next: Locale | null = null;
-    try {
-      const saved = window.localStorage.getItem(STORAGE_KEY);
-      if (isLocale(saved)) next = saved;
-    } catch {
-      /* localStorage mavjud boʻlmasligi mumkin */
-    }
-    if (!next) {
-      const nav = window.navigator.language.toLowerCase();
-      if (nav.startsWith("ru")) next = "ru";
-      else if (nav.includes("cyrl")) next = "cy";
-    }
-    if (next && next !== DEFAULT_LOCALE) setLocaleState(next);
-  }, []);
-
-  // <html lang> atributi tanlangan tilga moslanadi
-  useEffect(() => {
-    document.documentElement.lang = LOCALE_META[locale].htmlLang;
-  }, [locale]);
-
-  const setLocale = useCallback((next: Locale) => {
-    setLocaleState(next);
-    try {
-      window.localStorage.setItem(STORAGE_KEY, next);
-    } catch {
-      /* saqlab boʻlmasa ham til almashaveradi */
-    }
-  }, []);
-
-  const value = useMemo<Ctx>(
-    () => ({ locale, setLocale, t: DICTIONARIES[locale] }),
-    [locale, setLocale]
+export function LanguageProvider({
+  locale,
+  dictionary,
+  children,
+}: {
+  locale: Locale;
+  dictionary: Dictionary;
+  children: ReactNode;
+}) {
+  /* Qiymat server render'idan keladi va sahifa umri davomida oʻzgarmaydi,
+     shuning uchun memo shart emas. */
+  return (
+    <LanguageContext.Provider value={{ locale, t: dictionary }}>
+      {children}
+    </LanguageContext.Provider>
   );
-
-  return <LanguageContext.Provider value={value}>{children}</LanguageContext.Provider>;
 }
 
 export function useLanguage() {
