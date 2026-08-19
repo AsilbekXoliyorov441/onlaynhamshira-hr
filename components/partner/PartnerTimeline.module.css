@@ -343,3 +343,21 @@
 :global(.dark) .section {
   --t-node-inset: rgba(255, 255, 255, 0.06);
 }
+
+
+/* Kuchsiz qurilmada naychadagi cheksiz halqalar toʻxtaydi — suyuqlik,
+   pufakchalar va tugun pulsatsiyasi statik holatda qoladi. */
+:global(.low-power) .liquid,
+:global(.low-power) .surface,
+:global(.low-power) .bubble,
+:global(.low-power) .pulse {
+  animation: none !important;
+}
+
+/* Boʻlim ekrandan uzoqda boʻlsa ham shu halqalar pauzaga tushadi */
+:global(.section-shell[data-active="false"]) .surface,
+:global(.section-shell[data-active="false"]) .bubble,
+:global(.section-shell[data-active="false"]) .pulse,
+:global(.section-shell[data-active="false"]) .liquid {
+  animation-play-state: paused;
+}

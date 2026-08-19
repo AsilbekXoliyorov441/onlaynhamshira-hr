@@ -101,6 +101,14 @@ const themeBootstrap = `(function(){try{if(localStorage.getItem("theme")==="dark
    ham shu kichik inline skript orqali boshqariladi — u HTML kelishi bilan
    ishlaydi. Loader'ning oʻzi CSS animatsiyasi bilan soʻnadi. */
 const GATE_MS = 1100;
+/* Kuchsiz qurilmani sahifa chizilishidan oldin aniqlaymiz.
+   Oʻrta/past darajali Android'larda sahifadagi ~40 ta cheksiz bezak
+   animatsiyasi scroll'ni uzuq-yuluq qiladi (oʻlchov: ular scroll paytidagi
+   Style/Layout ishining 94% ini tashkil qiladi). Bunday qurilmalarda faqat
+   ambient (bezak) halqalar oʻchadi — matn, tuzilma, kirish animatsiyalari
+   va hover effektlari oʻz joyida qoladi. */
+const lowPowerBootstrap = `(function(){try{var n=navigator,m=n.deviceMemory||8,c=n.hardwareConcurrency||8;if(m<=4||c<=4){document.documentElement.classList.add("low-power")}}catch(e){}})();`;
+
 const gateBootstrap = `(function(){var d=document.documentElement;d.classList.add("oh-loading");setTimeout(function(){d.classList.remove("oh-loading")},${GATE_MS})})();`;
 
 export default function RootLayout({
@@ -120,7 +128,7 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <head>
-        <script dangerouslySetInnerHTML={{ __html: themeBootstrap + gateBootstrap }} />
+        <script dangerouslySetInnerHTML={{ __html: themeBootstrap + lowPowerBootstrap + gateBootstrap }} />
       </head>
       <body>
         <ThemeProvider>

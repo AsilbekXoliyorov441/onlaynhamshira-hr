@@ -9,13 +9,16 @@ const ActiveContext = createContext(true);
 
 /**
  * Bezak (dekorativ) cheksiz animatsiyalar uchun: boʻlim ekrandan uzoqda
- * boʻlsa `false` qaytaradi. Shunda `repeat: Infinity` li animatsiyalar
- * toʻxtaydi va asosiy oqim (main thread) bekorga band boʻlmaydi.
- * Koʻrinish oʻzgarmaydi — foydalanuvchi koʻrayotgan paytda animatsiya ishlaydi.
+ * boʻlsa `false` qaytaradi. Shunda `repeat: Infinity` li framer
+ * animatsiyalari toʻxtaydi (CSS animatsiyalarini esa `.section-shell`
+ * ustidagi `data-active` qoidasi pauzaga qoʻyadi) va asosiy oqim bekorga
+ * band boʻlmaydi. Koʻrinish oʻzgarmaydi — foydalanuvchi koʻrayotgan
+ * paytda animatsiya ishlaydi.
  */
 export function useSectionActive(): boolean {
   return useContext(ActiveContext);
 }
+
 
 type Props = {
   children: ReactNode;
@@ -34,7 +37,10 @@ export default function SectionShell({ children, defer = true, minHeight = 900 }
   return (
     <div
       ref={ref}
-      className={defer ? "section-shell" : undefined}
+      /* `data-active="false"` — boʻlim ekrandan uzoqda. CSS shunga qarab
+         ichkaridagi cheksiz animatsiyalarni pauzaga qoʻyadi. */
+      data-active={active ? "true" : "false"}
+      className={defer ? "section-shell section-defer" : "section-shell"}
       style={defer ? { containIntrinsicSize: `auto ${minHeight}px` } : undefined}
     >
       <ActiveContext.Provider value={active}>{children}</ActiveContext.Provider>

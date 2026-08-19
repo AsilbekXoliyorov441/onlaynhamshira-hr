@@ -43,10 +43,16 @@ export default function Page({ params }: { params: { locale?: string[] } }) {
 
   return (
     <main id="asosiy" className="relative min-h-screen w-full overflow-hidden bg-page">
-      <div className="hero-canvas relative">
-        <Navbar />
-        <Hero />
-      </div>
+      {/* Hero ham oʻralgan: sahifa pastiga surilganda uning bezak
+          animatsiyalari ham toʻxtaydi. `defer={false}` — ichkarida
+          `position: fixed` header bor, unga containment qoʻllab
+          boʻlmaydi. */}
+      <SectionShell defer={false}>
+        <div className="hero-canvas relative">
+          <Navbar />
+          <Hero />
+        </div>
+      </SectionShell>
 
       {/* Birinchi ekranga yaqin — kechiktirilmaydi */}
       <SectionShell defer={false}>

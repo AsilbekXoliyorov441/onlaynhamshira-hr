@@ -236,11 +236,39 @@
      piksel oʻzgarmaydi, faqat brauzer bekorga ish qilmaydi.
      Har bir boʻlim allaqachon `overflow: hidden` — shu bois `contain`
      hech narsani qirqib qoʻymaydi. */
-  .section-shell {
+  .section-defer {
     content-visibility: auto;
     /* `auto` — bir marta chizilgach haqiqiy balandlik eslab qolinadi,
        shuning uchun scroll balandligi sakramaydi */
     contain-intrinsic-size: auto 900px;
+  }
+
+  /* ---------- Kuchsiz qurilmada ambient animatsiyalar ----------
+     `low-power` sinfi `layout.tsx` dagi inline skript orqali qoʻyiladi
+     (deviceMemory <= 4 GB yoki <= 4 yadro). Faqat cheksiz bezak halqalari
+     toʻxtaydi — kirish animatsiyalari, hover effektlari va tuzilma
+     tegilmaydi, shuning uchun sahifa xuddi shunday koʻrinadi, faqat
+     "nafas olmaydi". */
+  .low-power .animate-liquid,
+  .low-power .animate-floaty,
+  .low-power .animate-drift {
+    animation: none !important;
+  }
+
+  /* ---------- Ekrandan tashqaridagi ambient animatsiyalar ----------
+     Sahifadagi cheksiz bezak halqalari boʻlim koʻrinmayotganda ham har
+     kadrda ishlaydi. Oʻlchov: aynan shular scroll paytidagi Style/Layout
+     ishining 94% ini (1 503 -> 84 ms) va rasterning 69% ini tashkil qiladi.
+     Boʻlim ekranga yaqinlashguncha ular pauzada turadi.
+
+     DIQQAT: qoida ataylab faqat shu uchta sinfga tegadi. Barcha
+     animatsiyalarga (`*`) qoʻllanilsa, `animate-rise` kabi BIR MARTALIK
+     kirish animatsiyalari ham opacity 0 da qotib qoladi va boʻlim
+     koʻrinmay qoladi. */
+  .section-shell[data-active="false"] .animate-liquid,
+  .section-shell[data-active="false"] .animate-floaty,
+  .section-shell[data-active="false"] .animate-drift {
+    animation-play-state: paused;
   }
 
   /* ---------- Boʻlim foni va chetlarni yumshatuvchi qatlamlar ---------- */
