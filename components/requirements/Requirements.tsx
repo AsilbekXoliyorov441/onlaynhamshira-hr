@@ -308,7 +308,8 @@ export default function Requirements() {
           <div className="relative mt-5">
             <motion.div
               aria-hidden
-              className="hero-glow pointer-events-none absolute left-1/2 top-1/2 -z-10 h-[190px] w-[560px] max-w-[112%] -translate-x-1/2 -translate-y-1/2 rounded-full"
+              style={{ x: "-50%", y: "-50%" }}
+              className="hero-glow pointer-events-none absolute left-1/2 top-1/2 -z-10 h-[190px] w-[560px] max-w-[112%] rounded-full"
               animate={reduce ? undefined : { opacity: [0.65, 1, 0.65], scale: [1, 1.08, 1] }}
               transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
             />

@@ -7,7 +7,11 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "icons:requirements": "node scripts/gen-requirement-icons.mjs"
+    "icons:requirements": "node scripts/gen-requirement-icons.mjs",
+    "icons:region": "node scripts/gen-region-assets.mjs",
+    "icons:quality": "node scripts/gen-quality-assets.mjs",
+    "icons:faq": "node scripts/gen-faq-assets.mjs",
+    "icons:cta": "node scripts/gen-cta-assets.mjs"
   },
   "dependencies": {
     "framer-motion": "^13.1.0",
