@@ -4,7 +4,7 @@ import Image, { type StaticImageData } from "next/image";
 import { useRef } from "react";
 import { useT } from "@/lib/i18n/LanguageProvider";
 import {
-  motion,
+  m,
   useReducedMotion,
   useScroll,
   useSpring,
@@ -15,6 +15,7 @@ import mapImg from "@/assets/region/region-map.png";
 import iconArea from "@/assets/region/region-1-hudud.png";
 import iconNear from "@/assets/region/region-2-yaqin.png";
 import iconChoice from "@/assets/region/region-3-qaror.png";
+import { useSectionActive } from "@/components/perf/SectionShell";
 
 /** Matnlar lugʻatdan (t.region.points) shu tartibda olinadi */
 const POINT_ICONS: StaticImageData[] = [iconArea, iconNear, iconChoice];
@@ -58,18 +59,20 @@ function Pin({
   float?: boolean;
   reduce?: boolean;
 }) {
+  /* Boʻlim ekrandan tashqarida boʻlsa — bezak animatsiyalari toʻxtaydi */
+  const offscreen = !useSectionActive();
   return (
     /* Joylashuv statik <g>'da — framer y/scale bilan transform atributini
        bekor qilib yubormasligi uchun */
     <g transform={`translate(${x} ${y})`}>
-      <motion.g
+      <m.g
         initial={{ opacity: 0, y: -26 }}
         whileInView={{ opacity: dim ? 0.45 : 1, y: 0 }}
         viewport={{ once: true, amount: 0.4 }}
         transition={{ type: "spring", stiffness: 260, damping: 14, delay }}
       >
-        <motion.g
-          animate={reduce || !float ? undefined : { y: [0, -4, 0] }}
+        <m.g
+          animate={reduce || offscreen || !float ? undefined : { y: [0, -4, 0] }}
           transition={{ duration: 3.2, repeat: Infinity, ease: "easeInOut", delay }}
         >
           <g transform={`scale(${scale})`}>
@@ -82,8 +85,8 @@ function Pin({
             />
             <circle cx="0" cy="-28" r="5.6" fill="#ffffff" />
           </g>
-        </motion.g>
-      </motion.g>
+        </m.g>
+      </m.g>
     </g>
   );
 }
@@ -91,6 +94,8 @@ function Pin({
 /* ===== Boʻlim ===== */
 
 export default function Region() {
+  /* Boʻlim ekrandan tashqarida boʻlsa — bezak animatsiyalari toʻxtaydi */
+  const offscreen = !useSectionActive();
   const t = useT();
   const reduce = useReducedMotion();
   const sectionRef = useRef<HTMLElement>(null);
@@ -114,16 +119,16 @@ export default function Region() {
         aria-hidden
         className="decor-glow pointer-events-none absolute -inset-x-[10%] bottom-[6%] top-[8%] bg-[radial-gradient(58%_54%_at_46%_48%,rgba(79,209,137,0.3),rgba(79,209,137,0)_72%)]"
       />
-      <motion.div
+      <m.div
         aria-hidden
         className="decor-glow pointer-events-none absolute -left-[10%] top-[18%] h-[500px] w-[500px] rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(44,193,118,0.44),rgba(44,193,118,0)_70%)] blur-2xl"
-        animate={reduce ? undefined : { x: [0, 36, 0], y: [0, -24, 0], scale: [1, 1.08, 1] }}
+        animate={reduce || offscreen ? undefined : { x: [0, 36, 0], y: [0, -24, 0], scale: [1, 1.08, 1] }}
         transition={{ duration: 17, repeat: Infinity, ease: "easeInOut" }}
       />
-      <motion.div
+      <m.div
         aria-hidden
         className="decor-glow pointer-events-none absolute -right-[8%] top-[10%] h-[460px] w-[460px] rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(31,182,232,0.3),rgba(31,182,232,0)_70%)] blur-2xl"
-        animate={reduce ? undefined : { x: [0, -30, 0], y: [0, 26, 0], scale: [1, 1.1, 1] }}
+        animate={reduce || offscreen ? undefined : { x: [0, -30, 0], y: [0, 26, 0], scale: [1, 1.1, 1] }}
         transition={{ duration: 20, repeat: Infinity, ease: "easeInOut", delay: 1.4 }}
       />
       <div
@@ -157,7 +162,7 @@ export default function Region() {
         <div className="grid items-center gap-10 lg:grid-cols-[1.04fr_1fr] lg:gap-14">
           {/* ===== Chap ustun — matn ===== */}
           <div>
-            <motion.span
+            <m.span
               initial={{ opacity: 0, y: 16, scale: 0.94 }}
               whileInView={{ opacity: 1, y: 0, scale: 1 }}
               viewport={{ once: true, amount: 0.6 }}
@@ -166,17 +171,17 @@ export default function Region() {
             >
               <Image src="/cuocces.png" alt="" width={19} height={20} className="h-[19px] w-[18px]" />
               {t.region.badge}
-            </motion.span>
+            </m.span>
 
             <div className="relative mt-5">
-              <motion.div
+              <m.div
                 aria-hidden
                 style={{ y: "-50%" }}
                 className="hero-glow pointer-events-none absolute left-0 top-1/2 -z-10 h-[190px] w-[480px] max-w-[110%] rounded-full"
-                animate={reduce ? undefined : { opacity: [0.6, 1, 0.6], scale: [1, 1.07, 1] }}
+                animate={reduce || offscreen ? undefined : { opacity: [0.6, 1, 0.6], scale: [1, 1.07, 1] }}
                 transition={{ duration: 6.5, repeat: Infinity, ease: "easeInOut" }}
               />
-              <motion.h2
+              <m.h2
                 initial={{ opacity: 0, y: 26, filter: "blur(8px)" }}
                 whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                 viewport={{ once: true, amount: 0.5 }}
@@ -184,10 +189,10 @@ export default function Region() {
                 className="font-display text-[26px] font-extrabold leading-[1.2] tracking-[-0.01em] text-ink sm:text-[32px] lg:text-[38px]"
               >
                 {t.region.title}
-              </motion.h2>
+              </m.h2>
             </div>
 
-            <motion.ul
+            <m.ul
               variants={listVariants}
               initial="hidden"
               whileInView="visible"
@@ -195,7 +200,7 @@ export default function Region() {
               className="mt-8 flex flex-col gap-3.5 sm:mt-10 sm:gap-4"
             >
               {POINT_ICONS.map((icon, i) => (
-                <motion.li
+                <m.li
                   key={i}
                   variants={itemVariants}
                   whileHover={reduce ? undefined : { x: 6 }}
@@ -212,13 +217,13 @@ export default function Region() {
                     className="pointer-events-none absolute inset-0 z-0 rounded-[22px] opacity-0 shadow-[inset_0_0_0_1px_rgba(79,209,137,0.5),0_22px_46px_-24px_rgba(27,164,99,0.6)] transition-opacity duration-500 group-hover:opacity-100"
                   />
 
-                  <motion.div
+                  <m.div
                     whileHover={reduce ? undefined : { scale: 1.08, rotate: -4 }}
                     transition={{ type: "spring", stiffness: 300, damping: 15 }}
                     className="relative z-[1] h-[58px] w-[58px] shrink-0 drop-shadow-[0_10px_18px_rgba(15,64,40,0.16)] sm:h-[64px] sm:w-[64px]"
                   >
                     <Image src={icon} alt="" fill sizes="64px" className="object-contain" placeholder="blur" />
-                  </motion.div>
+                  </m.div>
 
                   <div className="relative z-[1]">
                     <h3 className="font-display text-[15.5px] font-extrabold leading-[1.3] text-ink transition-colors duration-300 group-hover:text-brand-600 sm:text-[16.5px]">
@@ -228,13 +233,13 @@ export default function Region() {
                       {t.region.points[i].desc}
                     </p>
                   </div>
-                </motion.li>
+                </m.li>
               ))}
-            </motion.ul>
+            </m.ul>
           </div>
 
           {/* ===== Oʻng ustun — xarita ===== */}
-          <motion.div
+          <m.div
             style={reduce ? undefined : { y: mapY }}
             initial={{ opacity: 0, scale: 0.93, filter: "blur(12px)" }}
             whileInView={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
@@ -289,7 +294,7 @@ export default function Region() {
                   {/* Tarqaluvchi to‘lqinlar */}
                   {!reduce &&
                     [0, 1, 2].map((i) => (
-                      <motion.circle
+                      <m.circle
                         key={i}
                         cx="170"
                         cy="150"
@@ -297,7 +302,7 @@ export default function Region() {
                         stroke="#2CC176"
                         strokeWidth="2"
                         initial={{ r: 18, opacity: 0 }}
-                        animate={{ r: [18, 96], opacity: [0.55, 0] }}
+                        animate={offscreen ? undefined : { r: [18, 96], opacity: [0.55, 0] }}
                         transition={{
                           duration: 3.2,
                           repeat: Infinity,
@@ -308,7 +313,7 @@ export default function Region() {
                     ))}
 
                   {/* Eng yaqin buyurtmagacha boʻlgan yoʻl */}
-                  <motion.path
+                  <m.path
                     d="M170 150 C 196 132 210 118 238 110"
                     stroke="#12855A"
                     strokeOpacity="0.75"
@@ -331,7 +336,7 @@ export default function Region() {
                 </svg>
 
                 {/* Suzuvchi yorliq */}
-                <motion.div
+                <m.div
                   initial={{ opacity: 0, y: 12, scale: 0.9 }}
                   whileInView={{ opacity: 1, y: 0, scale: 1 }}
                   viewport={{ once: true, amount: 0.4 }}
@@ -340,19 +345,19 @@ export default function Region() {
                 >
                   <span className="relative flex h-2 w-2">
                     {!reduce && (
-                      <motion.span
+                      <m.span
                         className="absolute inset-0 rounded-full bg-brand-400"
-                        animate={{ scale: [1, 2.4], opacity: [0.7, 0] }}
+                        animate={offscreen ? undefined : { scale: [1, 2.4], opacity: [0.7, 0] }}
                         transition={{ duration: 1.8, repeat: Infinity, ease: "easeOut" }}
                       />
                     )}
                     <span className="relative h-2 w-2 rounded-full bg-brand-500" />
                   </span>
                   {t.region.chipNear}
-                </motion.div>
+                </m.div>
 
                 {/* Pastki yorliq — qamrov */}
-                <motion.div
+                <m.div
                   initial={{ opacity: 0, y: 12 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, amount: 0.4 }}
@@ -360,10 +365,10 @@ export default function Region() {
                   className="glass-panel absolute bottom-[6%] left-[6%] rounded-pill px-3.5 py-1.5 text-[11.5px] font-semibold text-ink shadow-[0_10px_24px_-12px_rgba(11,43,28,0.4)] sm:text-[12.5px]"
                 >
                   {t.region.chipArea}
-                </motion.div>
+                </m.div>
               </div>
             </div>
-          </motion.div>
+          </m.div>
         </div>
       </div>
     </section>

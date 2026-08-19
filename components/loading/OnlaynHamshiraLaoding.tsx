@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId, useState } from "react";
+import { useEffect, useId, useMemo, useState } from "react";
 import styles from "./loading.module.css";
 import { useT } from "@/lib/i18n/LanguageProvider";
 const RADIUS = 150;
@@ -58,25 +58,11 @@ export default function OnlaynHamshiraLoader({
     return () => window.clearTimeout(frame);
   }, [isControlled]);
 
-  const value = Math.max(0, Math.min(100, isControlled ? (progress as number) : simulated));
-  const text = label ?? stepLabel(value, t.loading.steps);
-
-  return (
-    <div
-      className={[styles.root, fullscreen ? styles.fullscreen : "", className ?? ""]
-        .filter(Boolean)
-        .join(" ")}
-      role="status"
-      aria-live="polite"
-      aria-label={`${text} — ${Math.round(value)}%`}
-    >
-      <span className={`${styles.blob} ${styles.blob1}`} aria-hidden />
-      <span className={`${styles.blob} ${styles.blob2}`} aria-hidden />
-      <span className={`${styles.blob} ${styles.blob3}`} aria-hidden />
-      <span className={`${styles.blob} ${styles.blob4}`} aria-hidden />
-
-      <div className={styles.stage}>
-        <svg className={styles.badge} viewBox="0 0 320 320" aria-hidden>
+  /* Progressga bogʻliq boʻlmagan ogʻir SVG qismlari — har 60 ms'da qayta
+     chizilmasin (yuklanish paytida CPU tejaladi) */
+  const staticHead = useMemo(
+    () => (
+      <>
           <defs>
             <linearGradient id={gradientId} x1="0" y1="0" x2="1" y2="1">
               <stop offset="0%" stopColor="#3FCF6E" />
@@ -92,20 +78,14 @@ export default function OnlaynHamshiraLoader({
 
           <circle cx="160" cy="160" r={RADIUS} fill="var(--oh-disc)" filter={`url(#${shadowId})`} />
           <circle cx="160" cy="160" r={RADIUS} fill="none" stroke="var(--oh-track)" strokeWidth="6" />
-          <circle
-            cx="160"
-            cy="160"
-            r={RADIUS}
-            fill="none"
-            stroke={`url(#${gradientId})`}
-            strokeWidth="6"
-            strokeLinecap="round"
-            transform="rotate(-90 160 160)"
-            strokeDasharray={CIRCUMFERENCE}
-            strokeDashoffset={CIRCUMFERENCE * (1 - value / 100)}
-            className={styles.ring}
-          />
+      </>
+    ),
+    [gradientId, shadowId, topArcId, bottomArcId],
+  );
 
+  const staticTail = useMemo(
+    () => (
+      <>
           <g className={styles.ringText}>
             <text>
               <textPath href={`#${topArcId}`} startOffset="50%" textAnchor="middle">
@@ -146,6 +126,47 @@ export default function OnlaynHamshiraLoader({
               <rect x="97.5" y="36.5" width="5" height="16" rx="2.5" />
             </g>
           </g>
+      </>
+    ),
+    [gradientId],
+  );
+
+  const value = Math.max(0, Math.min(100, isControlled ? (progress as number) : simulated));
+  const text = label ?? stepLabel(value, t.loading.steps);
+
+  return (
+    <div
+      className={[styles.root, fullscreen ? styles.fullscreen : "", className ?? ""]
+        .filter(Boolean)
+        .join(" ")}
+      role="status"
+      aria-live="polite"
+      aria-label={`${text} — ${Math.round(value)}%`}
+    >
+      <span className={`${styles.blob} ${styles.blob1}`} aria-hidden />
+      <span className={`${styles.blob} ${styles.blob2}`} aria-hidden />
+      <span className={`${styles.blob} ${styles.blob3}`} aria-hidden />
+      <span className={`${styles.blob} ${styles.blob4}`} aria-hidden />
+
+      <div className={styles.stage}>
+        <svg className={styles.badge} viewBox="0 0 320 320" aria-hidden>
+          {staticHead}
+
+          <circle
+            cx="160"
+            cy="160"
+            r={RADIUS}
+            fill="none"
+            stroke={`url(#${gradientId})`}
+            strokeWidth="6"
+            strokeLinecap="round"
+            transform="rotate(-90 160 160)"
+            strokeDasharray={CIRCUMFERENCE}
+            strokeDashoffset={CIRCUMFERENCE * (1 - value / 100)}
+            className={styles.ring}
+          />
+
+          {staticTail}
         </svg>
 
         <div className={styles.meter}>

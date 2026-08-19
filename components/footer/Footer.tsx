@@ -1,9 +1,10 @@
 "use client";
 
-import { motion, useReducedMotion, type Variants } from "framer-motion";
+import { m, useReducedMotion, type Variants } from "framer-motion";
 import { LogoMark } from "@/components/Icons";
 import { useT } from "@/lib/i18n/LanguageProvider";
 import LanguageSwitcher from "@/lib/i18n/LanguageSwitcher";
+import { useSectionActive } from "@/components/perf/SectionShell";
 
 /* Sahifaning yakuni — toʻq yashil, vazmin footer.
    Yuqori qirrasi yumaloqlangan: ochiq fonli sahifadan yumshoq oʻtish. */
@@ -98,6 +99,8 @@ const itemVariants: Variants = {
 };
 
 export default function Footer() {
+  /* Boʻlim ekrandan tashqarida boʻlsa — bezak animatsiyalari toʻxtaydi */
+  const offscreen = !useSectionActive();
   const t = useT();
   const reduce = useReducedMotion();
 
@@ -105,16 +108,16 @@ export default function Footer() {
     <footer className="relative bg-page pt-6 sm:pt-10">
       <div className="relative overflow-hidden rounded-t-[36px] bg-[linear-gradient(168deg,#0F4C36_0%,#0A3826_52%,#062419_100%)] sm:rounded-t-[56px]">
         {/* ===== Fon nurlari — juda vazmin ===== */}
-        <motion.div
+        <m.div
           aria-hidden
           className="decor-glow pointer-events-none absolute -left-[8%] -top-[18%] h-[460px] w-[460px] rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(44,193,118,0.24),rgba(44,193,118,0)_70%)] blur-2xl"
-          animate={reduce ? undefined : { x: [0, 30, 0], y: [0, 20, 0] }}
+          animate={reduce || offscreen ? undefined : { x: [0, 30, 0], y: [0, 20, 0] }}
           transition={{ duration: 30, repeat: Infinity, ease: "easeInOut" }}
         />
-        <motion.div
+        <m.div
           aria-hidden
           className="decor-glow pointer-events-none absolute -right-[10%] bottom-[-14%] h-[420px] w-[420px] rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(15,124,170,0.2),rgba(15,124,170,0)_70%)] blur-2xl"
-          animate={reduce ? undefined : { x: [0, -24, 0], y: [0, -18, 0] }}
+          animate={reduce || offscreen ? undefined : { x: [0, -24, 0], y: [0, -18, 0] }}
           transition={{ duration: 34, repeat: Infinity, ease: "easeInOut", delay: 2.5 }}
         />
         {/* Yuqori qirradagi ingichka yorugʻlik */}
@@ -123,7 +126,7 @@ export default function Footer() {
           className="pointer-events-none absolute inset-x-[10%] top-0 h-px bg-[linear-gradient(90deg,rgba(255,255,255,0),rgba(180,240,205,0.5),rgba(255,255,255,0))]"
         />
 
-        <motion.div
+        <m.div
           variants={colVariants}
           initial="hidden"
           whileInView="visible"
@@ -132,7 +135,7 @@ export default function Footer() {
         >
           <div className="grid gap-12 lg:grid-cols-[1.15fr_1fr_1fr] lg:gap-10">
             {/* ===== Brend ===== */}
-            <motion.div variants={itemVariants}>
+            <m.div variants={itemVariants}>
               <LogoMark className="h-[42px] w-auto" wordFill="#EAF6F0" />
               <p className="mt-5 max-w-[320px] text-[14px] leading-[1.65] text-[#A9C9BA]">
                 {t.footer.tagline}
@@ -147,10 +150,10 @@ export default function Footer() {
                 <TelegramIcon className="h-[18px] w-[18px] text-brand-300" />
                 {t.footer.contactCta}
               </a>
-            </motion.div>
+            </m.div>
 
             {/* ===== Havolalar ===== */}
-            <motion.nav variants={itemVariants} aria-label={t.footer.navLabel}>
+            <m.nav variants={itemVariants} aria-label={t.footer.navLabel}>
               <h3 className="font-display text-[13px] font-bold uppercase tracking-[0.14em] text-[#7FB79C]">
                 {t.footer.linksTitle}
               </h3>
@@ -176,10 +179,10 @@ export default function Footer() {
                   </li>
                 ))}
               </ul>
-            </motion.nav>
+            </m.nav>
 
             {/* ===== Aloqa ===== */}
-            <motion.div variants={itemVariants}>
+            <m.div variants={itemVariants}>
               <h3 className="font-display text-[13px] font-bold uppercase tracking-[0.14em] text-[#7FB79C]">
                 {t.footer.contactsTitle}
               </h3>
@@ -204,11 +207,11 @@ export default function Footer() {
                   </li>
                 ))}
               </ul>
-            </motion.div>
+            </m.div>
           </div>
 
           {/* ===== Ajratuvchi + yakuniy yozuv ===== */}
-          <motion.div
+          <m.div
             variants={itemVariants}
             className="mt-12 border-t border-white/10 pt-6 sm:mt-14 sm:pt-7"
           >
@@ -218,8 +221,8 @@ export default function Footer() {
               </p>
               <LanguageSwitcher tone="dark" />
             </div>
-          </motion.div>
-        </motion.div>
+          </m.div>
+        </m.div>
       </div>
     </footer>
   );

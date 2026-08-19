@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useCallback, useEffect, useRef } from "react";
 import {
   animate,
-  motion,
+  m,
   useInView,
   useMotionTemplate,
   useMotionValue,
@@ -14,6 +14,7 @@ import {
   type Variants,
 } from "framer-motion";
 import { useT } from "@/lib/i18n/LanguageProvider";
+import { useSectionActive } from "@/components/perf/SectionShell";
 
 /* ===== Ulushlar ===== */
 
@@ -77,6 +78,8 @@ function useCountUp(target: number, active: boolean, duration = 1.5) {
 /* ===== Halqa diagramma ===== */
 
 function SplitDonut({ active, label }: { active: boolean; label: string }) {
+  /* Boʻlim ekrandan tashqarida boʻlsa — bezak animatsiyalari toʻxtaydi */
+  const offscreen = !useSectionActive();
   const reduce = useReducedMotion();
   const count = useCountUp(SPECIALIST, active);
 
@@ -92,10 +95,10 @@ function SplitDonut({ active, label }: { active: boolean; label: string }) {
   return (
     <div className="relative mx-auto aspect-square w-full max-w-[330px] sm:max-w-[380px]">
       {/* Halqa ortidagi yumshoq nur */}
-      <motion.div
+      <m.div
         aria-hidden
         className="decor-glow pointer-events-none absolute inset-[8%] rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(79,209,137,0.42),rgba(79,209,137,0)_70%)] blur-2xl"
-        animate={reduce ? undefined : { opacity: [0.6, 1, 0.6], scale: [0.96, 1.06, 0.96] }}
+        animate={reduce || offscreen ? undefined : { opacity: [0.6, 1, 0.6], scale: [0.96, 1.06, 0.96] }}
         transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
       />
 
@@ -134,7 +137,7 @@ function SplitDonut({ active, label }: { active: boolean; label: string }) {
 
         <g filter="url(#dsplit-shadow)">
           {/* Mutaxassis ulushi — 70% */}
-          <motion.circle
+          <m.circle
             cx="130"
             cy="130"
             r="102"
@@ -150,7 +153,7 @@ function SplitDonut({ active, label }: { active: boolean; label: string }) {
           />
 
           {/* Platforma ulushi — 30% */}
-          <motion.circle
+          <m.circle
             cx="130"
             cy="130"
             r="102"
@@ -174,7 +177,7 @@ function SplitDonut({ active, label }: { active: boolean; label: string }) {
       <div className="pointer-events-none absolute inset-0 grid place-items-center">
         <div className="text-center">
           <div className="flex items-baseline justify-center font-display text-[46px] font-extrabold leading-none tracking-[-0.02em] text-ink sm:text-[56px]">
-            <motion.span>{count}</motion.span>
+            <m.span>{count}</m.span>
             <span className="text-brand-600">%</span>
           </div>
           <p className="mt-1.5 text-[12.5px] font-semibold uppercase tracking-[0.12em] text-mute sm:text-[13px]">
@@ -185,10 +188,10 @@ function SplitDonut({ active, label }: { active: boolean; label: string }) {
 
       {/* Halqa boʻylab pulsatsiya */}
       {!reduce && (
-        <motion.span
+        <m.span
           aria-hidden
           className="pointer-events-none absolute inset-[12%] rounded-full ring-1 ring-brand-300"
-          animate={{ scale: [1, 1.12], opacity: [0.5, 0] }}
+          animate={offscreen ? undefined : { scale: [1, 1.12], opacity: [0.5, 0] }}
           transition={{ duration: 3, repeat: Infinity, ease: "easeOut" }}
         />
       )}
@@ -236,7 +239,7 @@ function ShareCard({
   );
 
   return (
-    <motion.article
+    <m.article
       variants={cardVariants}
       whileHover={reduce ? undefined : { y: -6, scale: 1.015 }}
       transition={{ type: "spring", stiffness: 260, damping: 20 }}
@@ -244,7 +247,7 @@ function ShareCard({
       className="glass-card group relative overflow-hidden rounded-[26px] p-5 sm:p-6"
     >
       {/* Kursor yorugʻligi */}
-      <motion.span
+      <m.span
         aria-hidden
         style={{ backgroundImage: spotlight }}
         className="pointer-events-none absolute inset-0 z-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
@@ -265,7 +268,7 @@ function ShareCard({
 
       <div className="relative z-[1] flex items-center gap-4">
         <div className="flex items-baseline font-display text-[34px] font-extrabold leading-none tracking-[-0.02em] text-ink sm:text-[40px]">
-          <motion.span>{count}</motion.span>
+          <m.span>{count}</m.span>
           <span style={{ color: tone }}>%</span>
         </div>
         <div className="h-9 w-px shrink-0 bg-line" aria-hidden />
@@ -279,13 +282,15 @@ function ShareCard({
       </p>
 
       {children}
-    </motion.article>
+    </m.article>
   );
 }
 
 /* ===== Boʻlim ===== */
 
 export default function IncomeSplit() {
+  /* Boʻlim ekrandan tashqarida boʻlsa — bezak animatsiyalari toʻxtaydi */
+  const offscreen = !useSectionActive();
   const t = useT();
   const reduce = useReducedMotion();
   const ref = useRef<HTMLElement>(null);
@@ -302,22 +307,22 @@ export default function IncomeSplit() {
         aria-hidden
         className="decor-glow pointer-events-none absolute -inset-x-[10%] bottom-[6%] top-[8%] bg-[radial-gradient(58%_54%_at_42%_46%,rgba(79,209,137,0.30),rgba(79,209,137,0)_72%)]"
       />
-      <motion.div
+      <m.div
         aria-hidden
         className="decor-glow pointer-events-none absolute -left-[10%] top-[18%] h-[500px] w-[500px] rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(79,209,137,0.46),rgba(79,209,137,0)_70%)] blur-2xl"
-        animate={reduce ? undefined : { x: [0, 36, 0], y: [0, -24, 0], scale: [1, 1.08, 1] }}
+        animate={reduce || offscreen ? undefined : { x: [0, 36, 0], y: [0, -24, 0], scale: [1, 1.08, 1] }}
         transition={{ duration: 17, repeat: Infinity, ease: "easeInOut" }}
       />
-      <motion.div
+      <m.div
         aria-hidden
         className="decor-glow pointer-events-none absolute -right-[12%] top-[10%] h-[470px] w-[470px] rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(31,182,232,0.30),rgba(31,182,232,0)_70%)] blur-2xl"
-        animate={reduce ? undefined : { x: [0, -30, 0], y: [0, 28, 0], scale: [1, 1.1, 1] }}
+        animate={reduce || offscreen ? undefined : { x: [0, -30, 0], y: [0, 28, 0], scale: [1, 1.1, 1] }}
         transition={{ duration: 20, repeat: Infinity, ease: "easeInOut", delay: 1.4 }}
       />
-      <motion.div
+      <m.div
         aria-hidden
         className="decor-glow pointer-events-none absolute bottom-[-8%] left-[30%] h-[440px] w-[600px] rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(44,193,118,0.36),rgba(44,193,118,0)_72%)] blur-2xl"
-        animate={reduce ? undefined : { x: [0, 28, 0], scale: [1, 1.06, 1] }}
+        animate={reduce || offscreen ? undefined : { x: [0, 28, 0], scale: [1, 1.06, 1] }}
         transition={{ duration: 22, repeat: Infinity, ease: "easeInOut", delay: 0.7 }}
       />
 
@@ -346,7 +351,7 @@ export default function IncomeSplit() {
       <div className="relative z-[2] mx-auto max-w-[1240px] px-5 sm:px-8">
         {/* ===== Sarlavha ===== */}
         <div className="relative mx-auto max-w-[900px] text-center">
-          <motion.span
+          <m.span
             initial={{ opacity: 0, y: 16, scale: 0.94 }}
             whileInView={{ opacity: 1, y: 0, scale: 1 }}
             viewport={{ once: true, amount: 0.6 }}
@@ -355,16 +360,16 @@ export default function IncomeSplit() {
           >
             <Image src="/cuocces.png" alt="" width={19} height={20} className="h-[19px] w-[18px]" />
             {t.income.badge}
-          </motion.span>
+          </m.span>
 
           <div className="relative mt-5">
-            <motion.div
+            <m.div
               aria-hidden
               className="hero-glow pointer-events-none absolute left-1/2 top-1/2 -z-10 h-[190px] w-[560px] max-w-[112%] -translate-x-1/2 -translate-y-1/2 rounded-full"
-              animate={reduce ? undefined : { opacity: [0.65, 1, 0.65], scale: [1, 1.08, 1] }}
+              animate={reduce || offscreen ? undefined : { opacity: [0.65, 1, 0.65], scale: [1, 1.08, 1] }}
               transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
             />
-            <motion.h2
+            <m.h2
               initial={{ opacity: 0, y: 26, filter: "blur(8px)" }}
               whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
               viewport={{ once: true, amount: 0.6 }}
@@ -372,10 +377,10 @@ export default function IncomeSplit() {
               className="font-display text-[26px] font-extrabold leading-[1.2] tracking-[-0.01em] text-ink sm:text-[34px] lg:text-[40px]"
             >
               {t.income.title}
-            </motion.h2>
+            </m.h2>
           </div>
 
-          <motion.p
+          <m.p
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.6 }}
@@ -383,21 +388,21 @@ export default function IncomeSplit() {
             className="mx-auto mt-4 max-w-[640px] text-[14px] leading-[1.65] text-body sm:text-[15.5px]"
           >
             {t.income.lead}
-          </motion.p>
+          </m.p>
         </div>
 
         {/* ===== Diagramma + kartochkalar ===== */}
         <div className="mt-10 grid items-center gap-8 sm:mt-14 lg:grid-cols-[minmax(0,44%)_minmax(0,56%)] lg:gap-12">
-          <motion.div
+          <m.div
             initial={{ opacity: 0, scale: 0.9 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true, amount: 0.4 }}
             transition={{ type: "spring", stiffness: 90, damping: 18 }}
           >
             <SplitDonut active={inView} label={t.income.donutLabel} />
-          </motion.div>
+          </m.div>
 
-          <motion.div
+          <m.div
             variants={listVariants}
             initial="hidden"
             whileInView="visible"
@@ -423,12 +428,12 @@ export default function IncomeSplit() {
               ring="inset 0 0 0 1px rgba(31,146,201,0.5), 0 24px 50px -24px rgba(27,146,201,0.6)"
               active={inView}
             >
-              <motion.ul
+              <m.ul
                 variants={listVariants}
                 className="relative z-[1] mt-4 grid grid-cols-1 gap-2 sm:grid-cols-2 sm:gap-x-4"
               >
                 {t.income.costs.map((cost) => (
-                  <motion.li
+                  <m.li
                     key={cost}
                     variants={itemVariants}
                     className="flex items-start gap-2 text-[13px] font-medium leading-[1.45] text-body sm:text-[13.5px]"
@@ -448,15 +453,15 @@ export default function IncomeSplit() {
                       </svg>
                     </span>
                     {cost}
-                  </motion.li>
+                  </m.li>
                 ))}
-              </motion.ul>
+              </m.ul>
             </ShareCard>
-          </motion.div>
+          </m.div>
         </div>
 
         {/* ===== Qoʻshimcha izoh ===== */}
-        <motion.div
+        <m.div
           initial={{ opacity: 0, y: 18 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.6 }}
@@ -480,7 +485,7 @@ export default function IncomeSplit() {
           <p className="text-[13px] leading-[1.6] text-body sm:text-[14px]">
             {t.income.note}
           </p>
-        </motion.div>
+        </m.div>
       </div>
     </section>
   );

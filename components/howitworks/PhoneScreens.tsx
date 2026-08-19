@@ -1,7 +1,8 @@
 "use client";
 
-import { motion, type Variants } from "framer-motion";
+import { m, type Variants } from "framer-motion";
 import { useT } from "@/lib/i18n/LanguageProvider";
+import { useSectionActive } from "@/components/perf/SectionShell";
 
 /*
  * Telefon ekranida koʻrsatiladigan sakkizta "ilova oynasi".
@@ -21,10 +22,10 @@ const pop: Variants = {
 
 function ScreenTitle({ children, sub }: { children: React.ReactNode; sub?: string }) {
   return (
-    <motion.div variants={pop} custom={0} initial="hidden" animate="visible" className="mb-2.5">
+    <m.div variants={pop} custom={0} initial="hidden" animate="visible" className="mb-2.5">
       <h4 className="font-display text-[13px] font-extrabold leading-none text-ink">{children}</h4>
       {sub && <p className="mt-1 text-[9.5px] font-medium text-mute">{sub}</p>}
-    </motion.div>
+    </m.div>
   );
 }
 
@@ -56,8 +57,10 @@ function OrderCard({
   tone?: string;
   active?: boolean;
 }) {
+  /* Boʻlim ekrandan tashqarida boʻlsa — bezak animatsiyalari toʻxtaydi */
+  const offscreen = !useSectionActive();
   return (
-    <motion.div
+    <m.div
       variants={pop}
       custom={i + 1}
       initial="hidden"
@@ -75,17 +78,17 @@ function OrderCard({
       </div>
       <div className="shrink-0 text-right">
         {badge ? (
-          <motion.span
-            animate={{ opacity: [1, 0.45, 1] }}
+          <m.span
+            animate={offscreen ? undefined : { opacity: [1, 0.45, 1] }}
             transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
             className="rounded-pill bg-[color:var(--chip-warn-bg)] px-1.5 py-[2px] text-[8px] font-bold text-[color:var(--chip-warn-fg)]"
           >
             {badge}
-          </motion.span>
+          </m.span>
         ) : null}
         <p className="mt-1 text-[8.5px] font-semibold text-mute">{time}</p>
       </div>
-    </motion.div>
+    </m.div>
   );
 }
 
@@ -103,7 +106,7 @@ function InfoRow({
   icon: React.ReactNode;
 }) {
   return (
-    <motion.div
+    <m.div
       variants={pop}
       custom={i}
       initial="hidden"
@@ -120,7 +123,7 @@ function InfoRow({
         <p className="text-[8.5px] font-semibold uppercase tracking-[0.08em] text-mute">{label}</p>
         <p className="truncate font-display text-[10.5px] font-bold text-ink">{value}</p>
       </div>
-    </motion.div>
+    </m.div>
   );
 }
 
@@ -175,7 +178,7 @@ export function ScreenOrders() {
           tone="#F6A45A"
         />
       </div>
-      <motion.div
+      <m.div
         variants={pop}
         custom={4}
         initial="hidden"
@@ -183,13 +186,15 @@ export function ScreenOrders() {
         className="mt-2 rounded-[13px] border border-dashed border-brand-200 bg-brand-50/70 p-2 text-center text-[9px] font-semibold text-brand-700"
       >
         {t.screens.ordersFoot}
-      </motion.div>
+      </m.div>
     </div>
   );
 }
 
 /* ===== 2. Qabul qilish yoki rad etish ===== */
 export function ScreenAccept() {
+  /* Boʻlim ekrandan tashqarida boʻlsa — bezak animatsiyalari toʻxtaydi */
+  const offscreen = !useSectionActive();
   const t = useT();
   return (
     <div>
@@ -202,7 +207,7 @@ export function ScreenAccept() {
         active
       />
       <div className="mt-3 grid grid-cols-2 gap-2">
-        <motion.button
+        <m.button
           type="button"
           variants={pop}
           custom={1}
@@ -210,15 +215,15 @@ export function ScreenAccept() {
           animate="visible"
           className="btn-solid rounded-[13px] py-2 font-display text-[10.5px] font-bold text-white shadow-[0_10px_18px_-10px_rgba(23,164,104,0.9)]"
         >
-          <motion.span
+          <m.span
             className="inline-block"
-            animate={{ scale: [1, 0.94, 1] }}
+            animate={offscreen ? undefined : { scale: [1, 0.94, 1] }}
             transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut", times: [0, 0.12, 0.3] }}
           >
             {t.screens.accept}
-          </motion.span>
-        </motion.button>
-        <motion.button
+          </m.span>
+        </m.button>
+        <m.button
           type="button"
           variants={pop}
           custom={2}
@@ -227,9 +232,9 @@ export function ScreenAccept() {
           className="rounded-[13px] border border-[color:var(--chip-danger-border)] bg-[color:var(--chip-danger-bg)] py-2 font-display text-[10.5px] font-bold text-[color:var(--chip-danger-fg)]"
         >
           {t.screens.decline}
-        </motion.button>
+        </m.button>
       </div>
-      <motion.p
+      <m.p
         variants={pop}
         custom={3}
         initial="hidden"
@@ -237,13 +242,15 @@ export function ScreenAccept() {
         className="mt-2.5 text-center text-[9px] font-medium leading-[1.5] text-mute"
       >
         {t.screens.decisionFoot}
-      </motion.p>
+      </m.p>
     </div>
   );
 }
 
 /* ===== 3. Xizmat turi va manzil ===== */
 export function ScreenAddress() {
+  /* Boʻlim ekrandan tashqarida boʻlsa — bezak animatsiyalari toʻxtaydi */
+  const offscreen = !useSectionActive();
   const t = useT();
   return (
     <div>
@@ -253,7 +260,7 @@ export function ScreenAddress() {
         <InfoRow i={2} {...t.screens.detailRows[1]} tone="#E7F3FB" icon={ic.pin} />
         <InfoRow i={3} {...t.screens.detailRows[2]} tone="#FFF4E2" icon={ic.clock} />
       </div>
-      <motion.div
+      <m.div
         variants={pop}
         custom={4}
         initial="hidden"
@@ -264,7 +271,7 @@ export function ScreenAddress() {
           <rect width="200" height="90" fill="var(--map-bg-2)" />
           <path d="M8 58c14-16 30-24 52-22s34 12 54 6 40-16 62-6l16 8v46H8V58Z" fill="#DCE8DF" />
           <path d="M0 34h200M0 62h200M46 0v90M108 0v90M162 0v90" stroke="#D0DED4" strokeWidth="1" />
-          <motion.path
+          <m.path
             d="M30 74c26-10 44-30 72-30s44 14 70 6"
             stroke="#2CC176"
             strokeWidth="3.4"
@@ -275,48 +282,50 @@ export function ScreenAddress() {
             transition={{ duration: 1.3, ease: [0.22, 0.9, 0.3, 1], delay: 0.35 }}
           />
         </svg>
-        <motion.span
+        <m.span
           className="absolute left-[70%] top-[36%] grid h-5 w-5 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-surface shadow-[0_4px_10px_-4px_rgba(11,43,28,0.5)]"
-          animate={{ y: [0, -3, 0] }}
+          animate={offscreen ? undefined : { y: [0, -3, 0] }}
           transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
         >
           {ic.pin}
-        </motion.span>
-      </motion.div>
+        </m.span>
+      </m.div>
     </div>
   );
 }
 
 /* ===== 4. Mijoz bilan bogʻlanish ===== */
 export function ScreenCall() {
+  /* Boʻlim ekrandan tashqarida boʻlsa — bezak animatsiyalari toʻxtaydi */
+  const offscreen = !useSectionActive();
   const t = useT();
   return (
     <div className="flex h-full flex-col items-center justify-center pb-2 text-center">
       <div className="relative mb-3">
         {[0, 1].map((r) => (
-          <motion.span
+          <m.span
             key={r}
             className="absolute inset-0 rounded-full ring-2 ring-brand-300"
-            animate={{ scale: [1, 1.55], opacity: [0.55, 0] }}
+            animate={offscreen ? undefined : { scale: [1, 1.55], opacity: [0.55, 0] }}
             transition={{ duration: 2.4, repeat: Infinity, ease: "easeOut", delay: r * 1.2 }}
           />
         ))}
-        <motion.span
+        <m.span
           initial={{ scale: 0.7, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ type: "spring", stiffness: 190, damping: 15 }}
           className="relative grid h-[62px] w-[62px] place-items-center rounded-full bg-[linear-gradient(150deg,#8FE7B9,#22A96C)] font-display text-[19px] font-extrabold text-white shadow-[0_14px_24px_-14px_rgba(11,43,28,0.8)]"
         >
           NA
-        </motion.span>
+        </m.span>
       </div>
-      <motion.p variants={pop} custom={1} initial="hidden" animate="visible" className="font-display text-[13px] font-extrabold text-ink">
+      <m.p variants={pop} custom={1} initial="hidden" animate="visible" className="font-display text-[13px] font-extrabold text-ink">
         {t.screens.orders[0].name}
-      </motion.p>
-      <motion.p variants={pop} custom={2} initial="hidden" animate="visible" className="mt-1 text-[9.5px] font-medium text-mute">
+      </m.p>
+      <m.p variants={pop} custom={2} initial="hidden" animate="visible" className="mt-1 text-[9.5px] font-medium text-mute">
         {t.screens.contacting}
-      </motion.p>
-      <motion.div variants={pop} custom={3} initial="hidden" animate="visible" className="mt-3.5 flex items-center gap-2.5">
+      </m.p>
+      <m.div variants={pop} custom={3} initial="hidden" animate="visible" className="mt-3.5 flex items-center gap-2.5">
         <span className="grid h-10 w-10 place-items-center rounded-full bg-[linear-gradient(150deg,#5CD79A,#17A468)] shadow-[0_10px_18px_-10px_rgba(23,164,104,0.95)]">
           <svg viewBox="0 0 24 24" className="h-[17px] w-[17px]" fill="#fff">
             <path d="M6.6 3.4c.7-.6 1.8-.5 2.3.3l1.6 2.2c.4.6.3 1.4-.3 1.9l-1 .8c-.2.2-.3.5-.2.8a11 11 0 0 0 4.6 4.6c.3.1.6 0 .8-.2l.8-1c.5-.6 1.3-.7 1.9-.3l2.2 1.6c.8.5.9 1.6.3 2.3l-1.1 1.2c-.7.7-1.8 1-2.8.6a20 20 0 0 1-10.6-10.6c-.4-1-.1-2.1.6-2.8l1-1.1Z" />
@@ -327,18 +336,20 @@ export function ScreenCall() {
             <path d="M4 6.4A2.4 2.4 0 0 1 6.4 4h11.2A2.4 2.4 0 0 1 20 6.4v7.2a2.4 2.4 0 0 1-2.4 2.4H9.6L5 19.6V6.4Z" stroke="#1BA463" strokeWidth="1.9" strokeLinejoin="round" />
           </svg>
         </span>
-      </motion.div>
+      </m.div>
     </div>
   );
 }
 
 /* ===== 5. Xizmatni boshlash ===== */
 export function ScreenStart() {
+  /* Boʻlim ekrandan tashqarida boʻlsa — bezak animatsiyalari toʻxtaydi */
+  const offscreen = !useSectionActive();
   const t = useT();
   return (
     <div className="flex h-full flex-col justify-center pb-2">
       <ScreenTitle sub={t.screens.startSub}>{t.screens.startTitle}</ScreenTitle>
-      <motion.div
+      <m.div
         variants={pop}
         custom={1}
         initial="hidden"
@@ -347,7 +358,7 @@ export function ScreenStart() {
       >
         <svg viewBox="0 0 104 104" className="absolute inset-0 h-full w-full -rotate-90">
           <circle cx="52" cy="52" r="46" fill="none" stroke="var(--track)" strokeWidth="7" />
-          <motion.circle
+          <m.circle
             cx="52"
             cy="52"
             r="46"
@@ -364,44 +375,46 @@ export function ScreenStart() {
           <p className="font-display text-[19px] font-extrabold leading-none text-ink">12:40</p>
           <p className="mt-1 text-[8.5px] font-semibold uppercase tracking-[0.1em] text-mute">{t.screens.inProgress}</p>
         </div>
-      </motion.div>
-      <motion.div
+      </m.div>
+      <m.div
         variants={pop}
         custom={3}
         initial="hidden"
         animate="visible"
         className="btn-solid relative mt-4 overflow-hidden rounded-pill py-2.5 text-center font-display text-[11px] font-bold text-white shadow-[0_12px_22px_-12px_rgba(23,164,104,0.95)]"
       >
-        <motion.span
+        <m.span
           aria-hidden
           className="absolute inset-y-0 -left-1/3 w-1/3 bg-[linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,0.55),rgba(255,255,255,0))]"
-          animate={{ x: ["0%", "460%"] }}
+          animate={offscreen ? undefined : { x: ["0%", "460%"] }}
           transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut", repeatDelay: 0.9 }}
         />
         {t.screens.started}
-      </motion.div>
+      </m.div>
     </div>
   );
 }
 
 /* ===== 6. Xizmatni yakunlash ===== */
 export function ScreenDone() {
+  /* Boʻlim ekrandan tashqarida boʻlsa — bezak animatsiyalari toʻxtaydi */
+  const offscreen = !useSectionActive();
   const t = useT();
   return (
     <div className="flex h-full flex-col items-center justify-center pb-2 text-center">
-      <motion.span
+      <m.span
         initial={{ scale: 0.5, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{ type: "spring", stiffness: 200, damping: 13 }}
         className="relative grid h-[68px] w-[68px] place-items-center rounded-full bg-[linear-gradient(150deg,#B9F3CA,#2CC176)] shadow-[0_16px_26px_-14px_rgba(23,164,104,0.95)]"
       >
-        <motion.span
+        <m.span
           className="absolute inset-0 rounded-full ring-2 ring-brand-300"
-          animate={{ scale: [1, 1.45], opacity: [0.6, 0] }}
+          animate={offscreen ? undefined : { scale: [1, 1.45], opacity: [0.6, 0] }}
           transition={{ duration: 2.2, repeat: Infinity, ease: "easeOut" }}
         />
         <svg viewBox="0 0 24 24" className="h-[30px] w-[30px]" fill="none">
-          <motion.path
+          <m.path
             d="M5 12.6l4.6 4.6L19 7.4"
             stroke="#fff"
             strokeWidth="3"
@@ -412,13 +425,13 @@ export function ScreenDone() {
             transition={{ duration: 0.55, delay: 0.3, ease: "easeOut" }}
           />
         </svg>
-      </motion.span>
+      </m.span>
 
-      <motion.p variants={pop} custom={1} initial="hidden" animate="visible" className="mt-3 font-display text-[13px] font-extrabold text-ink">
+      <m.p variants={pop} custom={1} initial="hidden" animate="visible" className="mt-3 font-display text-[13px] font-extrabold text-ink">
         {t.screens.finished}
-      </motion.p>
+      </m.p>
 
-      <motion.div variants={pop} custom={2} initial="hidden" animate="visible" className="mt-3 w-full space-y-1.5">
+      <m.div variants={pop} custom={2} initial="hidden" animate="visible" className="mt-3 w-full space-y-1.5">
         {t.screens.doneRows.map((row) => (
           <div
             key={row.label}
@@ -428,7 +441,7 @@ export function ScreenDone() {
             <span className="font-display text-[9.5px] font-bold text-ink">{row.value}</span>
           </div>
         ))}
-      </motion.div>
+      </m.div>
     </div>
   );
 }
@@ -442,7 +455,7 @@ export function ScreenHistory() {
   return (
     <div>
       <ScreenTitle sub={t.screens.historySub}>{t.screens.historyTitle}</ScreenTitle>
-      <motion.div
+      <m.div
         variants={pop}
         custom={1}
         initial="hidden"
@@ -450,7 +463,7 @@ export function ScreenHistory() {
         className="mb-2 flex items-end gap-1.5 rounded-[13px] border border-line/90 bg-surface p-2"
       >
         {[38, 56, 44, 72, 60, 88, 68].map((h, i) => (
-          <motion.span
+          <m.span
             key={i}
             className="flex-1 rounded-t-[3px] bg-[linear-gradient(180deg,#7FE7B4,#2CC176)]"
             initial={{ height: 0 }}
@@ -458,10 +471,10 @@ export function ScreenHistory() {
             transition={{ duration: 0.55, delay: 0.2 + i * 0.06, ease: [0.22, 0.9, 0.3, 1] }}
           />
         ))}
-      </motion.div>
+      </m.div>
       <div className="space-y-1.5">
         {rows.map(([name, meta, tone], i) => (
-          <motion.div
+          <m.div
             key={name}
             variants={pop}
             custom={i + 2}
@@ -477,7 +490,7 @@ export function ScreenHistory() {
             <span className="rounded-pill bg-brand-50 px-1.5 py-[2px] text-[8px] font-bold text-brand-700">
               Yakunlandi
             </span>
-          </motion.div>
+          </m.div>
         ))}
       </div>
     </div>
@@ -489,7 +502,7 @@ export function ScreenProfile() {
   const t = useT();
   return (
     <div className="flex h-full flex-col justify-center pb-1">
-      <motion.div
+      <m.div
         variants={pop}
         custom={0}
         initial="hidden"
@@ -501,9 +514,9 @@ export function ScreenProfile() {
         </span>
         <p className="mt-2 font-display text-[13px] font-extrabold text-ink">{t.screens.profileName}</p>
         <p className="mt-0.5 text-[9px] font-medium text-mute">{t.screens.profileRole}</p>
-      </motion.div>
+      </m.div>
 
-      <motion.div
+      <m.div
         variants={pop}
         custom={1}
         initial="hidden"
@@ -511,7 +524,7 @@ export function ScreenProfile() {
         className="mt-3 flex items-center justify-center gap-1"
       >
         {[0, 1, 2, 3, 4].map((s) => (
-          <motion.svg
+          <m.svg
             key={s}
             viewBox="0 0 24 24"
             className="h-[15px] w-[15px]"
@@ -523,12 +536,12 @@ export function ScreenProfile() {
               d="M12 3.4l2.6 5.3 5.8.8-4.2 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8-4.2-4.1 5.8-.8L12 3.4Z"
               fill={s === 4 ? "#FFE1A2" : "#FFC94F"}
             />
-          </motion.svg>
+          </m.svg>
         ))}
         <span className="ml-1 font-display text-[11px] font-extrabold text-ink">4.9</span>
-      </motion.div>
+      </m.div>
 
-      <motion.div
+      <m.div
         variants={pop}
         custom={2}
         initial="hidden"
@@ -546,7 +559,7 @@ export function ScreenProfile() {
             <p className="mt-1 text-[8px] font-semibold text-mute">{stat.label}</p>
           </div>
         ))}
-      </motion.div>
+      </m.div>
     </div>
   );
 }

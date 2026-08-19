@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useCallback } from "react";
 import { useT } from "@/lib/i18n/LanguageProvider";
 import {
-  motion,
+  m,
   useMotionTemplate,
   useMotionValue,
   useReducedMotion,
@@ -19,6 +19,7 @@ import knowledge from "@/assets/requirements/req-5-kasbiy-bilim.png";
 import tech from "@/assets/requirements/req-6-texnik-konikma.png";
 import accuracy from "@/assets/requirements/req-7-malumotlar-togriligi.png";
 import expertise from "@/assets/requirements/req-8-mutaxassislik.png";
+import { useSectionActive } from "@/components/perf/SectionShell";
 
 /** Matnlar lugʻatdan (t.requirements.items) shu tartibda olinadi */
 type Requirement = { title: string; desc: string; icon: StaticImageData };
@@ -85,6 +86,8 @@ const textVariants: Variants = {
 /* ===== Kartochka ===== */
 
 function RequirementCard({ title, desc, icon }: Requirement) {
+  /* Boʻlim ekrandan tashqarida boʻlsa — bezak animatsiyalari toʻxtaydi */
+  const offscreen = !useSectionActive();
   const reduce = useReducedMotion();
 
   // Kursor ortidan yuruvchi "shisha" yorugʻlik nuqtasi
@@ -102,7 +105,7 @@ function RequirementCard({ title, desc, icon }: Requirement) {
   );
 
   return (
-    <motion.article
+    <m.article
       variants={cardVariants}
       whileHover={reduce ? undefined : { y: -8, scale: 1.02 }}
       transition={{ type: "spring", stiffness: 260, damping: 20 }}
@@ -110,7 +113,7 @@ function RequirementCard({ title, desc, icon }: Requirement) {
       className="glass-card group relative flex h-full cursor-default flex-col overflow-hidden rounded-[26px] p-5 sm:p-[22px]"
     >
       {/* Kursor yorugʻligi */}
-      <motion.span
+      <m.span
         aria-hidden
         style={{ backgroundImage: spotlight }}
         className="pointer-events-none absolute inset-0 z-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
@@ -129,7 +132,7 @@ function RequirementCard({ title, desc, icon }: Requirement) {
       />
 
       <div className="relative z-[1] flex items-start justify-between gap-3">
-        <motion.div
+        <m.div
           variants={iconVariants}
           whileHover={reduce ? undefined : { scale: 1.08, rotate: -4 }}
           transition={{ type: "spring", stiffness: 300, damping: 15 }}
@@ -143,10 +146,10 @@ function RequirementCard({ title, desc, icon }: Requirement) {
             className="object-contain"
             placeholder="blur"
           />
-        </motion.div>
+        </m.div>
 
         {/* Yashil belgi — talab tasdiqlanganini bildiradi */}
-        <motion.span
+        <m.span
           variants={checkVariants}
           aria-hidden
           className="relative mt-1 grid h-[26px] w-[26px] shrink-0 place-items-center rounded-full bg-[linear-gradient(150deg,#DFF8E9,#A9E9C4)] shadow-[inset_0_1px_0_rgba(255,255,255,0.9),0_6px_14px_-8px_rgba(15,64,40,0.5)]"
@@ -161,37 +164,39 @@ function RequirementCard({ title, desc, icon }: Requirement) {
             />
           </svg>
           {!reduce && (
-            <motion.span
+            <m.span
               className="absolute inset-0 rounded-full ring-1 ring-brand-400"
-              animate={{ scale: [1, 1.45], opacity: [0.55, 0] }}
+              animate={offscreen ? undefined : { scale: [1, 1.45], opacity: [0.55, 0] }}
               transition={{ duration: 2.2, repeat: Infinity, ease: "easeOut" }}
             />
           )}
-        </motion.span>
+        </m.span>
       </div>
 
-      <motion.h3
+      <m.h3
         variants={textVariants}
         custom={0}
         className="relative z-[1] mt-5 font-display text-[17px] font-extrabold leading-[1.25] text-ink transition-colors duration-300 group-hover:text-brand-600 sm:text-[18px]"
       >
         {title}:
-      </motion.h3>
+      </m.h3>
 
-      <motion.p
+      <m.p
         variants={textVariants}
         custom={1}
         className="relative z-[1] mt-2 text-[13.5px] leading-[1.55] text-body sm:text-[14px]"
       >
         {desc}
-      </motion.p>
-    </motion.article>
+      </m.p>
+    </m.article>
   );
 }
 
 /* ===== Boʻlim ===== */
 
 export default function Requirements() {
+  /* Boʻlim ekrandan tashqarida boʻlsa — bezak animatsiyalari toʻxtaydi */
+  const offscreen = !useSectionActive();
   const t = useT();
   const reduce = useReducedMotion();
 
@@ -206,22 +211,22 @@ export default function Requirements() {
         aria-hidden
         className="decor-glow pointer-events-none absolute -inset-x-[10%] bottom-[6%] top-[8%] bg-[radial-gradient(60%_55%_at_50%_45%,rgba(79,209,137,0.34),rgba(79,209,137,0)_72%)]"
       />
-      <motion.div
+      <m.div
         aria-hidden
         className="decor-glow pointer-events-none absolute -left-[12%] top-[14%] h-[520px] w-[520px] rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(79,209,137,0.5),rgba(79,209,137,0)_70%)] blur-2xl"
-        animate={reduce ? undefined : { x: [0, 40, 0], y: [0, -26, 0], scale: [1, 1.08, 1] }}
+        animate={reduce || offscreen ? undefined : { x: [0, 40, 0], y: [0, -26, 0], scale: [1, 1.08, 1] }}
         transition={{ duration: 16, repeat: Infinity, ease: "easeInOut" }}
       />
-      <motion.div
+      <m.div
         aria-hidden
         className="decor-glow pointer-events-none absolute -right-[10%] top-[8%] h-[480px] w-[480px] rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(31,182,232,0.28),rgba(31,182,232,0)_70%)] blur-2xl"
-        animate={reduce ? undefined : { x: [0, -34, 0], y: [0, 30, 0], scale: [1, 1.1, 1] }}
+        animate={reduce || offscreen ? undefined : { x: [0, -34, 0], y: [0, 30, 0], scale: [1, 1.1, 1] }}
         transition={{ duration: 19, repeat: Infinity, ease: "easeInOut", delay: 1.5 }}
       />
-      <motion.div
+      <m.div
         aria-hidden
         className="decor-glow pointer-events-none absolute bottom-[-6%] left-[26%] h-[460px] w-[620px] rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(44,193,118,0.42),rgba(44,193,118,0)_72%)] blur-2xl"
-        animate={reduce ? undefined : { x: [0, 30, 0], scale: [1, 1.06, 1] }}
+        animate={reduce || offscreen ? undefined : { x: [0, 30, 0], scale: [1, 1.06, 1] }}
         transition={{ duration: 21, repeat: Infinity, ease: "easeInOut", delay: 0.8 }}
       />
       <div
@@ -260,7 +265,7 @@ export default function Requirements() {
       <div className="relative z-[2] mx-auto max-w-[1240px] px-5 sm:px-8">
         {/* ===== Sarlavha ===== */}
         <div className="relative mx-auto max-w-[1000px] text-center">
-          <motion.span
+          <m.span
             initial={{ opacity: 0, y: 16, scale: 0.94 }}
             whileInView={{ opacity: 1, y: 0, scale: 1 }}
             viewport={{ once: true, amount: 0.6 }}
@@ -269,17 +274,17 @@ export default function Requirements() {
           >
             <Image src="/cuocces.png" alt="" width={19} height={20} className="h-[19px] w-[18px]" />
             {t.requirements.badge}
-          </motion.span>
+          </m.span>
 
           <div className="relative mt-5">
-            <motion.div
+            <m.div
               aria-hidden
               style={{ x: "-50%", y: "-50%" }}
               className="hero-glow pointer-events-none absolute left-1/2 top-1/2 -z-10 h-[190px] w-[560px] max-w-[112%] rounded-full"
-              animate={reduce ? undefined : { opacity: [0.65, 1, 0.65], scale: [1, 1.08, 1] }}
+              animate={reduce || offscreen ? undefined : { opacity: [0.65, 1, 0.65], scale: [1, 1.08, 1] }}
               transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
             />
-            <motion.h2
+            <m.h2
               initial={{ opacity: 0, y: 26, filter: "blur(8px)" }}
               whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
               viewport={{ once: true, amount: 0.6 }}
@@ -287,12 +292,12 @@ export default function Requirements() {
               className="font-display text-[26px] font-extrabold leading-[1.2] tracking-[-0.01em] text-ink sm:text-[34px] lg:text-[40px]"
             >
               {t.requirements.title}
-            </motion.h2>
+            </m.h2>
           </div>
         </div>
 
         {/* ===== Kartochkalar ===== */}
-        <motion.div
+        <m.div
           variants={gridVariants}
           initial="hidden"
           whileInView="visible"
@@ -302,10 +307,10 @@ export default function Requirements() {
           {ICONS.map((icon, i) => (
             <RequirementCard key={i} icon={icon} {...t.requirements.items[i]} />
           ))}
-        </motion.div>
+        </m.div>
 
         {/* ===== Izoh ===== */}
-        <motion.p
+        <m.p
           initial={{ opacity: 0, y: 14 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.8 }}
@@ -313,7 +318,7 @@ export default function Requirements() {
           className="mt-8 text-center text-[13px] font-medium text-body sm:mt-10 sm:text-[14px]"
         >
           {t.requirements.footnote}
-        </motion.p>
+        </m.p>
       </div>
     </section>
   );

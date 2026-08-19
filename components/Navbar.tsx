@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { LogoMark } from "./Icons";
 import { useT } from "@/lib/i18n/LanguageProvider";
 import LanguageSwitcher from "@/lib/i18n/LanguageSwitcher";
@@ -130,21 +130,53 @@ function HeaderBar({ sticky = false }: { sticky?: boolean }) {
 
 export default function Navbar() {
   const [showFixed, setShowFixed] = useState(false);
-  const [progress, setProgress] = useState(0);
+  /* Progress chizigʻi React state'i orqali emas, toʻgʻridan-toʻgʻri DOM'ga
+     yoziladi — aks holda har bir scroll kadrida butun Navbar qayta
+     render boʻlar edi. */
+  const barRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const onScroll = () => {
-      setShowFixed(window.scrollY > 80);
-      const docHeight =
-        document.documentElement.scrollHeight - window.innerHeight;
-      setProgress(docHeight > 0 ? (window.scrollY / docHeight) * 100 : 0);
+    /* `scrollHeight` oʻqilishi layout'ni majburan qayta hisoblaydi
+       ("forced reflow"). Shu bois u faqat oʻlcham oʻzgarganda oʻlchanadi,
+       har scroll'da emas. */
+    let docHeight = 0;
+    const measure = () => {
+      docHeight = document.documentElement.scrollHeight - window.innerHeight;
     };
-    onScroll();
+
+    let ticking = false;
+    const apply = () => {
+      ticking = false;
+      const y = window.scrollY;
+      setShowFixed((prev) => (prev === y > 80 ? prev : y > 80));
+      const bar = barRef.current;
+      if (bar) {
+        const pct = docHeight > 0 ? Math.min(100, (y / docHeight) * 100) : 0;
+        bar.style.width = `${pct}%`;
+      }
+    };
+    /* Scroll hodisasi kadrga bir marta qayta ishlanadi */
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      window.requestAnimationFrame(apply);
+    };
+    const onResize = () => {
+      measure();
+      onScroll();
+    };
+
+    measure();
+    apply();
     window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
+    window.addEventListener("resize", onResize);
+    /* Boʻlimlar kech yuklanganda sahifa balandligi oʻzgaradi — qayta oʻlchaymiz */
+    const ro = new ResizeObserver(measure);
+    ro.observe(document.documentElement);
     return () => {
+      ro.disconnect();
       window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
+      window.removeEventListener("resize", onResize);
     };
   }, []);
 
@@ -156,8 +188,8 @@ export default function Navbar() {
         className="fixed inset-x-0 top-0 z-[60] h-[3px] bg-transparent"
       >
         <div
-          className="h-full bg-[linear-gradient(90deg,#4FD189,#1BA463)] transition-[width] duration-150 ease-out"
-          style={{ width: `${progress}%` }}
+          ref={barRef}
+          className="h-full w-0 bg-[linear-gradient(90deg,#4FD189,#1BA463)] transition-[width] duration-150 ease-out"
         />
       </div>
 

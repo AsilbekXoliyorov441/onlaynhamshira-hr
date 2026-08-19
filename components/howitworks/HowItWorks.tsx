@@ -11,7 +11,7 @@ import {
 } from "react";
 import {
   AnimatePresence,
-  motion,
+  m,
   useInView,
   useMotionTemplate,
   useMotionValue,
@@ -41,6 +41,7 @@ import {
   ScreenProfile,
   ScreenStart,
 } from "./PhoneScreens";
+import { useSectionActive } from "@/components/perf/SectionShell";
 
 /* Bir qadam ekranda necha millisekund turadi */
 const AUTOPLAY_MS = 5200;
@@ -140,6 +141,8 @@ function StepCard({
   playing: boolean;
   onSelect: () => void;
 }) {
+  /* Boʻlim ekrandan tashqarida boʻlsa — bezak animatsiyalari toʻxtaydi */
+  const offscreen = !useSectionActive();
   const reduce = useReducedMotion();
   const Icon = step.icon;
 
@@ -157,7 +160,7 @@ function StepCard({
   );
 
   return (
-    <motion.button
+    <m.button
       type="button"
       variants={itemVariants}
       onClick={onSelect}
@@ -171,7 +174,7 @@ function StepCard({
       }`}
     >
       {/* Kursor yorugʻligi */}
-      <motion.span
+      <m.span
         aria-hidden
         style={{ backgroundImage: spotlight }}
         className="pointer-events-none absolute inset-0 z-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
@@ -191,24 +194,24 @@ function StepCard({
       <div className="relative z-[1] flex items-start gap-3">
         {/* Tartib raqami + ikonka */}
         <span className="relative shrink-0">
-          <motion.span
+          <m.span
             aria-hidden
             className="absolute inset-[-6px] rounded-full"
             style={{
               background: `radial-gradient(50% 50% at 50% 50%, ${step.glow}, rgba(255,255,255,0) 70%)`,
             }}
             animate={
-              active && !reduce ? { opacity: [0.5, 1, 0.5], scale: [0.94, 1.08, 0.94] } : { opacity: 0 }
+              active && !reduce && !offscreen ? { opacity: [0.5, 1, 0.5], scale: [0.94, 1.08, 0.94] } : { opacity: 0 }
             }
             transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut" }}
           />
-          <motion.span
-            animate={active && !reduce ? { y: [0, -3, 0] } : { y: 0 }}
+          <m.span
+            animate={active && !reduce && !offscreen ? { y: [0, -3, 0] } : { y: 0 }}
             transition={{ duration: 3.4, repeat: Infinity, ease: "easeInOut" }}
             className="relative block"
           >
             <Icon className="h-[42px] w-[42px] sm:h-[46px] sm:w-[46px]" />
-          </motion.span>
+          </m.span>
           <span
             className="absolute -right-1 -top-1 grid h-[18px] w-[18px] place-items-center rounded-full font-display text-[10px] font-extrabold text-white shadow-[0_4px_10px_-4px_rgba(11,43,28,0.7)] transition-colors duration-500"
             style={{ background: active ? step.tone : "var(--dot-idle)" }}
@@ -228,7 +231,7 @@ function StepCard({
           {/* Tavsif faqat faol qadamda ochiladi */}
           <AnimatePresence initial={false}>
             {active && (
-              <motion.p
+              <m.p
                 key="desc"
                 initial={{ height: 0, opacity: 0 }}
                 animate={{ height: "auto", opacity: 1 }}
@@ -237,7 +240,7 @@ function StepCard({
                 className="overflow-hidden text-[12.5px] leading-[1.6] text-body sm:text-[13.5px]"
               >
                 <span className="mt-1.5 block">{text.text}</span>
-              </motion.p>
+              </m.p>
             )}
           </AnimatePresence>
         </div>
@@ -249,7 +252,7 @@ function StepCard({
         className="pointer-events-none absolute inset-x-3 bottom-[6px] z-[1] h-[3px] overflow-hidden rounded-pill bg-line/70"
         style={{ opacity: active ? 1 : 0 }}
       >
-        <motion.span
+        <m.span
           key={`${index}-${active}-${playing}`}
           className="block h-full w-full origin-left rounded-pill"
           style={{ background: `linear-gradient(90deg, ${step.tone}66, ${step.tone})` }}
@@ -262,13 +265,15 @@ function StepCard({
           }
         />
       </span>
-    </motion.button>
+    </m.button>
   );
 }
 
 /* ===== Telefon mockupi ===== */
 
 function PhoneFrame({ index }: { index: number }) {
+  /* Boʻlim ekrandan tashqarida boʻlsa — bezak animatsiyalari toʻxtaydi */
+  const offscreen = !useSectionActive();
   const reduce = useReducedMotion();
   const Screen = STEPS[index].screen;
 
@@ -302,16 +307,16 @@ function PhoneFrame({ index }: { index: number }) {
       onMouseLeave={reduce ? undefined : onLeave}
     >
       {/* Telefon ortidagi nur */}
-      <motion.div
+      <m.div
         aria-hidden
         className="decor-glow pointer-events-none absolute inset-[6%] rounded-[60px] bg-[radial-gradient(50%_50%_at_50%_50%,rgba(79,209,137,0.55),rgba(79,209,137,0)_70%)] blur-2xl"
-        animate={reduce ? undefined : { opacity: [0.6, 1, 0.6], scale: [0.96, 1.06, 0.96] }}
+        animate={reduce || offscreen ? undefined : { opacity: [0.6, 1, 0.6], scale: [0.96, 1.06, 0.96] }}
         transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
       />
 
-      <motion.div
+      <m.div
         style={{ rotateX: rx, rotateY: ry, transformStyle: "preserve-3d" }}
-        animate={reduce ? undefined : { y: [0, -10, 0] }}
+        animate={reduce || offscreen ? undefined : { y: [0, -10, 0] }}
         transition={{ duration: 7.5, repeat: Infinity, ease: "easeInOut" }}
         className="relative"
       >
@@ -358,7 +363,7 @@ function PhoneFrame({ index }: { index: number }) {
               {/* Almashuvchi ekran */}
               <div className="relative z-[1] h-[calc(100%-92px)] px-3.5 pt-2.5">
                 <AnimatePresence mode="wait">
-                  <motion.div
+                  <m.div
                     key={index}
                     initial={{ opacity: 0, x: 26, filter: "blur(6px)" }}
                     animate={{ opacity: 1, x: 0, filter: "blur(0px)" }}
@@ -367,7 +372,7 @@ function PhoneFrame({ index }: { index: number }) {
                     className="h-full"
                   >
                     <Screen />
-                  </motion.div>
+                  </m.div>
                 </AnimatePresence>
               </div>
 
@@ -396,7 +401,7 @@ function PhoneFrame({ index }: { index: number }) {
               </div>
 
               {/* Shishadagi yaltiroq */}
-              <motion.span
+              <m.span
                 aria-hidden
                 style={{ opacity: glare }}
                 className="pointer-events-none absolute -inset-y-10 left-[-30%] z-[4] w-[52%] rotate-[18deg] bg-[linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,0.85),rgba(255,255,255,0))]"
@@ -409,7 +414,7 @@ function PhoneFrame({ index }: { index: number }) {
         <span aria-hidden className="absolute -left-[3px] top-[22%] h-9 w-[3px] rounded-pill bg-[color:var(--phone-side)]" />
         <span aria-hidden className="absolute -left-[3px] top-[33%] h-14 w-[3px] rounded-pill bg-[color:var(--phone-side)]" />
         <span aria-hidden className="absolute -right-[3px] top-[26%] h-16 w-[3px] rounded-pill bg-[color:var(--phone-side)]" />
-      </motion.div>
+      </m.div>
     </div>
   );
 }
@@ -417,6 +422,8 @@ function PhoneFrame({ index }: { index: number }) {
 /* ===== Boʻlim ===== */
 
 export default function HowItWorks() {
+  /* Boʻlim ekrandan tashqarida boʻlsa — bezak animatsiyalari toʻxtaydi */
+  const offscreen = !useSectionActive();
   const t = useT();
   const reduce = useReducedMotion();
   const ref = useRef<HTMLElement>(null);
@@ -448,22 +455,22 @@ export default function HowItWorks() {
         aria-hidden
         className="decor-glow pointer-events-none absolute -inset-x-[10%] bottom-[6%] top-[8%] bg-[radial-gradient(56%_52%_at_56%_44%,rgba(79,209,137,0.28),rgba(79,209,137,0)_72%)]"
       />
-      <motion.div
+      <m.div
         aria-hidden
         className="decor-glow pointer-events-none absolute -right-[10%] top-[14%] h-[520px] w-[520px] rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(79,209,137,0.44),rgba(79,209,137,0)_70%)] blur-2xl"
-        animate={reduce ? undefined : { x: [0, -34, 0], y: [0, 26, 0], scale: [1, 1.08, 1] }}
+        animate={reduce || offscreen ? undefined : { x: [0, -34, 0], y: [0, 26, 0], scale: [1, 1.08, 1] }}
         transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
       />
-      <motion.div
+      <m.div
         aria-hidden
         className="decor-glow pointer-events-none absolute -left-[12%] top-[8%] h-[460px] w-[460px] rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(31,182,232,0.28),rgba(31,182,232,0)_70%)] blur-2xl"
-        animate={reduce ? undefined : { x: [0, 30, 0], y: [0, -22, 0], scale: [1, 1.1, 1] }}
+        animate={reduce || offscreen ? undefined : { x: [0, 30, 0], y: [0, -22, 0], scale: [1, 1.1, 1] }}
         transition={{ duration: 21, repeat: Infinity, ease: "easeInOut", delay: 1.2 }}
       />
-      <motion.div
+      <m.div
         aria-hidden
         className="decor-glow pointer-events-none absolute bottom-[-10%] left-[22%] h-[420px] w-[620px] rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(44,193,118,0.32),rgba(44,193,118,0)_72%)] blur-2xl"
-        animate={reduce ? undefined : { x: [0, -26, 0], scale: [1, 1.06, 1] }}
+        animate={reduce || offscreen ? undefined : { x: [0, -26, 0], scale: [1, 1.06, 1] }}
         transition={{ duration: 23, repeat: Infinity, ease: "easeInOut", delay: 0.6 }}
       />
 
@@ -492,7 +499,7 @@ export default function HowItWorks() {
       <div className="relative z-[2] mx-auto max-w-[1240px] px-5 sm:px-8">
         {/* ===== Sarlavha ===== */}
         <div className="relative mx-auto max-w-[900px] text-center">
-          <motion.span
+          <m.span
             initial={{ opacity: 0, y: 16, scale: 0.94 }}
             whileInView={{ opacity: 1, y: 0, scale: 1 }}
             viewport={{ once: true, amount: 0.6 }}
@@ -501,16 +508,16 @@ export default function HowItWorks() {
           >
             <Image src="/cuocces.png" alt="" width={19} height={20} className="h-[19px] w-[18px]" />
             {t.howitworks.badge}
-          </motion.span>
+          </m.span>
 
           <div className="relative mt-5">
-            <motion.div
+            <m.div
               aria-hidden
               className="hero-glow pointer-events-none absolute left-1/2 top-1/2 -z-10 h-[190px] w-[560px] max-w-[112%] -translate-x-1/2 -translate-y-1/2 rounded-full"
-              animate={reduce ? undefined : { opacity: [0.65, 1, 0.65], scale: [1, 1.08, 1] }}
+              animate={reduce || offscreen ? undefined : { opacity: [0.65, 1, 0.65], scale: [1, 1.08, 1] }}
               transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
             />
-            <motion.h2
+            <m.h2
               initial={{ opacity: 0, y: 26, filter: "blur(8px)" }}
               whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
               viewport={{ once: true, amount: 0.6 }}
@@ -518,10 +525,10 @@ export default function HowItWorks() {
               className="font-display text-[26px] font-extrabold leading-[1.2] tracking-[-0.01em] text-ink sm:text-[34px] lg:text-[40px]"
             >
               {t.howitworks.title}
-            </motion.h2>
+            </m.h2>
           </div>
 
-          <motion.p
+          <m.p
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.6 }}
@@ -531,7 +538,7 @@ export default function HowItWorks() {
             {t.howitworks.leadStart}
             <span className="font-semibold text-ink">{t.howitworks.leadBold}</span>
             {t.howitworks.leadEnd}
-          </motion.p>
+          </m.p>
         </div>
 
         {/* ===== Telefon + qadamlar ===== */}
@@ -540,7 +547,7 @@ export default function HowItWorks() {
           onMouseEnter={() => setPaused(true)}
           onMouseLeave={() => setPaused(false)}
         >
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 40, scale: 0.94 }}
             whileInView={{ opacity: 1, y: 0, scale: 1 }}
             viewport={{ once: true, amount: 0.3 }}
@@ -565,9 +572,9 @@ export default function HowItWorks() {
                 />
               ))}
             </div>
-          </motion.div>
+          </m.div>
 
-          <motion.div
+          <m.div
             variants={listVariants}
             initial="hidden"
             whileInView="visible"
@@ -585,18 +592,18 @@ export default function HowItWorks() {
                 onSelect={() => select(i)}
               />
             ))}
-          </motion.div>
+          </m.div>
         </div>
 
         {/* ===== CTA ===== */}
-        <motion.div
+        <m.div
           initial={{ opacity: 0, y: 22 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.5 }}
           transition={{ duration: 0.6, delay: 0.1 }}
           className="mt-12 flex flex-col items-center gap-3 sm:mt-16"
         >
-          <motion.a
+          <m.a
             href="#"
             whileHover={reduce ? undefined : { scale: 1.05, y: -3 }}
             whileTap={reduce ? undefined : { scale: 0.97 }}
@@ -609,10 +616,10 @@ export default function HowItWorks() {
               className="pointer-events-none absolute -inset-y-6 -left-1/2 w-1/3 -translate-x-full rotate-[18deg] bg-[linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,0.8),rgba(255,255,255,0))] transition-transform duration-[900ms] ease-out group-hover:translate-x-[520%]"
             />
             <span className="relative">{t.howitworks.cta}</span>
-            <motion.span
+            <m.span
               aria-hidden
               className="relative grid h-[26px] w-[26px] place-items-center rounded-full bg-white/70 shadow-[inset_0_1px_0_rgba(255,255,255,0.9)]"
-              animate={reduce ? undefined : { x: [0, 3, 0] }}
+              animate={reduce || offscreen ? undefined : { x: [0, 3, 0] }}
               transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
             >
               <svg viewBox="0 0 24 24" className="h-[14px] w-[14px]" fill="none">
@@ -624,13 +631,13 @@ export default function HowItWorks() {
                   strokeLinejoin="round"
                 />
               </svg>
-            </motion.span>
-          </motion.a>
+            </m.span>
+          </m.a>
 
           <p className="text-[12.5px] font-medium text-mute sm:text-[13.5px]">
             {t.howitworks.ctaNote}
           </p>
-        </motion.div>
+        </m.div>
       </div>
     </section>
   );

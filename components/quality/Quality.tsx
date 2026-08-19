@@ -2,7 +2,7 @@
 
 import Image, { type StaticImageData } from "next/image";
 import {
-  motion,
+  m,
   useReducedMotion,
   type Variants,
 } from "framer-motion";
@@ -15,6 +15,7 @@ import iconScope from "@/assets/quality/q-3-malaka.png";
 import iconSanitary from "@/assets/quality/q-4-sanitariya.png";
 import iconCourtesy from "@/assets/quality/q-5-muomala.png";
 import iconApp from "@/assets/quality/q-6-ilova.png";
+import { useSectionActive } from "@/components/perf/SectionShell";
 
 /** Qoidalar matni lugʻatdan (t.quality.rules) shu tartibda olinadi */
 const RULE_ICONS: StaticImageData[] = [
@@ -51,6 +52,8 @@ const ruleVariants: Variants = {
 };
 
 export default function Quality() {
+  /* Boʻlim ekrandan tashqarida boʻlsa — bezak animatsiyalari toʻxtaydi */
+  const offscreen = !useSectionActive();
   const t = useT();
   const reduce = useReducedMotion();
 
@@ -64,16 +67,16 @@ export default function Quality() {
         aria-hidden
         className="decor-glow pointer-events-none absolute -inset-x-[10%] bottom-[6%] top-[8%] bg-[radial-gradient(56%_52%_at_32%_52%,rgba(79,209,137,0.32),rgba(79,209,137,0)_72%)]"
       />
-      <motion.div
+      <m.div
         aria-hidden
         className="decor-glow pointer-events-none absolute left-[2%] top-[26%] h-[520px] w-[520px] rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(44,193,118,0.42),rgba(44,193,118,0)_70%)] blur-2xl"
-        animate={reduce ? undefined : { x: [0, 30, 0], y: [0, -28, 0], scale: [1, 1.09, 1] }}
+        animate={reduce || offscreen ? undefined : { x: [0, 30, 0], y: [0, -28, 0], scale: [1, 1.09, 1] }}
         transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
       />
-      <motion.div
+      <m.div
         aria-hidden
         className="decor-glow pointer-events-none absolute -right-[10%] top-[12%] h-[460px] w-[460px] rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(31,182,232,0.26),rgba(31,182,232,0)_70%)] blur-2xl"
-        animate={reduce ? undefined : { x: [0, -28, 0], y: [0, 26, 0], scale: [1, 1.1, 1] }}
+        animate={reduce || offscreen ? undefined : { x: [0, -28, 0], y: [0, 26, 0], scale: [1, 1.1, 1] }}
         transition={{ duration: 21, repeat: Infinity, ease: "easeInOut", delay: 1.2 }}
       />
       <div
@@ -106,7 +109,7 @@ export default function Quality() {
       <div className="relative z-[2] mx-auto max-w-[1240px] px-5 sm:px-8">
         {/* ===== Sarlavha ===== */}
         <div className="relative mx-auto max-w-[820px] text-center">
-          <motion.span
+          <m.span
             initial={{ opacity: 0, y: 16, scale: 0.94 }}
             whileInView={{ opacity: 1, y: 0, scale: 1 }}
             viewport={{ once: true, amount: 0.6 }}
@@ -115,17 +118,17 @@ export default function Quality() {
           >
             <Image src="/cuocces.png" alt="" width={19} height={20} className="h-[19px] w-[18px]" />
             {t.quality.badge}
-          </motion.span>
+          </m.span>
 
           <div className="relative mt-5">
-            <motion.div
+            <m.div
               aria-hidden
               style={{ x: "-50%", y: "-50%" }}
               className="hero-glow pointer-events-none absolute left-1/2 top-1/2 -z-10 h-[180px] w-[540px] max-w-[112%] rounded-full"
-              animate={reduce ? undefined : { opacity: [0.6, 1, 0.6], scale: [1, 1.07, 1] }}
+              animate={reduce || offscreen ? undefined : { opacity: [0.6, 1, 0.6], scale: [1, 1.07, 1] }}
               transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
             />
-            <motion.h2
+            <m.h2
               initial={{ opacity: 0, y: 26, filter: "blur(8px)" }}
               whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
               viewport={{ once: true, amount: 0.6 }}
@@ -133,10 +136,10 @@ export default function Quality() {
               className="font-display text-[26px] font-extrabold leading-[1.2] tracking-[-0.01em] text-ink sm:text-[34px] lg:text-[40px]"
             >
               {t.quality.title}
-            </motion.h2>
+            </m.h2>
           </div>
 
-          <motion.p
+          <m.p
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.6 }}
@@ -144,12 +147,12 @@ export default function Quality() {
             className="mx-auto mt-4 max-w-[680px] text-[14px] leading-[1.6] text-body sm:text-[15.5px]"
           >
             {t.quality.lead}
-          </motion.p>
+          </m.p>
         </div>
 
         <div className="mt-12 grid items-center gap-10 sm:mt-14 lg:grid-cols-[0.88fr_1.12fr] lg:gap-14">
           {/* ===== Chap ustun — qalqon ===== */}
-          <motion.div
+          <m.div
             initial={{ opacity: 0, scale: 0.85 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true, amount: 0.35 }}
@@ -160,14 +163,14 @@ export default function Quality() {
               {/* Tarqaluvchi halqalar */}
               {!reduce &&
                 [0, 1, 2].map((i) => (
-                  <motion.span
+                  <m.span
                     key={i}
                     aria-hidden
                     /* Tailwind'ning -translate-* klasslari framer'ning inline
                        transform'i bilan toʻqnashadi — markazlash style.x/y orqali */
                     style={{ x: "-50%", y: "-50%" }}
                     className="pointer-events-none absolute left-1/2 top-1/2 h-[62%] w-[62%] rounded-full border-2 border-brand-400"
-                    animate={{ scale: [0.72, 1.42], opacity: [0.5, 0] }}
+                    animate={offscreen ? undefined : { scale: [0.72, 1.42], opacity: [0.5, 0] }}
                     transition={{ duration: 3.6, repeat: Infinity, ease: "easeOut", delay: i * 1.2 }}
                   />
                 ))}
@@ -178,9 +181,9 @@ export default function Quality() {
               />
 
               {/* Qalqon */}
-              <motion.div
+              <m.div
                 className="relative h-full w-full"
-                animate={reduce ? undefined : { y: [0, -12, 0] }}
+                animate={reduce || offscreen ? undefined : { y: [0, -12, 0] }}
                 transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
               >
                 <Image
@@ -192,11 +195,11 @@ export default function Quality() {
                   placeholder="blur"
                   priority={false}
                 />
-              </motion.div>
+              </m.div>
 
               {/* Suzuvchi yorliqlar */}
               {CHIPS.map((chip, i) => (
-                <motion.div
+                <m.div
                   key={i}
                   aria-hidden
                   initial={{ opacity: 0, scale: 0.5 }}
@@ -205,8 +208,8 @@ export default function Quality() {
                   transition={{ type: "spring", stiffness: 240, damping: 15, delay: 0.35 + i * 0.14 }}
                   className={`absolute ${chip.className}`}
                 >
-                  <motion.div
-                    animate={reduce ? undefined : { y: [0, -10, 0] }}
+                  <m.div
+                    animate={reduce || offscreen ? undefined : { y: [0, -10, 0] }}
                     transition={{
                       duration: 4.6,
                       repeat: Infinity,
@@ -222,15 +225,15 @@ export default function Quality() {
                       height={92}
                       className="h-[46px] w-[46px] object-contain sm:h-[52px] sm:w-[52px]"
                     />
-                  </motion.div>
-                </motion.div>
+                  </m.div>
+                </m.div>
               ))}
             </div>
-          </motion.div>
+          </m.div>
 
           {/* ===== Oʻng ustun — qoidalar ===== */}
           <div>
-            <motion.p
+            <m.p
               initial={{ opacity: 0, y: 14 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.6 }}
@@ -238,9 +241,9 @@ export default function Quality() {
               className="font-display text-[16px] font-extrabold text-ink sm:text-[18px]"
             >
               {t.quality.listTitle}
-            </motion.p>
+            </m.p>
 
-            <motion.ul
+            <m.ul
               variants={listVariants}
               initial="hidden"
               whileInView="visible"
@@ -248,7 +251,7 @@ export default function Quality() {
               className="mt-4 flex flex-col gap-3 sm:mt-5 sm:gap-3.5"
             >
               {RULE_ICONS.map((icon, i) => (
-                <motion.li
+                <m.li
                   key={i}
                   variants={ruleVariants}
                   whileHover={reduce ? undefined : { x: -6 }}
@@ -265,13 +268,13 @@ export default function Quality() {
                     className="pointer-events-none absolute inset-0 z-0 rounded-[20px] opacity-0 shadow-[inset_0_0_0_1px_rgba(79,209,137,0.5),0_22px_46px_-24px_rgba(27,164,99,0.6)] transition-opacity duration-500 group-hover:opacity-100"
                   />
 
-                  <motion.div
+                  <m.div
                     whileHover={reduce ? undefined : { scale: 1.08, rotate: -4 }}
                     transition={{ type: "spring", stiffness: 300, damping: 15 }}
                     className="relative z-[1] h-[52px] w-[52px] shrink-0 drop-shadow-[0_8px_16px_rgba(15,64,40,0.16)] sm:h-[58px] sm:w-[58px]"
                   >
                     <Image src={icon} alt="" fill sizes="58px" className="object-contain" placeholder="blur" />
-                  </motion.div>
+                  </m.div>
 
                   <p className="relative z-[1] text-[13.5px] font-medium leading-[1.5] text-ink/85 sm:text-[14.5px]">
                     {t.quality.rules[i]}
@@ -284,14 +287,14 @@ export default function Quality() {
                   >
                     {String(i + 1).padStart(2, "0")}
                   </span>
-                </motion.li>
+                </m.li>
               ))}
-            </motion.ul>
+            </m.ul>
           </div>
         </div>
 
         {/* ===== Ogohlantirish ===== */}
-        <motion.div
+        <m.div
           initial={{ opacity: 0, y: 22, filter: "blur(8px)" }}
           whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
           viewport={{ once: true, amount: 0.5 }}
@@ -302,17 +305,17 @@ export default function Quality() {
             aria-hidden
             className="decor-glow pointer-events-none absolute -left-[6%] -top-[60%] h-[220px] w-[220px] rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(255,198,92,0.35),rgba(255,198,92,0)_70%)] blur-2xl"
           />
-          <motion.div
-            animate={reduce ? undefined : { rotate: [0, -7, 7, -4, 0] }}
+          <m.div
+            animate={reduce || offscreen ? undefined : { rotate: [0, -7, 7, -4, 0] }}
             transition={{ duration: 3, repeat: Infinity, repeatDelay: 2.4, ease: "easeInOut" }}
             className="relative h-[50px] w-[50px] shrink-0 drop-shadow-[0_8px_16px_rgba(120,80,10,0.22)] sm:h-[58px] sm:w-[58px]"
           >
             <Image src={warningIcon} alt="" fill sizes="58px" className="object-contain" placeholder="blur" />
-          </motion.div>
+          </m.div>
           <p className="relative text-[13.5px] font-medium leading-[1.55] text-[color:var(--note-fg)] sm:text-[14.5px]">
             {t.quality.warning}
           </p>
-        </motion.div>
+        </m.div>
       </div>
     </section>
   );

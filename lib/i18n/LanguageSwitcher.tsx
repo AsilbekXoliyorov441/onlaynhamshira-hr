@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, m } from "framer-motion";
 import { LOCALES, LOCALE_META } from "./config";
 import { useLanguage } from "./LanguageProvider";
 
@@ -81,7 +81,7 @@ export default function LanguageSwitcher({
 
       <AnimatePresence>
         {open && (
-          <motion.ul
+          <m.ul
             role="listbox"
             aria-label={t.common.language}
             initial={{ opacity: 0, y: -6, scale: 0.96 }}
@@ -124,7 +124,7 @@ export default function LanguageSwitcher({
                 </li>
               );
             })}
-          </motion.ul>
+          </m.ul>
         )}
       </AnimatePresence>
     </div>

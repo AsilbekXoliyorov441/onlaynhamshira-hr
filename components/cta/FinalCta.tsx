@@ -1,9 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import { motion, useReducedMotion } from "framer-motion";
+import { m, useReducedMotion } from "framer-motion";
 import emblem from "@/assets/cta/cta-emblem.png";
 import { useT } from "@/lib/i18n/LanguageProvider";
+import { useSectionActive } from "@/components/perf/SectionShell";
 
 /* Yakuniy chaqiriq bloki.
    Uslub ataylab vazmin: illyustrativ detallar oʻrniga bitta emblema,
@@ -12,6 +13,8 @@ import { useT } from "@/lib/i18n/LanguageProvider";
 const EASE = [0.22, 0.9, 0.3, 1] as const;
 
 export default function FinalCta() {
+  /* Boʻlim ekrandan tashqarida boʻlsa — bezak animatsiyalari toʻxtaydi */
+  const offscreen = !useSectionActive();
   const t = useT();
   const reduce = useReducedMotion();
 
@@ -25,16 +28,16 @@ export default function FinalCta() {
         aria-hidden
         className="decor-glow pointer-events-none absolute -inset-x-[10%] bottom-[4%] top-[6%] bg-[radial-gradient(56%_52%_at_50%_48%,rgba(27,164,99,0.34),rgba(27,164,99,0)_72%)]"
       />
-      <motion.div
+      <m.div
         aria-hidden
         className="decor-glow pointer-events-none absolute -left-[10%] top-[18%] h-[500px] w-[500px] rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(22,140,86,0.36),rgba(22,140,86,0)_70%)] blur-2xl"
-        animate={reduce ? undefined : { x: [0, 26, 0], y: [0, -18, 0] }}
+        animate={reduce || offscreen ? undefined : { x: [0, 26, 0], y: [0, -18, 0] }}
         transition={{ duration: 26, repeat: Infinity, ease: "easeInOut" }}
       />
-      <motion.div
+      <m.div
         aria-hidden
         className="decor-glow pointer-events-none absolute -right-[10%] bottom-[12%] h-[460px] w-[460px] rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(15,124,170,0.24),rgba(15,124,170,0)_70%)] blur-2xl"
-        animate={reduce ? undefined : { x: [0, -22, 0], y: [0, 18, 0] }}
+        animate={reduce || offscreen ? undefined : { x: [0, -22, 0], y: [0, 18, 0] }}
         transition={{ duration: 30, repeat: Infinity, ease: "easeInOut", delay: 2 }}
       />
 
@@ -45,7 +48,7 @@ export default function FinalCta() {
       />
 
       <div className="relative z-[2] mx-auto max-w-[1240px] px-5 sm:px-8">
-        <motion.div
+        <m.div
           initial={{ opacity: 0, y: 28 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.3 }}
@@ -53,10 +56,10 @@ export default function FinalCta() {
           className="relative mx-auto max-w-[1000px] overflow-hidden rounded-[28px] border border-[color:var(--glass-border)] bg-[image:linear-gradient(165deg,var(--glass-1),var(--glass-2))] px-6 pb-14 pt-14 text-center shadow-[0_40px_84px_-44px_rgba(15,64,40,0.4),inset_0_1px_0_rgba(255,255,255,0.85)] backdrop-blur-[12px] sm:rounded-[34px] sm:px-16 sm:pb-[72px] sm:pt-[72px]"
         >
           {/* Panel ichidagi yumshoq nur — sekin "nafas oladi" */}
-          <motion.div
+          <m.div
             aria-hidden
             className="decor-glow pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(58%_62%_at_50%_18%,rgba(17,98,69,0.2),rgba(17,98,69,0)_70%)]"
-            animate={reduce ? undefined : { opacity: [0.75, 1, 0.75] }}
+            animate={reduce || offscreen ? undefined : { opacity: [0.75, 1, 0.75] }}
             transition={{ duration: 9, repeat: Infinity, ease: "easeInOut" }}
           />
           {/* Yuqori qirradagi ingichka yorugʻlik chizigʻi */}
@@ -66,7 +69,7 @@ export default function FinalCta() {
           />
 
           {/* ===== Emblema ===== */}
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 16, scale: 0.92 }}
             whileInView={{ opacity: 1, y: 0, scale: 1 }}
             viewport={{ once: true, amount: 0.5 }}
@@ -77,9 +80,9 @@ export default function FinalCta() {
               aria-hidden
               className="decor-glow pointer-events-none absolute -inset-10 rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(17,98,69,0.3),rgba(17,98,69,0)_70%)] blur-xl"
             />
-            <motion.div
+            <m.div
               className="relative h-full w-full"
-              animate={reduce ? undefined : { y: [0, -5, 0] }}
+              animate={reduce || offscreen ? undefined : { y: [0, -5, 0] }}
               transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
             >
               <Image
@@ -90,11 +93,11 @@ export default function FinalCta() {
                 className="object-contain drop-shadow-[0_20px_34px_rgba(5,51,36,0.3)]"
                 placeholder="blur"
               />
-            </motion.div>
-          </motion.div>
+            </m.div>
+          </m.div>
 
           {/* ===== Matn ===== */}
-          <motion.h2
+          <m.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.5 }}
@@ -102,9 +105,9 @@ export default function FinalCta() {
             className="mx-auto mt-8 max-w-[820px] font-display text-[26px] font-extrabold leading-[1.2] tracking-[-0.015em] text-ink sm:mt-9 sm:text-[38px] lg:text-[46px]"
           >
             {t.finalCta.title}
-          </motion.h2>
+          </m.h2>
 
-          <motion.div
+          <m.div
             aria-hidden
             initial={{ opacity: 0, scaleX: 0 }}
             whileInView={{ opacity: 1, scaleX: 1 }}
@@ -113,7 +116,7 @@ export default function FinalCta() {
             className="mx-auto mt-7 h-px w-[150px] origin-center bg-[linear-gradient(90deg,rgba(11,90,60,0),rgba(11,90,60,0.75),rgba(11,90,60,0))] sm:mt-7"
           />
 
-          <motion.p
+          <m.p
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.5 }}
@@ -121,9 +124,9 @@ export default function FinalCta() {
             className="mx-auto mt-6 max-w-[740px] text-[15px] leading-[1.65] text-body sm:text-[17px]"
           >
             {t.finalCta.p1}
-          </motion.p>
+          </m.p>
 
-          <motion.p
+          <m.p
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.5 }}
@@ -131,10 +134,10 @@ export default function FinalCta() {
             className="mx-auto mt-3 max-w-[740px] text-[15px] leading-[1.65] text-body sm:text-[17px]"
           >
             {t.finalCta.p2}
-          </motion.p>
+          </m.p>
 
           {/* ===== Tugmalar ===== */}
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 18 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.5 }}
@@ -156,8 +159,8 @@ export default function FinalCta() {
             >
               {t.finalCta.secondary}
             </a>
-          </motion.div>
-        </motion.div>
+          </m.div>
+        </m.div>
       </div>
     </section>
   );

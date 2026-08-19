@@ -73,7 +73,7 @@ function ScreenContent() {
           alt="Hamshira"
           fill
           className="object-cover object-[50%_12%]"
-          sizes="246px"
+          sizes="(min-width: 640px) 180px, 100px"
           priority
         />
         <div className="absolute inset-x-0 bottom-0 h-14 bg-gradient-to-t from-white to-transparent" />
@@ -139,6 +139,7 @@ export default function PhoneMockup() {
             aria-hidden
             width={800}
             height={1024}
+            sizes="(min-width: 640px) 560px, 320px"
             className="pointer-events-none absolute left-0 top-0"
             priority
           />

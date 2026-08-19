@@ -216,6 +216,33 @@
 }
 
 @layer components {
+  /* ---------- Yuklanish ekrani (JS'siz boshqariladi) ----------
+     Loader React hydration'ni kutmaydi: HTML kelishi bilan koʻrinadi va
+     belgilangan vaqtdan soʻng CSS animatsiyasi bilan soʻnadi. Shu sabab
+     tayyor kontent erta ochiladi (LCP/Speed Index yaxshilanadi). */
+  .oh-gate {
+    animation: ohGateOut 400ms cubic-bezier(0.4, 0, 0.2, 1) 700ms both;
+  }
+
+  /* Loader koʻrinib turgan vaqtda sahifa scroll qilinmaydi */
+  html.oh-loading,
+  html.oh-loading body {
+    overflow: hidden;
+  }
+
+  /* ---------- Unumdorlik: ekrandan tashqaridagi boʻlimlar ----------
+     `content-visibility: auto` — ekranga yaqin boʻlmagan boʻlim
+     rasterlanmaydi va uning ichki layout'i hisoblanmaydi. Koʻrinadigan
+     piksel oʻzgarmaydi, faqat brauzer bekorga ish qilmaydi.
+     Har bir boʻlim allaqachon `overflow: hidden` — shu bois `contain`
+     hech narsani qirqib qoʻymaydi. */
+  .section-shell {
+    content-visibility: auto;
+    /* `auto` — bir marta chizilgach haqiqiy balandlik eslab qolinadi,
+       shuning uchun scroll balandligi sakramaydi */
+    contain-intrinsic-size: auto 900px;
+  }
+
   /* ---------- Boʻlim foni va chetlarni yumshatuvchi qatlamlar ---------- */
 
   /* Har bir boʻlimning bazaviy foni */
@@ -480,5 +507,22 @@
     animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
+  }
+}
+
+@keyframes ohGateOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .oh-gate {
+    animation-duration: 1ms;
+    animation-delay: 300ms;
   }
 }

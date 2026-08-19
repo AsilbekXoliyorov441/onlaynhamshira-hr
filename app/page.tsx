@@ -1,19 +1,28 @@
+import dynamic from "next/dynamic";
+import { Suspense } from "react";
+
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import About from "@/components/About";
-import Prefers from "@/components/Prefers";
-import PartnerTimeline from "@/components/partner/PartnerTimeline";
-import ServiceSection from "@/components/service/ServiceSection";
-import Requirements from "@/components/requirements/Requirements";
-import Region from "@/components/region/Region";
-import Quality from "@/components/quality/Quality";
-import Faq from "@/components/faq/Faq";
-import FinalCta from "@/components/cta/FinalCta";
-import Footer from "@/components/footer/Footer";
-import IncomeSplit from "@/components/income/IncomeSplit";
-import HowItWorks from "@/components/howitworks/HowItWorks";
-import OnboardingFlow from "@/components/onboarding/OnboardingFlow";
-import PrepChecklist from "@/components/checklist/PrepChecklist";
+import SectionShell from "@/components/perf/SectionShell";
+
+/* Ekrandan pastdagi boʻlimlar alohida JS-chunk'larga ajratiladi.
+   `ssr` yoqilgan holicha qoladi — HTML server tomonda hosil boʻladi,
+   ya'ni SEO va koʻrinish oʻzgarmaydi. Faqat brauzerdagi hydration
+   bitta ulkan vazifa oʻrniga kichik boʻlaklarga boʻlinadi. */
+const Prefers = dynamic(() => import("@/components/Prefers"));
+const PartnerTimeline = dynamic(() => import("@/components/partner/PartnerTimeline"));
+const Requirements = dynamic(() => import("@/components/requirements/Requirements"));
+const ServiceSection = dynamic(() => import("@/components/service/ServiceSection"));
+const IncomeSplit = dynamic(() => import("@/components/income/IncomeSplit"));
+const HowItWorks = dynamic(() => import("@/components/howitworks/HowItWorks"));
+const OnboardingFlow = dynamic(() => import("@/components/onboarding/OnboardingFlow"));
+const PrepChecklist = dynamic(() => import("@/components/checklist/PrepChecklist"));
+const Region = dynamic(() => import("@/components/region/Region"));
+const Quality = dynamic(() => import("@/components/quality/Quality"));
+const Faq = dynamic(() => import("@/components/faq/Faq"));
+const FinalCta = dynamic(() => import("@/components/cta/FinalCta"));
+const Footer = dynamic(() => import("@/components/footer/Footer"));
 
 export default function Page() {
   return (
@@ -22,21 +31,79 @@ export default function Page() {
         <Navbar />
         <Hero />
       </div>
-      <About />
-      <Prefers />
-      <PartnerTimeline />
-      {/* Demand boʻlimi qoʻshilgach, ServiceSection oʻsha boʻlimdan keyin turadi */}
-      <Requirements />
-      <ServiceSection />
-      <IncomeSplit />
-      <HowItWorks />
-      <OnboardingFlow />
-      <PrepChecklist />
-      <Region />
-      <Quality />
-      <Faq />
-      <FinalCta />
-      <Footer />
+
+      {/* Birinchi ekranga yaqin — kechiktirilmaydi */}
+      <SectionShell defer={false}>
+        <About />
+      </SectionShell>
+
+      {/* Har bir <Suspense> alohida hydration chegarasi — React ular
+          orasida "nafas oladi", uzun bloklovchi vazifalar boʻlinadi. */}
+      <Suspense>
+        <SectionShell minHeight={1100}>
+          <Prefers />
+        </SectionShell>
+      </Suspense>
+      <Suspense>
+        <SectionShell minHeight={1600}>
+          <PartnerTimeline />
+        </SectionShell>
+      </Suspense>
+      <Suspense>
+        <SectionShell minHeight={1200}>
+          <Requirements />
+        </SectionShell>
+      </Suspense>
+      <Suspense>
+        <SectionShell minHeight={1000}>
+          <ServiceSection />
+        </SectionShell>
+      </Suspense>
+      <Suspense>
+        <SectionShell minHeight={1200}>
+          <IncomeSplit />
+        </SectionShell>
+      </Suspense>
+      <Suspense>
+        <SectionShell minHeight={1600}>
+          <HowItWorks />
+        </SectionShell>
+      </Suspense>
+      <Suspense>
+        <SectionShell minHeight={1600}>
+          <OnboardingFlow />
+        </SectionShell>
+      </Suspense>
+      <Suspense>
+        <SectionShell minHeight={1600}>
+          <PrepChecklist />
+        </SectionShell>
+      </Suspense>
+      <Suspense>
+        <SectionShell minHeight={1200}>
+          <Region />
+        </SectionShell>
+      </Suspense>
+      <Suspense>
+        <SectionShell minHeight={1400}>
+          <Quality />
+        </SectionShell>
+      </Suspense>
+      <Suspense>
+        <SectionShell minHeight={1200}>
+          <Faq />
+        </SectionShell>
+      </Suspense>
+      <Suspense>
+        <SectionShell minHeight={800}>
+          <FinalCta />
+        </SectionShell>
+      </Suspense>
+      <Suspense>
+        <SectionShell minHeight={900}>
+          <Footer />
+        </SectionShell>
+      </Suspense>
     </main>
   );
 }
