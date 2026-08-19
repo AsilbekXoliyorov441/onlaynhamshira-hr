@@ -4,6 +4,7 @@ import PageLoadGate from "@/components/loading/PageLoadGate";
 import { LanguageProvider } from "@/lib/i18n/LanguageProvider";
 import SkipLink from "@/lib/i18n/SkipLink";
 import { ThemeProvider } from "@/components/theme/ThemeProvider";
+import MotionProvider from "@/components/perf/MotionProvider";
 import { uz } from "@/lib/i18n/dictionaries/uz";
 import "./globals.css";
 
@@ -33,6 +34,14 @@ export const metadata: Metadata = {
    Hech narsa saqlanmagan boʻlsa standart holat — yorugʻ rejim. */
 const themeBootstrap = `(function(){try{if(localStorage.getItem("theme")==="dark"){document.documentElement.classList.add("dark")}}catch(e){}})();`;
 
+/* Yuklanish ekrani React'ga bogʻlanib qolmasligi kerak: agar u hydration'ni
+   kutsa, sekin tarmoqda tayyor kontent bir necha soniya yopiq turadi va
+   LCP shunga qarab jarima oladi. Shu bois scroll qulfi ham, oʻchish vaqti
+   ham shu kichik inline skript orqali boshqariladi — u HTML kelishi bilan
+   ishlaydi. Loader'ning oʻzi CSS animatsiyasi bilan soʻnadi. */
+const GATE_MS = 1100;
+const gateBootstrap = `(function(){var d=document.documentElement;d.classList.add("oh-loading");setTimeout(function(){d.classList.remove("oh-loading")},${GATE_MS})})();`;
+
 export default function RootLayout({
   children,
 }: {
@@ -45,14 +54,16 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <head>
-        <script dangerouslySetInnerHTML={{ __html: themeBootstrap }} />
+        <script dangerouslySetInnerHTML={{ __html: themeBootstrap + gateBootstrap }} />
       </head>
       <body>
         <ThemeProvider>
           <LanguageProvider>
-            {/* Klaviatura bilan yuruvchilar uchun — kontentga oʻtish havolasi */}
-            <SkipLink />
-            <PageLoadGate>{children}</PageLoadGate>
+            <MotionProvider>
+              {/* Klaviatura bilan yuruvchilar uchun — kontentga oʻtish havolasi */}
+              <SkipLink />
+              <PageLoadGate>{children}</PageLoadGate>
+            </MotionProvider>
           </LanguageProvider>
         </ThemeProvider>
       </body>

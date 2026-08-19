@@ -2,7 +2,7 @@
 
 import { useLayoutEffect, useRef, useState, type ComponentType, type SVGProps } from "react";
 import {
-  motion,
+  m,
   useMotionValueEvent,
   useReducedMotion,
   useScroll,
@@ -183,7 +183,7 @@ export default function PartnerTimeline({ steps = STEPS }: { steps?: TimelineSte
       />
 
       <header className={styles.header}>
-        <motion.h2
+        <m.h2
           className={styles.title}
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -191,8 +191,8 @@ export default function PartnerTimeline({ steps = STEPS }: { steps?: TimelineSte
           transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
         >
           {title} <span className={styles.titleSoft}>({subtitle})</span>
-        </motion.h2>
-        <motion.p
+        </m.h2>
+        <m.p
           className={styles.kicker}
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
@@ -200,18 +200,18 @@ export default function PartnerTimeline({ steps = STEPS }: { steps?: TimelineSte
           transition={{ duration: 0.6, delay: 0.15 }}
         >
           {kicker}
-        </motion.p>
+        </m.p>
       </header>
 
       <div className={styles.timeline}>
         {/* naycha + suyuqlik */}
         <div className={styles.tube} ref={tubeRef} aria-hidden>
-          <motion.div className={styles.liquid} data-complete={allDone} style={{ height: fillHeight }}>
+          <m.div className={styles.liquid} data-complete={allDone} style={{ height: fillHeight }}>
             <span className={styles.surface} />
             {[0, 1, 2, 3, 4, 5].map((i) => (
               <span key={i} className={styles.bubble} data-i={i} />
             ))}
-          </motion.div>
+          </m.div>
         </div>
 
         {steps.map((step, i) => {
@@ -232,7 +232,7 @@ export default function PartnerTimeline({ steps = STEPS }: { steps?: TimelineSte
               </div>
 
               <div className={styles.nodeCell}>
-                <motion.div
+                <m.div
                   className={styles.node}
                   ref={(el) => {
                     nodeRefs.current[i] = el;
@@ -252,8 +252,8 @@ export default function PartnerTimeline({ steps = STEPS }: { steps?: TimelineSte
                   transition={{ duration: 0.5, ease: "easeOut" }}
                 >
                   <span>{i + 1}</span>
-                  {filled && <motion.span className={styles.pulse} data-final={isLast} aria-hidden />}
-                </motion.div>
+                  {filled && <m.span className={styles.pulse} data-final={isLast} aria-hidden />}
+                </m.div>
               </div>
 
               <div className={styles.cell} data-active={step.side === "right"}>
@@ -289,7 +289,7 @@ function Card({
   celebrate?: boolean;
 }) {
   return (
-    <motion.article
+    <m.article
       className={styles.card}
       data-celebrate={celebrate}
       custom={step.side}
@@ -298,7 +298,7 @@ function Card({
       animate={filled ? "visible" : "hidden"}
       whileHover={{ y: -6, transition: { duration: 0.2 } }}
     >
-      <motion.div
+      <m.div
         className={styles.icon}
         data-celebrate={celebrate}
         initial={{ scale: 0.6, opacity: 0, rotate: -8 }}
@@ -306,7 +306,7 @@ function Card({
         transition={{ type: "spring", stiffness: 180, damping: 14, delay: 0.12 }}
       >
         <step.icon className={styles.iconImg} />
-      </motion.div>
+      </m.div>
 
       <div className={styles.body}>
         <h3 className={styles.cardTitle}>
@@ -315,6 +315,6 @@ function Card({
         </h3>
         <p className={styles.cardText}>{text.text}</p>
       </div>
-    </motion.article>
+    </m.article>
   );
 }

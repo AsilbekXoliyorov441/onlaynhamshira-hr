@@ -2,9 +2,10 @@
 
 import Image from "next/image";
 import { useId, useState } from "react";
-import { AnimatePresence, motion, useReducedMotion, type Variants } from "framer-motion";
+import { AnimatePresence, m, useReducedMotion, type Variants } from "framer-motion";
 import faqHero from "@/assets/faq/faq-hero.png";
 import { useT } from "@/lib/i18n/LanguageProvider";
+import { useSectionActive } from "@/components/perf/SectionShell";
 
 type Qa = { q: string; a: string };
 
@@ -45,7 +46,7 @@ function FaqItem({
   const buttonId = `faq-button-${uid}`;
 
   return (
-    <motion.li variants={itemVariants} className="list-none">
+    <m.li variants={itemVariants} className="list-none">
       <div
         data-open={open}
         className="glass-card group relative overflow-hidden rounded-[22px] transition-shadow duration-500 data-[open=true]:shadow-[0_28px_56px_-28px_rgba(27,164,99,0.55),inset_0_1px_0_rgba(255,255,255,0.7)]"
@@ -83,7 +84,7 @@ function FaqItem({
             </span>
 
             {/* Plyus → minus */}
-            <motion.span
+            <m.span
               aria-hidden
               animate={{ rotate: open ? 135 : 0 }}
               transition={{ type: "spring", stiffness: 300, damping: 20 }}
@@ -91,13 +92,13 @@ function FaqItem({
             >
               <span className="absolute h-[2.5px] w-[13px] rounded-full bg-[#12855A] sm:w-[15px]" />
               <span className="absolute h-[13px] w-[2.5px] rounded-full bg-[#12855A] sm:h-[15px]" />
-            </motion.span>
+            </m.span>
           </button>
         </h3>
 
         <AnimatePresence initial={false}>
           {open && (
-            <motion.div
+            <m.div
               id={panelId}
               role="region"
               aria-labelledby={buttonId}
@@ -112,7 +113,7 @@ function FaqItem({
               }
               className="relative z-[1] overflow-hidden"
             >
-              <motion.div
+              <m.div
                 initial={{ y: -8 }}
                 animate={{ y: 0 }}
                 exit={{ y: -8 }}
@@ -121,18 +122,20 @@ function FaqItem({
               >
                 <div className="h-px w-full bg-[linear-gradient(90deg,rgba(79,209,137,0.45),rgba(79,209,137,0))]" />
                 <p className="mt-3.5 text-[13.5px] leading-[1.6] text-body sm:text-[14.5px]">{item.a}</p>
-              </motion.div>
-            </motion.div>
+              </m.div>
+            </m.div>
           )}
         </AnimatePresence>
       </div>
-    </motion.li>
+    </m.li>
   );
 }
 
 /* ===== Boʻlim ===== */
 
 export default function Faq() {
+  /* Boʻlim ekrandan tashqarida boʻlsa — bezak animatsiyalari toʻxtaydi */
+  const offscreen = !useSectionActive();
   const t = useT();
   const reduce = useReducedMotion();
   const [openIndex, setOpenIndex] = useState<number | null>(0);
@@ -147,16 +150,16 @@ export default function Faq() {
         aria-hidden
         className="decor-glow pointer-events-none absolute -inset-x-[10%] bottom-[6%] top-[8%] bg-[radial-gradient(56%_50%_at_50%_42%,rgba(79,209,137,0.3),rgba(79,209,137,0)_72%)]"
       />
-      <motion.div
+      <m.div
         aria-hidden
         className="decor-glow pointer-events-none absolute -left-[12%] top-[20%] h-[500px] w-[500px] rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(44,193,118,0.4),rgba(44,193,118,0)_70%)] blur-2xl"
-        animate={reduce ? undefined : { x: [0, 34, 0], y: [0, -26, 0], scale: [1, 1.08, 1] }}
+        animate={reduce || offscreen ? undefined : { x: [0, 34, 0], y: [0, -26, 0], scale: [1, 1.08, 1] }}
         transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
       />
-      <motion.div
+      <m.div
         aria-hidden
         className="decor-glow pointer-events-none absolute -right-[10%] top-[14%] h-[460px] w-[460px] rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(31,182,232,0.26),rgba(31,182,232,0)_70%)] blur-2xl"
-        animate={reduce ? undefined : { x: [0, -30, 0], y: [0, 24, 0], scale: [1, 1.1, 1] }}
+        animate={reduce || offscreen ? undefined : { x: [0, -30, 0], y: [0, 24, 0], scale: [1, 1.1, 1] }}
         transition={{ duration: 21, repeat: Infinity, ease: "easeInOut", delay: 1.3 }}
       />
       <div
@@ -189,16 +192,16 @@ export default function Faq() {
       <div className="relative z-[2] mx-auto max-w-[980px] px-5 sm:px-8">
         {/* ===== Sarlavha ===== */}
         <div className="relative text-center">
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 26, scale: 0.8 }}
             whileInView={{ opacity: 1, y: 0, scale: 1 }}
             viewport={{ once: true, amount: 0.6 }}
             transition={{ type: "spring", stiffness: 160, damping: 15 }}
             className="mx-auto mb-4 h-[86px] w-[86px] sm:mb-5 sm:h-[100px] sm:w-[100px]"
           >
-            <motion.div
+            <m.div
               className="relative h-full w-full"
-              animate={reduce ? undefined : { y: [0, -8, 0] }}
+              animate={reduce || offscreen ? undefined : { y: [0, -8, 0] }}
               transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
             >
               <Image
@@ -209,10 +212,10 @@ export default function Faq() {
                 className="object-contain drop-shadow-[0_18px_28px_rgba(15,64,40,0.22)]"
                 placeholder="blur"
               />
-            </motion.div>
-          </motion.div>
+            </m.div>
+          </m.div>
 
-          <motion.span
+          <m.span
             initial={{ opacity: 0, y: 16, scale: 0.94 }}
             whileInView={{ opacity: 1, y: 0, scale: 1 }}
             viewport={{ once: true, amount: 0.6 }}
@@ -221,17 +224,17 @@ export default function Faq() {
           >
             <Image src="/cuocces.png" alt="" width={19} height={20} className="h-[19px] w-[18px]" />
             {t.faq.badge}
-          </motion.span>
+          </m.span>
 
           <div className="relative mt-5">
-            <motion.div
+            <m.div
               aria-hidden
               style={{ x: "-50%", y: "-50%" }}
               className="hero-glow pointer-events-none absolute left-1/2 top-1/2 -z-10 h-[170px] w-[520px] max-w-[112%] rounded-full"
-              animate={reduce ? undefined : { opacity: [0.6, 1, 0.6], scale: [1, 1.07, 1] }}
+              animate={reduce || offscreen ? undefined : { opacity: [0.6, 1, 0.6], scale: [1, 1.07, 1] }}
               transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
             />
-            <motion.h2
+            <m.h2
               initial={{ opacity: 0, y: 26, filter: "blur(8px)" }}
               whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
               viewport={{ once: true, amount: 0.6 }}
@@ -239,12 +242,12 @@ export default function Faq() {
               className="font-display text-[26px] font-extrabold leading-[1.2] tracking-[-0.01em] text-ink sm:text-[34px] lg:text-[40px]"
             >
               {t.faq.title}
-            </motion.h2>
+            </m.h2>
           </div>
         </div>
 
         {/* ===== Akkordeon ===== */}
-        <motion.ul
+        <m.ul
           variants={listVariants}
           initial="hidden"
           whileInView="visible"
@@ -261,7 +264,7 @@ export default function Faq() {
               reduce={!!reduce}
             />
           ))}
-        </motion.ul>
+        </m.ul>
       </div>
     </section>
   );

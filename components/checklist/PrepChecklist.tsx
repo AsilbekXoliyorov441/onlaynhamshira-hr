@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useCallback, useMemo, useState, type ComponentType, type SVGProps } from "react";
 import {
   AnimatePresence,
-  motion,
+  m,
   useMotionTemplate,
   useMotionValue,
   useReducedMotion,
@@ -21,6 +21,7 @@ import {
   SmartphoneWifi3D,
   VideoRecord3D,
 } from "./PrepIcons";
+import { useSectionActive } from "@/components/perf/SectionShell";
 
 /*
  * Ariza qoldirishdan oldingi tayyorgarlik roʻyxati.
@@ -97,7 +98,7 @@ function CheckBox({ on }: { on: boolean }) {
   const dark = theme === "dark";
 
   return (
-    <motion.span
+    <m.span
       animate={{
         background: on
           ? "linear-gradient(150deg,#7FE7B4 0%,#2CC176 55%,#12855A 100%)"
@@ -119,7 +120,7 @@ function CheckBox({ on }: { on: boolean }) {
       className="relative grid h-[26px] w-[26px] shrink-0 place-items-center rounded-[9px] border"
     >
       <svg viewBox="0 0 24 24" className="h-[14px] w-[14px]" fill="none">
-        <motion.path
+        <m.path
           d="M5 12.6l4.6 4.6L19 7.4"
           stroke="#fff"
           strokeWidth="3.2"
@@ -134,9 +135,9 @@ function CheckBox({ on }: { on: boolean }) {
       {/* Belgilangan lahzadagi uchqunlar */}
       <AnimatePresence>
         {on && (
-          <motion.span key="spark" className="pointer-events-none absolute inset-0" aria-hidden>
+          <m.span key="spark" className="pointer-events-none absolute inset-0" aria-hidden>
             {[0, 60, 120, 180, 240, 300].map((deg) => (
-              <motion.span
+              <m.span
                 key={deg}
                 className="absolute left-1/2 top-1/2 h-[3px] w-[3px] rounded-full bg-brand-400"
                 initial={{ x: 0, y: 0, opacity: 0.9, scale: 1 }}
@@ -150,10 +151,10 @@ function CheckBox({ on }: { on: boolean }) {
                 transition={{ duration: 0.55, ease: "easeOut" }}
               />
             ))}
-          </motion.span>
+          </m.span>
         )}
       </AnimatePresence>
-    </motion.span>
+    </m.span>
   );
 }
 
@@ -172,6 +173,8 @@ function PrepRow({
   on: boolean;
   onToggle: () => void;
 }) {
+  /* Boʻlim ekrandan tashqarida boʻlsa — bezak animatsiyalari toʻxtaydi */
+  const offscreen = !useSectionActive();
   const reduce = useReducedMotion();
   const Icon = item.icon;
 
@@ -195,7 +198,7 @@ function PrepRow({
   );
 
   return (
-    <motion.button
+    <m.button
       type="button"
       role="checkbox"
       aria-checked={on}
@@ -208,7 +211,7 @@ function PrepRow({
       className="glass-card group relative w-full overflow-hidden rounded-[20px] p-3.5 text-left sm:p-4"
     >
       {/* Kursor yorugʻligi */}
-      <motion.span
+      <m.span
         aria-hidden
         style={{ backgroundImage: spotlight }}
         className="pointer-events-none absolute inset-0 z-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
@@ -221,7 +224,7 @@ function PrepRow({
       />
 
       {/* Belgilangan bandning halqasi */}
-      <motion.span
+      <m.span
         aria-hidden
         animate={{ opacity: on ? 1 : 0 }}
         transition={{ duration: 0.4 }}
@@ -229,7 +232,7 @@ function PrepRow({
       />
 
       {/* Chap chekkadagi holat chizigʻi */}
-      <motion.span
+      <m.span
         aria-hidden
         animate={{ scaleY: on ? 1 : 0 }}
         transition={{ duration: 0.35, ease: [0.22, 0.9, 0.3, 1] }}
@@ -238,40 +241,40 @@ function PrepRow({
 
       <div className="relative z-[1] flex items-center gap-3.5">
         <span className="relative shrink-0">
-          <motion.span
+          <m.span
             aria-hidden
             className="absolute inset-[-6px] rounded-full"
             style={{
               background: `radial-gradient(50% 50% at 50% 50%, ${item.glow}, rgba(255,255,255,0) 70%)`,
             }}
-            animate={on && !reduce ? { opacity: [0.5, 1, 0.5], scale: [0.94, 1.08, 0.94] } : { opacity: 0 }}
+            animate={on && !reduce && !offscreen ? { opacity: [0.5, 1, 0.5], scale: [0.94, 1.08, 0.94] } : { opacity: 0 }}
             transition={{ duration: 4.4, repeat: Infinity, ease: "easeInOut" }}
           />
-          <motion.span
-            animate={on && !reduce ? { y: [0, -3, 0] } : { y: 0 }}
+          <m.span
+            animate={on && !reduce && !offscreen ? { y: [0, -3, 0] } : { y: 0 }}
             transition={{ duration: 3.6, repeat: Infinity, ease: "easeInOut" }}
             className="relative block"
           >
             <Icon className="h-[44px] w-[44px] sm:h-[48px] sm:w-[48px]" />
-          </motion.span>
+          </m.span>
           <span className="absolute -left-1 -top-1 grid h-[17px] w-[17px] place-items-center rounded-full bg-surface/90 font-display text-[9.5px] font-extrabold text-mute shadow-[0_3px_8px_-4px_rgba(11,43,28,0.6)]">
             {index + 1}
           </span>
         </span>
 
         <div className="min-w-0 flex-1">
-          <motion.h3
+          <m.h3
             animate={{ color: on ? headingOn : headingOff }}
             className="font-display text-[14px] font-extrabold leading-[1.3] sm:text-[15px]"
           >
             {text.title}
-          </motion.h3>
+          </m.h3>
           <p className="mt-1 text-[12px] leading-[1.5] text-mute sm:text-[12.5px]">{text.hint}</p>
         </div>
 
         <CheckBox on={on} />
       </div>
-    </motion.button>
+    </m.button>
   );
 }
 
@@ -298,6 +301,8 @@ function ProgressPanel({
   onReset: () => void;
   labels: PanelLabels;
 }) {
+  /* Boʻlim ekrandan tashqarida boʻlsa — bezak animatsiyalari toʻxtaydi */
+  const offscreen = !useSectionActive();
   const { ready } = labels;
   const reduce = useReducedMotion();
   const ratio = count / TOTAL;
@@ -307,7 +312,7 @@ function ProgressPanel({
   return (
     <div className="glass-card relative overflow-hidden rounded-[26px] p-5 sm:p-6 lg:sticky lg:top-24">
       {/* Toʻliq tayyor boʻlgandagi yashil nur */}
-      <motion.span
+      <m.span
         aria-hidden
         animate={{ opacity: full ? 1 : 0 }}
         transition={{ duration: 0.6 }}
@@ -316,10 +321,10 @@ function ProgressPanel({
 
       {/* Halqa */}
       <div className="relative mx-auto aspect-square w-full max-w-[220px]">
-        <motion.div
+        <m.div
           aria-hidden
           className="decor-glow pointer-events-none absolute inset-[10%] rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(79,209,137,0.4),rgba(79,209,137,0)_70%)] blur-2xl"
-          animate={reduce ? undefined : { opacity: [0.6, 1, 0.6], scale: [0.95, 1.06, 0.95] }}
+          animate={reduce || offscreen ? undefined : { opacity: [0.6, 1, 0.6], scale: [0.95, 1.06, 0.95] }}
           transition={{ duration: 6.5, repeat: Infinity, ease: "easeInOut" }}
         />
 
@@ -347,7 +352,7 @@ function ProgressPanel({
             />
           ))}
 
-          <motion.circle
+          <m.circle
             cx="100"
             cy="100"
             r="78"
@@ -366,7 +371,7 @@ function ProgressPanel({
           <div className="text-center">
             <div className="flex items-baseline justify-center font-display text-[40px] font-extrabold leading-none tracking-[-0.02em] text-ink sm:text-[46px]">
               <AnimatePresence mode="popLayout" initial={false}>
-                <motion.span
+                <m.span
                   key={count}
                   initial={{ y: 14, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
@@ -374,7 +379,7 @@ function ProgressPanel({
                   transition={{ duration: 0.28, ease: [0.22, 0.9, 0.3, 1] }}
                 >
                   {count}
-                </motion.span>
+                </m.span>
               </AnimatePresence>
               <span className="text-mute">/{TOTAL}</span>
             </div>
@@ -388,7 +393,7 @@ function ProgressPanel({
       {/* Holat matni */}
       <div className="relative mt-4 min-h-[70px] text-center">
         <AnimatePresence mode="wait" initial={false}>
-          <motion.div
+          <m.div
             key={full ? "done" : "progress"}
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
@@ -414,13 +419,13 @@ function ProgressPanel({
                 </p>
               </>
             )}
-          </motion.div>
+          </m.div>
         </AnimatePresence>
       </div>
 
       {/* Boshqaruv tugmalari */}
       <div className="relative mt-4 flex items-center justify-center gap-2">
-        <motion.button
+        <m.button
           type="button"
           onClick={onAll}
           whileHover={reduce ? undefined : { scale: 1.04 }}
@@ -428,8 +433,8 @@ function ProgressPanel({
           className="btn-secondary rounded-pill px-4 py-2 font-display text-[12.5px] font-bold text-ink"
         >
           {labels.checkAll}
-        </motion.button>
-        <motion.button
+        </m.button>
+        <m.button
           type="button"
           onClick={onReset}
           whileHover={reduce ? undefined : { scale: 1.04 }}
@@ -437,15 +442,15 @@ function ProgressPanel({
           className="rounded-pill border border-line bg-surface/60 px-4 py-2 font-display text-[12.5px] font-bold text-mute transition-colors hover:text-ink"
         >
           {labels.reset}
-        </motion.button>
+        </m.button>
       </div>
 
       {/* Toʻliq tayyor boʻlgandagi konfetti */}
       <AnimatePresence>
         {full && !reduce && (
-          <motion.span key="confetti" aria-hidden className="pointer-events-none absolute inset-0">
+          <m.span key="confetti" aria-hidden className="pointer-events-none absolute inset-0">
             {Array.from({ length: 14 }).map((_, i) => (
-              <motion.span
+              <m.span
                 key={i}
                 className="absolute top-[18%] h-[6px] w-[6px] rounded-[2px]"
                 style={{
@@ -457,7 +462,7 @@ function ProgressPanel({
                 transition={{ duration: 1.8, delay: i * 0.05, ease: "easeIn" }}
               />
             ))}
-          </motion.span>
+          </m.span>
         )}
       </AnimatePresence>
     </div>
@@ -467,6 +472,8 @@ function ProgressPanel({
 /* ===== Boʻlim ===== */
 
 export default function PrepChecklist() {
+  /* Boʻlim ekrandan tashqarida boʻlsa — bezak animatsiyalari toʻxtaydi */
+  const offscreen = !useSectionActive();
   const t = useT();
   const reduce = useReducedMotion();
   const [checked, setChecked] = useState<boolean[]>(() => ITEMS.map(() => false));
@@ -490,22 +497,22 @@ export default function PrepChecklist() {
         aria-hidden
         className="decor-glow pointer-events-none absolute -inset-x-[10%] bottom-[8%] top-[8%] bg-[radial-gradient(56%_52%_at_38%_44%,rgba(79,209,137,0.26),rgba(79,209,137,0)_72%)]"
       />
-      <motion.div
+      <m.div
         aria-hidden
         className="decor-glow pointer-events-none absolute -left-[10%] top-[10%] h-[500px] w-[500px] rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(79,209,137,0.44),rgba(79,209,137,0)_70%)] blur-2xl"
-        animate={reduce ? undefined : { x: [0, 32, 0], y: [0, -20, 0], scale: [1, 1.08, 1] }}
+        animate={reduce || offscreen ? undefined : { x: [0, 32, 0], y: [0, -20, 0], scale: [1, 1.08, 1] }}
         transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
       />
-      <motion.div
+      <m.div
         aria-hidden
         className="decor-glow pointer-events-none absolute -right-[12%] top-[18%] h-[470px] w-[470px] rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(169,146,236,0.24),rgba(169,146,236,0)_70%)] blur-2xl"
-        animate={reduce ? undefined : { x: [0, -26, 0], y: [0, 26, 0], scale: [1, 1.1, 1] }}
+        animate={reduce || offscreen ? undefined : { x: [0, -26, 0], y: [0, 26, 0], scale: [1, 1.1, 1] }}
         transition={{ duration: 21, repeat: Infinity, ease: "easeInOut", delay: 1.1 }}
       />
-      <motion.div
+      <m.div
         aria-hidden
         className="decor-glow pointer-events-none absolute bottom-[-8%] left-[28%] h-[420px] w-[580px] rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(44,193,118,0.30),rgba(44,193,118,0)_72%)] blur-2xl"
-        animate={reduce ? undefined : { x: [0, 26, 0], scale: [1, 1.06, 1] }}
+        animate={reduce || offscreen ? undefined : { x: [0, 26, 0], scale: [1, 1.06, 1] }}
         transition={{ duration: 23, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
       />
 
@@ -534,7 +541,7 @@ export default function PrepChecklist() {
       <div className="relative z-[2] mx-auto max-w-[1240px] px-5 sm:px-8">
         {/* ===== Sarlavha ===== */}
         <div className="relative mx-auto max-w-[900px] text-center">
-          <motion.span
+          <m.span
             initial={{ opacity: 0, y: 16, scale: 0.94 }}
             whileInView={{ opacity: 1, y: 0, scale: 1 }}
             viewport={{ once: true, amount: 0.6 }}
@@ -543,16 +550,16 @@ export default function PrepChecklist() {
           >
             <Image src="/cuocces.png" alt="" width={19} height={20} className="h-[19px] w-[18px]" />
             {t.checklist.badge}
-          </motion.span>
+          </m.span>
 
           <div className="relative mt-5">
-            <motion.div
+            <m.div
               aria-hidden
               className="hero-glow pointer-events-none absolute left-1/2 top-1/2 -z-10 h-[190px] w-[560px] max-w-[112%] -translate-x-1/2 -translate-y-1/2 rounded-full"
-              animate={reduce ? undefined : { opacity: [0.65, 1, 0.65], scale: [1, 1.08, 1] }}
+              animate={reduce || offscreen ? undefined : { opacity: [0.65, 1, 0.65], scale: [1, 1.08, 1] }}
               transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
             />
-            <motion.h2
+            <m.h2
               initial={{ opacity: 0, y: 26, filter: "blur(8px)" }}
               whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
               viewport={{ once: true, amount: 0.6 }}
@@ -560,10 +567,10 @@ export default function PrepChecklist() {
               className="font-display text-[26px] font-extrabold leading-[1.2] tracking-[-0.01em] text-ink sm:text-[34px] lg:text-[40px]"
             >
               {t.checklist.title}
-            </motion.h2>
+            </m.h2>
           </div>
 
-          <motion.p
+          <m.p
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.6 }}
@@ -571,21 +578,21 @@ export default function PrepChecklist() {
             className="mx-auto mt-4 max-w-[640px] text-[14px] leading-[1.65] text-body sm:text-[15.5px]"
           >
             {t.checklist.desc}
-          </motion.p>
+          </m.p>
         </div>
 
         {/* ===== Panel + roʻyxat ===== */}
         <div className="mt-10 grid gap-8 sm:mt-14 lg:grid-cols-[minmax(0,36%)_minmax(0,64%)] lg:gap-10">
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 34, scale: 0.95 }}
             whileInView={{ opacity: 1, y: 0, scale: 1 }}
             viewport={{ once: true, amount: 0.3 }}
             transition={{ type: "spring", stiffness: 90, damping: 18 }}
           >
             <ProgressPanel count={count} onAll={checkAll} onReset={reset} labels={t.checklist} />
-          </motion.div>
+          </m.div>
 
-          <motion.div
+          <m.div
             variants={listVariants}
             initial="hidden"
             whileInView="visible"
@@ -602,11 +609,11 @@ export default function PrepChecklist() {
                 onToggle={() => toggle(i)}
               />
             ))}
-          </motion.div>
+          </m.div>
         </div>
 
         {/* ===== Izoh ===== */}
-        <motion.div
+        <m.div
           initial={{ opacity: 0, y: 18 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.6 }}
@@ -625,10 +632,10 @@ export default function PrepChecklist() {
           <p className="text-[13px] leading-[1.6] text-body sm:text-[14px]">
             {t.checklist.note}
           </p>
-        </motion.div>
+        </m.div>
 
         {/* ===== Chaqiriq tugmasi ===== */}
-        <motion.div
+        <m.div
           initial={{ opacity: 0, y: 18 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.6 }}
@@ -641,7 +648,7 @@ export default function PrepChecklist() {
           >
             {t.checklist.cta}
           </a>
-        </motion.div>
+        </m.div>
       </div>
     </section>
   );
