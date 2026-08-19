@@ -11,7 +11,8 @@
     "icons:region": "node scripts/gen-region-assets.mjs",
     "icons:quality": "node scripts/gen-quality-assets.mjs",
     "icons:faq": "node scripts/gen-faq-assets.mjs",
-    "icons:cta": "node scripts/gen-cta-assets.mjs"
+    "icons:cta": "node scripts/gen-cta-assets.mjs",
+    "icons:svg": "node scripts/gen-icon-svgs.mjs"
   },
   "dependencies": {
     "framer-motion": "^13.1.0",

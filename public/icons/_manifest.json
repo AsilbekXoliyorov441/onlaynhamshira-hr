@@ -1,0 +1,138 @@
+{
+  "components/service/ServiceIcons.source.tsx": [
+    {
+      "name": "Bandage3D",
+      "file": "service-bandage-3d.svg"
+    },
+    {
+      "name": "BloodPressure3D",
+      "file": "service-blood-pressure-3d.svg"
+    },
+    {
+      "name": "CheckBadge3D",
+      "file": "service-check-badge-3d.svg"
+    },
+    {
+      "name": "HeartCare3D",
+      "file": "service-heart-care-3d.svg"
+    },
+    {
+      "name": "IvDrip3D",
+      "file": "service-iv-drip-3d.svg"
+    },
+    {
+      "name": "Massage3D",
+      "file": "service-massage-3d.svg"
+    },
+    {
+      "name": "MedicalBag3D",
+      "file": "service-medical-bag-3d.svg"
+    },
+    {
+      "name": "Microscope3D",
+      "file": "service-microscope-3d.svg"
+    },
+    {
+      "name": "Prescription3D",
+      "file": "service-prescription-3d.svg"
+    },
+    {
+      "name": "SyringeVial3D",
+      "file": "service-syringe-vial-3d.svg"
+    }
+  ],
+  "components/howitworks/HowItWorksIcons.source.tsx": [
+    {
+      "name": "AcceptDecline3D",
+      "file": "how-accept-decline-3d.svg"
+    },
+    {
+      "name": "BellNew3D",
+      "file": "how-bell-new-3d.svg"
+    },
+    {
+      "name": "CompleteBadge3D",
+      "file": "how-complete-badge-3d.svg"
+    },
+    {
+      "name": "HistoryList3D",
+      "file": "how-history-list-3d.svg"
+    },
+    {
+      "name": "MapPinCare3D",
+      "file": "how-map-pin-care-3d.svg"
+    },
+    {
+      "name": "PhoneCall3D",
+      "file": "how-phone-call-3d.svg"
+    },
+    {
+      "name": "ProfileStar3D",
+      "file": "how-profile-star-3d.svg"
+    },
+    {
+      "name": "StartService3D",
+      "file": "how-start-service-3d.svg"
+    }
+  ],
+  "components/checklist/PrepIcons.source.tsx": [
+    {
+      "name": "Certificate3D",
+      "file": "prep-certificate-3d.svg"
+    },
+    {
+      "name": "Diploma3D",
+      "file": "prep-diploma-3d.svg"
+    },
+    {
+      "name": "Experience3D",
+      "file": "prep-experience-3d.svg"
+    },
+    {
+      "name": "IdCard3D",
+      "file": "prep-id-card-3d.svg"
+    },
+    {
+      "name": "PhotoPortrait3D",
+      "file": "prep-photo-portrait-3d.svg"
+    },
+    {
+      "name": "SmartphoneWifi3D",
+      "file": "prep-smartphone-wifi-3d.svg"
+    },
+    {
+      "name": "VideoRecord3D",
+      "file": "prep-video-record-3d.svg"
+    }
+  ],
+  "components/partner/PartnerIcons.source.tsx": [
+    {
+      "name": "AppLessonsIcon",
+      "file": "partner-app-lessons-icon.svg"
+    },
+    {
+      "name": "EducationIcon",
+      "file": "partner-education-icon.svg"
+    },
+    {
+      "name": "IntroIcon",
+      "file": "partner-intro-icon.svg"
+    },
+    {
+      "name": "MotivationIcon",
+      "file": "partner-motivation-icon.svg"
+    },
+    {
+      "name": "OrderIcon",
+      "file": "partner-order-icon.svg"
+    },
+    {
+      "name": "QualificationIcon",
+      "file": "partner-qualification-icon.svg"
+    },
+    {
+      "name": "RegisterIcon",
+      "file": "partner-register-icon.svg"
+    }
+  ]
+}
