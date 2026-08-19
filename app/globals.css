@@ -255,6 +255,29 @@
     animation: none !important;
   }
 
+  /* Kuchsiz qurilmada chizish (raster) yuki ham kamaytiriladi.
+     Oʻlchov: scroll paytidagi rasterning ~28% i aynan katta blur
+     radiuslariga ketadi, yana ~13% i ortiqcha `will-change` qatlamlariga.
+     Radius kichraytiriladi (butunlay olib tashlanmaydi) — bezak nurlari
+     shu holicha yumshoq koʻrinadi, lekin ancha arzon chiziladi. */
+  .low-power .blur-3xl {
+    --tw-blur: blur(18px);
+  }
+  .low-power .blur-2xl {
+    --tw-blur: blur(14px);
+  }
+  .low-power .blur-xl {
+    --tw-blur: blur(10px);
+  }
+  .low-power .hero-glow {
+    filter: blur(12px);
+  }
+  /* Ortiqcha kompozitor qatlamlari qurilma xotirasini band qiladi va
+     qatlam daraxti har kadrda qayta hisoblanadi */
+  .low-power * {
+    will-change: auto !important;
+  }
+
   /* ---------- Ekrandan tashqaridagi ambient animatsiyalar ----------
      Sahifadagi cheksiz bezak halqalari boʻlim koʻrinmayotganda ham har
      kadrda ishlaydi. Oʻlchov: aynan shular scroll paytidagi Style/Layout
