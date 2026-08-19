@@ -17,7 +17,7 @@ import PrepChecklist from "@/components/checklist/PrepChecklist";
 
 export default function Page() {
   return (
-    <main className="relative min-h-screen w-full overflow-hidden bg-[#fbfdfb]">
+    <main id="asosiy" className="relative min-h-screen w-full overflow-hidden bg-page">
       <div className="hero-canvas relative">
         <Navbar />
         <Hero />

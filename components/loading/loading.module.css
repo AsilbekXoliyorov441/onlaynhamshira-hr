@@ -4,12 +4,19 @@
   --oh-blue: #1fb6e8;
   --oh-ink: #152546;
   --oh-ink-soft: #6b7a96;
+  --oh-bg: #ffffff;
+  --oh-track: #eaf0f6;
+  --oh-disc: #ffffff;
+  --oh-blob-1: #fbe7d2;
+  --oh-blob-2: #d7ebf9;
+  --oh-blob-3: #e7e1f6;
+  --oh-blob-4: #d6f2e4;
 
   position: relative;
   display: grid;
   place-items: center;
   overflow: hidden;
-  background: #ffffff;
+  background: var(--oh-bg);
   color: var(--oh-ink);
   font-family: var(--font-sans, "Poppins", "Montserrat", system-ui, -apple-system, sans-serif);
 }
@@ -30,25 +37,25 @@
 }
 
 .blob1 {
-  background: #fbe7d2;
+  background: var(--oh-blob-1);
   top: -18vmax;
   left: -16vmax;
   border-radius: 44% 56% 60% 40% / 50% 45% 55% 50%;
 }
 .blob2 {
-  background: #d7ebf9;
+  background: var(--oh-blob-2);
   top: -20vmax;
   right: -18vmax;
   border-radius: 58% 42% 45% 55% / 48% 58% 42% 52%;
 }
 .blob3 {
-  background: #e7e1f6;
+  background: var(--oh-blob-3);
   bottom: -20vmax;
   left: -18vmax;
   border-radius: 55% 45% 52% 48% / 58% 42% 58% 42%;
 }
 .blob4 {
-  background: #d6f2e4;
+  background: var(--oh-blob-4);
   bottom: -18vmax;
   right: -16vmax;
   border-radius: 44% 56% 60% 40% / 50% 45% 55% 50%;
@@ -119,7 +126,7 @@
 .track {
   height: 8px;
   border-radius: 99px;
-  background: #eaf0f6;
+  background: var(--oh-track);
   overflow: hidden;
 }
 
@@ -155,4 +162,16 @@
   .ring {
     transition: none;
   }
+}
+/* Toʻq rejim — yuklanish ekrani ham sahifa bilan bir xil kayfiyatda */
+:global(.dark) .root {
+  --oh-ink: #e9f6ef;
+  --oh-ink-soft: #8fa79c;
+  --oh-bg: #08130f;
+  --oh-track: #223328;
+  --oh-disc: #10201a;
+  --oh-blob-1: #2a2015;
+  --oh-blob-2: #12293a;
+  --oh-blob-3: #221d33;
+  --oh-blob-4: #102b20;
 }

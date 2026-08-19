@@ -6,6 +6,7 @@ import {
   useReducedMotion,
   type Variants,
 } from "framer-motion";
+import { useT } from "@/lib/i18n/LanguageProvider";
 import heroShield from "@/assets/quality/quality-hero.png";
 import warningIcon from "@/assets/quality/quality-warning.png";
 import iconEthics from "@/assets/quality/q-1-etika.png";
@@ -15,15 +16,14 @@ import iconSanitary from "@/assets/quality/q-4-sanitariya.png";
 import iconCourtesy from "@/assets/quality/q-5-muomala.png";
 import iconApp from "@/assets/quality/q-6-ilova.png";
 
-type Rule = { text: string; icon: StaticImageData };
-
-const RULES: Rule[] = [
-  { text: "tibbiy etika qoidalariga rioya qilishi;", icon: iconEthics },
-  { text: "mijoz maʼlumotlarini sir saqlashi;", icon: iconPrivacy },
-  { text: "faqat oʻz malakasi doirasidagi xizmatlarni bajarishi;", icon: iconScope },
-  { text: "xizmat vaqtida sanitariya va xavfsizlik talablariga amal qilishi;", icon: iconSanitary },
-  { text: "mijoz bilan hushmuomalada boʻlishi;", icon: iconCourtesy },
-  { text: "buyurtma holatini ilovada toʻgʻri yuritishi kerak.", icon: iconApp },
+/** Qoidalar matni lugʻatdan (t.quality.rules) shu tartibda olinadi */
+const RULE_ICONS: StaticImageData[] = [
+  iconEthics,
+  iconPrivacy,
+  iconScope,
+  iconSanitary,
+  iconCourtesy,
+  iconApp,
 ];
 
 /** Qalqon atrofida suzuvchi kichik yorliqlar */
@@ -51,56 +51,56 @@ const ruleVariants: Variants = {
 };
 
 export default function Quality() {
+  const t = useT();
   const reduce = useReducedMotion();
 
   return (
     <section
       id="xizmat-sifati"
-      className="relative scroll-mt-24 overflow-hidden pb-24 pt-16 sm:pb-32 sm:pt-24"
-      style={{ backgroundColor: "#fbfdfb" }}
+      className="section-page relative scroll-mt-24 overflow-hidden pb-24 pt-16 sm:pb-32 sm:pt-24"
     >
       {/* ===== Fon nurlari ===== */}
       <div
         aria-hidden
-        className="pointer-events-none absolute -inset-x-[10%] bottom-[6%] top-[8%] bg-[radial-gradient(56%_52%_at_32%_52%,rgba(79,209,137,0.32),rgba(79,209,137,0)_72%)]"
+        className="decor-glow pointer-events-none absolute -inset-x-[10%] bottom-[6%] top-[8%] bg-[radial-gradient(56%_52%_at_32%_52%,rgba(79,209,137,0.32),rgba(79,209,137,0)_72%)]"
       />
       <motion.div
         aria-hidden
-        className="pointer-events-none absolute left-[2%] top-[26%] h-[520px] w-[520px] rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(44,193,118,0.42),rgba(44,193,118,0)_70%)] blur-2xl"
+        className="decor-glow pointer-events-none absolute left-[2%] top-[26%] h-[520px] w-[520px] rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(44,193,118,0.42),rgba(44,193,118,0)_70%)] blur-2xl"
         animate={reduce ? undefined : { x: [0, 30, 0], y: [0, -28, 0], scale: [1, 1.09, 1] }}
         transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
       />
       <motion.div
         aria-hidden
-        className="pointer-events-none absolute -right-[10%] top-[12%] h-[460px] w-[460px] rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(31,182,232,0.26),rgba(31,182,232,0)_70%)] blur-2xl"
+        className="decor-glow pointer-events-none absolute -right-[10%] top-[12%] h-[460px] w-[460px] rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(31,182,232,0.26),rgba(31,182,232,0)_70%)] blur-2xl"
         animate={reduce ? undefined : { x: [0, -28, 0], y: [0, 26, 0], scale: [1, 1.1, 1] }}
         transition={{ duration: 21, repeat: Infinity, ease: "easeInOut", delay: 1.2 }}
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute bottom-[6%] right-[22%] h-[320px] w-[320px] rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(190,230,60,0.2),rgba(190,230,60,0)_70%)] blur-2xl"
+        className="decor-glow pointer-events-none absolute bottom-[6%] right-[22%] h-[320px] w-[320px] rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(190,230,60,0.2),rgba(190,230,60,0)_70%)] blur-2xl"
       />
 
       {/* ===== Suyuq tomchilar ===== */}
       <div
         aria-hidden
-        className="pointer-events-none absolute right-[4%] top-[24%] hidden h-4 w-4 animate-liquid rounded-full bg-[radial-gradient(circle_at_32%_28%,rgba(255,255,255,0.9)_0%,rgba(190,230,60,0.5)_38%,rgba(79,209,137,0.6)_78%)] shadow-[0_3px_8px_rgba(11,43,28,0.16)] sm:block"
+        className="decor-glow pointer-events-none absolute right-[4%] top-[24%] hidden h-4 w-4 animate-liquid rounded-full bg-[radial-gradient(circle_at_32%_28%,rgba(255,255,255,0.9)_0%,rgba(190,230,60,0.5)_38%,rgba(79,209,137,0.6)_78%)] shadow-[0_3px_8px_rgba(11,43,28,0.16)] sm:block"
         style={{ animationDuration: "5.4s" }}
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute bottom-[22%] left-[3%] hidden h-5 w-5 animate-liquid rounded-full bg-[radial-gradient(circle_at_32%_28%,rgba(255,255,255,0.85)_0%,rgba(190,230,60,0.45)_38%,rgba(79,209,137,0.5)_78%)] shadow-[0_3px_8px_rgba(11,43,28,0.14)] blur-[1px] sm:block"
+        className="decor-glow pointer-events-none absolute bottom-[22%] left-[3%] hidden h-5 w-5 animate-liquid rounded-full bg-[radial-gradient(circle_at_32%_28%,rgba(255,255,255,0.85)_0%,rgba(190,230,60,0.45)_38%,rgba(79,209,137,0.5)_78%)] shadow-[0_3px_8px_rgba(11,43,28,0.14)] blur-[1px] sm:block"
         style={{ animationDelay: "2.1s", animationDuration: "6.3s" }}
       />
 
       {/* Qoʻshni boʻlimlar bilan chiziqsiz tutashish uchun chekka tekislovchilar */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 top-0 h-[200px] bg-[linear-gradient(to_bottom,#fbfdfb_0%,#fbfdfb_26%,rgba(251,253,251,0.7)_52%,rgba(251,253,251,0)_100%)] sm:h-[280px]"
+        className="pointer-events-none absolute inset-x-0 top-0 h-[200px] fade-top sm:h-[280px]"
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-[190px] bg-[linear-gradient(to_top,#fbfdfb_0%,#fbfdfb_26%,rgba(251,253,251,0.7)_52%,rgba(251,253,251,0)_100%)] sm:h-[260px]"
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-[190px] fade-bottom sm:h-[260px]"
       />
 
       <div className="relative z-[2] mx-auto max-w-[1240px] px-5 sm:px-8">
@@ -111,10 +111,10 @@ export default function Quality() {
             whileInView={{ opacity: 1, y: 0, scale: 1 }}
             viewport={{ once: true, amount: 0.6 }}
             transition={{ type: "spring", stiffness: 140, damping: 16 }}
-            className="badge-pill inline-flex items-center gap-2 rounded-pill py-[7px] pl-3 pr-4 text-[13.5px] font-semibold text-[#1F4433] shadow-[0_6px_16px_-8px_rgba(11,43,28,0.25)]"
+            className="badge-pill inline-flex items-center gap-2 rounded-pill py-[7px] pl-3 pr-4 text-[13.5px] font-semibold shadow-[0_6px_16px_-8px_rgba(11,43,28,0.25)]"
           >
             <Image src="/cuocces.png" alt="" width={19} height={20} className="h-[19px] w-[18px]" />
-            Xizmat sifati va xavfsizlik
+            {t.quality.badge}
           </motion.span>
 
           <div className="relative mt-5">
@@ -132,7 +132,7 @@ export default function Quality() {
               transition={{ duration: 0.7, ease: [0.22, 0.9, 0.3, 1] }}
               className="font-display text-[26px] font-extrabold leading-[1.2] tracking-[-0.01em] text-ink sm:text-[34px] lg:text-[40px]"
             >
-              Professional xizmat — asosiy talab!
+              {t.quality.title}
             </motion.h2>
           </div>
 
@@ -143,8 +143,7 @@ export default function Quality() {
             transition={{ duration: 0.6, delay: 0.18 }}
             className="mx-auto mt-4 max-w-[680px] text-[14px] leading-[1.6] text-body sm:text-[15.5px]"
           >
-            Onlayn Hamshira platformasida mijozlarning xavfsizligi va xizmat sifati birinchi
-            oʻrinda turadi.
+            {t.quality.lead}
           </motion.p>
         </div>
 
@@ -175,7 +174,7 @@ export default function Quality() {
               {/* Orqa nur */}
               <div
                 aria-hidden
-                className="pointer-events-none absolute left-1/2 top-1/2 h-[78%] w-[78%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(44,193,118,0.5),rgba(44,193,118,0)_70%)] blur-2xl"
+                className="decor-glow pointer-events-none absolute left-1/2 top-1/2 h-[78%] w-[78%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(44,193,118,0.5),rgba(44,193,118,0)_70%)] blur-2xl"
               />
 
               {/* Qalqon */}
@@ -186,7 +185,7 @@ export default function Quality() {
               >
                 <Image
                   src={heroShield}
-                  alt="Xavfsizlik va sifat kafolati"
+                  alt={t.quality.shieldAlt}
                   fill
                   sizes="(max-width: 1024px) 80vw, 420px"
                   className="object-contain drop-shadow-[0_28px_44px_rgba(15,64,40,0.22)]"
@@ -238,7 +237,7 @@ export default function Quality() {
               transition={{ duration: 0.5 }}
               className="font-display text-[16px] font-extrabold text-ink sm:text-[18px]"
             >
-              Har bir mutaxassis:
+              {t.quality.listTitle}
             </motion.p>
 
             <motion.ul
@@ -248,9 +247,9 @@ export default function Quality() {
               viewport={{ once: true, amount: 0.2 }}
               className="mt-4 flex flex-col gap-3 sm:mt-5 sm:gap-3.5"
             >
-              {RULES.map((rule, i) => (
+              {RULE_ICONS.map((icon, i) => (
                 <motion.li
-                  key={rule.text}
+                  key={i}
                   variants={ruleVariants}
                   whileHover={reduce ? undefined : { x: -6 }}
                   transition={{ type: "spring", stiffness: 280, damping: 22 }}
@@ -271,11 +270,11 @@ export default function Quality() {
                     transition={{ type: "spring", stiffness: 300, damping: 15 }}
                     className="relative z-[1] h-[52px] w-[52px] shrink-0 drop-shadow-[0_8px_16px_rgba(15,64,40,0.16)] sm:h-[58px] sm:w-[58px]"
                   >
-                    <Image src={rule.icon} alt="" fill sizes="58px" className="object-contain" placeholder="blur" />
+                    <Image src={icon} alt="" fill sizes="58px" className="object-contain" placeholder="blur" />
                   </motion.div>
 
                   <p className="relative z-[1] text-[13.5px] font-medium leading-[1.5] text-ink/85 sm:text-[14.5px]">
-                    {rule.text}
+                    {t.quality.rules[i]}
                   </p>
 
                   {/* Tartib raqami — fonda yumshoq urgʻu */}
@@ -297,11 +296,11 @@ export default function Quality() {
           whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
           viewport={{ once: true, amount: 0.5 }}
           transition={{ duration: 0.6, ease: [0.22, 0.9, 0.3, 1] }}
-          className="relative mt-10 flex items-center gap-4 overflow-hidden rounded-[24px] border border-white/70 bg-[linear-gradient(150deg,rgba(255,250,238,0.92),rgba(255,244,222,0.62))] p-4 shadow-[0_20px_44px_-24px_rgba(120,80,10,0.35),inset_0_1px_0_rgba(255,255,255,0.75)] backdrop-blur-[8px] sm:mt-12 sm:gap-5 sm:p-5"
+          className="relative mt-10 flex items-center gap-4 overflow-hidden rounded-[24px] border border-[color:var(--glass-border)] bg-[image:linear-gradient(150deg,var(--note-1),var(--note-2))] p-4 shadow-[0_20px_44px_-24px_rgba(120,80,10,0.35),inset_0_1px_0_rgba(255,255,255,0.75)] backdrop-blur-[8px] sm:mt-12 sm:gap-5 sm:p-5"
         >
           <div
             aria-hidden
-            className="pointer-events-none absolute -left-[6%] -top-[60%] h-[220px] w-[220px] rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(255,198,92,0.35),rgba(255,198,92,0)_70%)] blur-2xl"
+            className="decor-glow pointer-events-none absolute -left-[6%] -top-[60%] h-[220px] w-[220px] rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(255,198,92,0.35),rgba(255,198,92,0)_70%)] blur-2xl"
           />
           <motion.div
             animate={reduce ? undefined : { rotate: [0, -7, 7, -4, 0] }}
@@ -310,9 +309,8 @@ export default function Quality() {
           >
             <Image src={warningIcon} alt="" fill sizes="58px" className="object-contain" placeholder="blur" />
           </motion.div>
-          <p className="relative text-[13.5px] font-medium leading-[1.55] text-[#6B4E12] sm:text-[14.5px]">
-            Qoidalarga rioya qilmaslik mutaxassis faoliyatining vaqtincha yoki butunlay
-            cheklanishiga olib kelishi mumkin.
+          <p className="relative text-[13.5px] font-medium leading-[1.55] text-[color:var(--note-fg)] sm:text-[14.5px]">
+            {t.quality.warning}
           </p>
         </motion.div>
       </div>

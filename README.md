@@ -59,10 +59,56 @@ import Image from "next/image";
 Faylni `public/nurse.jpg` ga qoʻying. Xuddi shu usul `Hero.tsx` dagi avatarlar
 uchun ham ishlaydi.
 
+## Mavzu (yorugʻ / toʻq rejim)
+
+Sayt ikkala rejimda ishlaydi. **Standart holat — yorugʻ rejim**; tanlov
+`localStorage` dagi `theme` kalitida saqlanadi va headerdagi tugma orqali
+almashtiriladi.
+
+```
+app/layout.tsx                     <head> dagi kichik skript — sahifa
+                                   chizilishidan oldin `dark` sinfini qoʻyadi
+                                   (yorugʻ fon "chaqnab" ketmasligi uchun)
+components/theme/ThemeProvider.tsx  holat, localStorage, `useTheme()`
+components/theme/ThemeToggle.tsx    headerdagi almashtirgich
+app/globals.css                     `:root` (yorugʻ) va `.dark` (toʻq) tokenlari
+tailwind.config.ts                  `darkMode: "class"` + tokenlarga bogʻlangan ranglar
+```
+
+### Ranglarni qanday yozish kerak
+
+Komponentlarda **hech qachon toʻgʻridan-toʻgʻri hex rang yozilmaydi** — hamma
+narsa tokenlar orqali oʻtadi, shunda ikkala rejim oʻz-oʻzidan toʻgʻri chiqadi:
+
+| Maqsad | Ishlatiladi |
+| --- | --- |
+| Sarlavha / asosiy matn | `text-ink` |
+| Oddiy matn | `text-body` |
+| Ikkilamchi matn | `text-mute` |
+| Chegara chizigʻi | `border-line` |
+| Boʻlim foni | `bg-page` yoki `.section-page` |
+| Kartochka foni | `bg-surface` |
+| Shisha kartochka | `.glass-card` / `.glass-panel` |
+| Yashil CTA ustidagi matn | `text-onbrand` (ikkala rejimda ham toʻq) |
+| Boʻlim chetlari | `.fade-top` / `.fade-bottom` / `.edge-fade-y` |
+| Bezak nurlari | `.decor-glow` (toʻq rejimda avtomatik soʻnadi) |
+
+Boshqa nozik ranglar CSS oʻzgaruvchilari orqali olinadi, masalan
+`bg-[color:var(--map-bg)]`, `stroke="var(--track)"`, `text-[color:var(--note-fg)]`.
+
+`framer-motion` `var()` qiymatlarini interpolyatsiya qila olmaydi — animatsiya
+qilinadigan ranglar uchun `useTheme()` dan foydalaniladi (`PrepChecklist`,
+`OnboardingFlow` ga qarang).
+
 ## Nimalar hisobga olingan
 
 - 1280 / 1024 / 768 / 390 px kengliklarida moslashadi; mobilda ustunlar ustma-ust.
 - Klaviatura fokusi koʻrinadi (`:focus-visible`).
 - `prefers-reduced-motion: reduce` boʻlsa barcha animatsiyalar oʻchadi.
 - Dekorativ elementlarda `aria-hidden`, shuning uchun skrinrider matnni toza oʻqiydi.
+- Mavzu tugmasi `role="switch"` + `aria-checked` — holat ekran oʻqigichga eʼlon qilinadi.
+- Toʻq rejimda barcha matn/fon juftliklari WCAG AA dan oʻtadi (asosiy matn 9:1 dan yuqori).
+- `color-scheme` ikkala rejimda ham eʼlon qilinadi — brauzer scrollbar va
+  formalarni mos rangda chizadi.
+- Yashiringan yopishqoq header `invisible` — havolalari Tab tartibiga tushmaydi.
 # onlaynhamshira-hr

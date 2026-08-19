@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useCallback } from "react";
+import { useT } from "@/lib/i18n/LanguageProvider";
 import {
   motion,
   useMotionTemplate,
@@ -19,53 +20,18 @@ import tech from "@/assets/requirements/req-6-texnik-konikma.png";
 import accuracy from "@/assets/requirements/req-7-malumotlar-togriligi.png";
 import expertise from "@/assets/requirements/req-8-mutaxassislik.png";
 
-type Requirement = {
-  title: string;
-  desc: string;
-  icon: StaticImageData;
-};
+/** Matnlar lugʻatdan (t.requirements.items) shu tartibda olinadi */
+type Requirement = { title: string; desc: string; icon: StaticImageData };
 
-const REQUIREMENTS: Requirement[] = [
-  {
-    title: "Tibbiy Maʼlumot",
-    desc: "Tegishli tibbiy maʼlumotga ega boʻlishi va diplom mavjudligi.",
-    icon: diploma,
-  },
-  {
-    title: "Tajriba",
-    desc: "Yetarli professional tajribaga ega boʻlish (eng kamida 1 yil).",
-    icon: experience,
-  },
-  {
-    title: "Standartlar",
-    desc: "Platforma qoidalari va xizmat standartlariga rioya qilish.",
-    icon: standards,
-  },
-  {
-    title: "Muloqot",
-    desc: "Mijozlar bilan hurmatli va professional muloqot qila olish.",
-    icon: dialog,
-  },
-  {
-    title: "Kasbiy Bilim",
-    desc: "Kasbiy bilim va malakani doimiy oshirib borish koʻnikmasi.",
-    icon: knowledge,
-  },
-  {
-    title: "Texnik Koʻnikma",
-    desc: "Smartfon va mobil ilovalardan foydalana olish koʻnikmasi.",
-    icon: tech,
-  },
-  {
-    title: "Maʼlumotlar Toʻgʻriligi",
-    desc: "Taqdim etilgan maʼlumotlarning toʻgʻriligiga javob berish.",
-    icon: accuracy,
-  },
-  {
-    title: "Mutaxassislik",
-    desc: "Mutaxassislikka mos xizmat koʻrsatish (jihozlar).",
-    icon: expertise,
-  },
+const ICONS: StaticImageData[] = [
+  diploma,
+  experience,
+  standards,
+  dialog,
+  knowledge,
+  tech,
+  accuracy,
+  expertise,
 ];
 
 /* ===== Animatsiya sxemalari ===== */
@@ -226,57 +192,57 @@ function RequirementCard({ title, desc, icon }: Requirement) {
 /* ===== Boʻlim ===== */
 
 export default function Requirements() {
+  const t = useT();
   const reduce = useReducedMotion();
 
   return (
     <section
       id="talablar"
-      className="relative scroll-mt-24 overflow-hidden pb-24 pt-16 sm:pb-32 sm:pt-24"
-      style={{ backgroundColor: "#fbfdfb" }}
+      className="section-page relative scroll-mt-24 overflow-hidden pb-24 pt-16 sm:pb-32 sm:pt-24"
     >
       {/* ===== Fon nurlari ===== */}
       {/* Umumiy yashil asos — kartochkalar ortidan oʻtadi */}
       <div
         aria-hidden
-        className="pointer-events-none absolute -inset-x-[10%] bottom-[6%] top-[8%] bg-[radial-gradient(60%_55%_at_50%_45%,rgba(79,209,137,0.34),rgba(79,209,137,0)_72%)]"
+        className="decor-glow pointer-events-none absolute -inset-x-[10%] bottom-[6%] top-[8%] bg-[radial-gradient(60%_55%_at_50%_45%,rgba(79,209,137,0.34),rgba(79,209,137,0)_72%)]"
       />
       <motion.div
         aria-hidden
-        className="pointer-events-none absolute -left-[12%] top-[14%] h-[520px] w-[520px] rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(79,209,137,0.5),rgba(79,209,137,0)_70%)] blur-2xl"
+        className="decor-glow pointer-events-none absolute -left-[12%] top-[14%] h-[520px] w-[520px] rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(79,209,137,0.5),rgba(79,209,137,0)_70%)] blur-2xl"
         animate={reduce ? undefined : { x: [0, 40, 0], y: [0, -26, 0], scale: [1, 1.08, 1] }}
         transition={{ duration: 16, repeat: Infinity, ease: "easeInOut" }}
       />
       <motion.div
         aria-hidden
-        className="pointer-events-none absolute -right-[10%] top-[8%] h-[480px] w-[480px] rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(31,182,232,0.28),rgba(31,182,232,0)_70%)] blur-2xl"
+        className="decor-glow pointer-events-none absolute -right-[10%] top-[8%] h-[480px] w-[480px] rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(31,182,232,0.28),rgba(31,182,232,0)_70%)] blur-2xl"
         animate={reduce ? undefined : { x: [0, -34, 0], y: [0, 30, 0], scale: [1, 1.1, 1] }}
         transition={{ duration: 19, repeat: Infinity, ease: "easeInOut", delay: 1.5 }}
       />
       <motion.div
         aria-hidden
-        className="pointer-events-none absolute bottom-[-6%] left-[26%] h-[460px] w-[620px] rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(44,193,118,0.42),rgba(44,193,118,0)_72%)] blur-2xl"
+        className="decor-glow pointer-events-none absolute bottom-[-6%] left-[26%] h-[460px] w-[620px] rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(44,193,118,0.42),rgba(44,193,118,0)_72%)] blur-2xl"
         animate={reduce ? undefined : { x: [0, 30, 0], scale: [1, 1.06, 1] }}
         transition={{ duration: 21, repeat: Infinity, ease: "easeInOut", delay: 0.8 }}
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute right-[14%] top-[46%] h-[300px] w-[300px] rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(190,230,60,0.22),rgba(190,230,60,0)_70%)] blur-2xl"
+        className="decor-glow pointer-events-none absolute right-[14%] top-[46%] h-[300px] w-[300px] rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(190,230,60,0.22),rgba(190,230,60,0)_70%)] blur-2xl"
       />
 
       {/* ===== Suyuq tomchilar ===== */}
       <div
         aria-hidden
-        className="pointer-events-none absolute left-[4%] top-[38%] hidden h-4 w-4 animate-liquid rounded-full bg-[radial-gradient(circle_at_32%_28%,rgba(255,255,255,0.9)_0%,rgba(190,230,60,0.5)_38%,rgba(79,209,137,0.6)_78%)] shadow-[0_3px_8px_rgba(11,43,28,0.16)] sm:block"
+        className="decor-glow pointer-events-none absolute left-[4%] top-[38%] hidden h-4 w-4 animate-liquid rounded-full bg-[radial-gradient(circle_at_32%_28%,rgba(255,255,255,0.9)_0%,rgba(190,230,60,0.5)_38%,rgba(79,209,137,0.6)_78%)] shadow-[0_3px_8px_rgba(11,43,28,0.16)] sm:block"
         style={{ animationDuration: "5.5s" }}
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute left-[3%] top-[46%] hidden h-2.5 w-2.5 animate-liquid rounded-full bg-[radial-gradient(circle_at_32%_28%,rgba(255,255,255,0.9)_0%,rgba(190,230,60,0.5)_38%,rgba(44,193,118,0.6)_78%)] shadow-[0_2px_6px_rgba(11,43,28,0.16)] sm:block"
+        className="decor-glow pointer-events-none absolute left-[3%] top-[46%] hidden h-2.5 w-2.5 animate-liquid rounded-full bg-[radial-gradient(circle_at_32%_28%,rgba(255,255,255,0.9)_0%,rgba(190,230,60,0.5)_38%,rgba(44,193,118,0.6)_78%)] shadow-[0_2px_6px_rgba(11,43,28,0.16)] sm:block"
         style={{ animationDelay: "1.4s", animationDuration: "4.6s" }}
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute bottom-[16%] right-[5%] hidden h-6 w-6 animate-liquid rounded-full bg-[radial-gradient(circle_at_32%_28%,rgba(255,255,255,0.85)_0%,rgba(190,230,60,0.45)_38%,rgba(79,209,137,0.5)_78%)] shadow-[0_3px_8px_rgba(11,43,28,0.14)] blur-[1px] sm:block"
+        className="decor-glow pointer-events-none absolute bottom-[16%] right-[5%] hidden h-6 w-6 animate-liquid rounded-full bg-[radial-gradient(circle_at_32%_28%,rgba(255,255,255,0.85)_0%,rgba(190,230,60,0.45)_38%,rgba(79,209,137,0.5)_78%)] shadow-[0_3px_8px_rgba(11,43,28,0.14)] blur-[1px] sm:block"
         style={{ animationDelay: "2.6s", animationDuration: "6.4s" }}
       />
 
@@ -284,11 +250,11 @@ export default function Requirements() {
           boʻlimlar bilan qattiq chiziqsiz tutashishi uchun */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 top-0 h-[220px] bg-[linear-gradient(to_bottom,#fbfdfb_0%,#fbfdfb_26%,rgba(251,253,251,0.7)_52%,rgba(251,253,251,0)_100%)] sm:h-[300px]"
+        className="pointer-events-none absolute inset-x-0 top-0 h-[220px] fade-top sm:h-[300px]"
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-[200px] bg-[linear-gradient(to_top,#fbfdfb_0%,#fbfdfb_26%,rgba(251,253,251,0.7)_52%,rgba(251,253,251,0)_100%)] sm:h-[280px]"
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-[200px] fade-bottom sm:h-[280px]"
       />
 
       <div className="relative z-[2] mx-auto max-w-[1240px] px-5 sm:px-8">
@@ -299,10 +265,10 @@ export default function Requirements() {
             whileInView={{ opacity: 1, y: 0, scale: 1 }}
             viewport={{ once: true, amount: 0.6 }}
             transition={{ type: "spring", stiffness: 140, damping: 16 }}
-            className="badge-pill inline-flex items-center gap-2 rounded-pill py-[7px] pl-3 pr-4 text-[13.5px] font-semibold text-[#1F4433] shadow-[0_6px_16px_-8px_rgba(11,43,28,0.25)]"
+            className="badge-pill inline-flex items-center gap-2 rounded-pill py-[7px] pl-3 pr-4 text-[13.5px] font-semibold shadow-[0_6px_16px_-8px_rgba(11,43,28,0.25)]"
           >
             <Image src="/cuocces.png" alt="" width={19} height={20} className="h-[19px] w-[18px]" />
-            Mutaxassislar uchun
+            {t.requirements.badge}
           </motion.span>
 
           <div className="relative mt-5">
@@ -320,7 +286,7 @@ export default function Requirements() {
               transition={{ duration: 0.7, ease: [0.22, 0.9, 0.3, 1] }}
               className="font-display text-[26px] font-extrabold leading-[1.2] tracking-[-0.01em] text-ink sm:text-[34px] lg:text-[40px]"
             >
-              NOMZODLARGA QOʻYILADIGAN TALABLAR
+              {t.requirements.title}
             </motion.h2>
           </div>
         </div>
@@ -333,8 +299,8 @@ export default function Requirements() {
           viewport={{ once: true, amount: 0.15 }}
           className="mt-10 grid grid-cols-1 gap-4 sm:mt-12 sm:grid-cols-2 sm:gap-5 lg:grid-cols-4 lg:gap-6"
         >
-          {REQUIREMENTS.map((item) => (
-            <RequirementCard key={item.title} {...item} />
+          {ICONS.map((icon, i) => (
+            <RequirementCard key={i} icon={icon} {...t.requirements.items[i]} />
           ))}
         </motion.div>
 
@@ -346,7 +312,7 @@ export default function Requirements() {
           transition={{ duration: 0.6, delay: 0.2 }}
           className="mt-8 text-center text-[13px] font-medium text-body sm:mt-10 sm:text-[14px]"
         >
-          *Har bir nomzodning maʼlumoti, ish tajribasi va kasbiy malakasi alohida tekshiriladi.
+          {t.requirements.footnote}
         </motion.p>
       </div>
     </section>

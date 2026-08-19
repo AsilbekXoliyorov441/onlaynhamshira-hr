@@ -20,6 +20,7 @@ import {
   useTransform,
   type Variants,
 } from "framer-motion";
+import { useT } from "@/lib/i18n/LanguageProvider";
 import {
   AcceptDecline3D,
   BellNew3D,
@@ -44,9 +45,8 @@ import {
 /* Bir qadam ekranda necha millisekund turadi */
 const AUTOPLAY_MS = 5200;
 
+/** Matnlar lugʻatdan (t.howitworks.steps) shu tartibda olinadi */
 type Step = {
-  title: string;
-  text: string;
   icon: ComponentType<SVGProps<SVGSVGElement>>;
   /** Faol qadamning asosiy rangi */
   tone: string;
@@ -57,64 +57,48 @@ type Step = {
 
 const STEPS: Step[] = [
   {
-    title: "Yangi buyurtmalarni koʻrasiz",
-    text: "Hududingizga tushgan soʻrovlar ilovada bildirishnoma bilan darhol paydo boʻladi.",
     icon: BellNew3D,
     tone: "#E9962B",
     glow: "rgba(255,200,92,0.34)",
     screen: ScreenOrders,
   },
   {
-    title: "Qabul qilasiz yoki rad etasiz",
-    text: "Jadvalingizga qarab oʻzingiz hal qilasiz — majburiy buyurtma yoʻq.",
     icon: AcceptDecline3D,
     tone: "#159C66",
     glow: "rgba(79,209,137,0.32)",
     screen: ScreenAccept,
   },
   {
-    title: "Xizmat turi va manzilni koʻrasiz",
-    text: "Qaysi xizmat kerakligi, mijoz manzili va vaqti toʻliq koʻrsatiladi.",
     icon: MapPinCare3D,
     tone: "#1478B4",
     glow: "rgba(31,182,232,0.30)",
     screen: ScreenAddress,
   },
   {
-    title: "Mijoz bilan bogʻlanasiz",
-    text: "Chiqishdan oldin qoʻngʻiroq yoki chat orqali tafsilotlarni aniqlaysiz.",
     icon: PhoneCall3D,
     tone: "#128A57",
     glow: "rgba(44,193,118,0.32)",
     screen: ScreenCall,
   },
   {
-    title: "Xizmatni boshlaysiz",
-    text: "Manzilga yetib borgach, bir tugma bilan xizmatni rasman boshlaysiz.",
     icon: StartService3D,
     tone: "#0F8F5D",
     glow: "rgba(99,219,161,0.34)",
     screen: ScreenStart,
   },
   {
-    title: "Yakunlanganini belgilaysiz",
-    text: "Xizmat tugagach uni yopasiz — hisob-kitob avtomatik shakllanadi.",
     icon: CompleteBadge3D,
     tone: "#0E8154",
     glow: "rgba(76,206,141,0.32)",
     screen: ScreenDone,
   },
   {
-    title: "Buyurtmalar tarixini kuzatasiz",
-    text: "Bajarilgan ishlar, sana va daromad statistikasi bir joyda saqlanadi.",
     icon: HistoryList3D,
     tone: "#5E7A6D",
     glow: "rgba(155,203,178,0.32)",
     screen: ScreenHistory,
   },
   {
-    title: "Profil va reytingni boshqarasiz",
-    text: "Maʼlumotlaringizni yangilab, mijoz baholari orqali reytingni oshirasiz.",
     icon: ProfileStar3D,
     tone: "#2A7FB6",
     glow: "rgba(255,201,79,0.32)",
@@ -143,12 +127,14 @@ const itemVariants: Variants = {
 
 function StepCard({
   step,
+  text,
   index,
   active,
   playing,
   onSelect,
 }: {
   step: Step;
+  text: { title: string; text: string };
   index: number;
   active: boolean;
   playing: boolean;
@@ -181,7 +167,7 @@ function StepCard({
       transition={{ type: "spring", stiffness: 300, damping: 22 }}
       aria-current={active}
       className={`group relative w-full overflow-hidden rounded-[20px] p-3 text-left transition-colors duration-500 sm:p-3.5 ${
-        active ? "glass-card" : "border border-transparent hover:border-white/70"
+        active ? "glass-card" : "border border-transparent hover:border-[color:var(--glass-border)]"
       }`}
     >
       {/* Kursor yorugʻligi */}
@@ -225,7 +211,7 @@ function StepCard({
           </motion.span>
           <span
             className="absolute -right-1 -top-1 grid h-[18px] w-[18px] place-items-center rounded-full font-display text-[10px] font-extrabold text-white shadow-[0_4px_10px_-4px_rgba(11,43,28,0.7)] transition-colors duration-500"
-            style={{ background: active ? step.tone : "#B7C7BF" }}
+            style={{ background: active ? step.tone : "var(--dot-idle)" }}
           >
             {index + 1}
           </span>
@@ -234,9 +220,9 @@ function StepCard({
         <div className="min-w-0 flex-1 pt-0.5">
           <h3
             className="font-display text-[14px] font-extrabold leading-[1.3] transition-colors duration-500 sm:text-[15px]"
-            style={{ color: active ? "#0B2B1C" : "#375146" }}
+            style={{ color: active ? "rgb(var(--c-ink))" : "rgb(var(--c-body))" }}
           >
-            {step.title}
+            {text.title}
           </h3>
 
           {/* Tavsif faqat faol qadamda ochiladi */}
@@ -250,7 +236,7 @@ function StepCard({
                 transition={{ duration: 0.35, ease: [0.22, 0.9, 0.3, 1] }}
                 className="overflow-hidden text-[12.5px] leading-[1.6] text-body sm:text-[13.5px]"
               >
-                <span className="mt-1.5 block">{step.text}</span>
+                <span className="mt-1.5 block">{text.text}</span>
               </motion.p>
             )}
           </AnimatePresence>
@@ -318,7 +304,7 @@ function PhoneFrame({ index }: { index: number }) {
       {/* Telefon ortidagi nur */}
       <motion.div
         aria-hidden
-        className="pointer-events-none absolute inset-[6%] rounded-[60px] bg-[radial-gradient(50%_50%_at_50%_50%,rgba(79,209,137,0.55),rgba(79,209,137,0)_70%)] blur-2xl"
+        className="decor-glow pointer-events-none absolute inset-[6%] rounded-[60px] bg-[radial-gradient(50%_50%_at_50%_50%,rgba(79,209,137,0.55),rgba(79,209,137,0)_70%)] blur-2xl"
         animate={reduce ? undefined : { opacity: [0.6, 1, 0.6], scale: [0.96, 1.06, 0.96] }}
         transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
       />
@@ -330,9 +316,9 @@ function PhoneFrame({ index }: { index: number }) {
         className="relative"
       >
         {/* Korpus */}
-        <div className="relative rounded-[42px] bg-[linear-gradient(150deg,#F4F8F5_0%,#D9E5DE_38%,#AFC3B8_100%)] p-[9px] shadow-[0_46px_70px_-34px_rgba(11,43,28,0.55),0_18px_34px_-20px_rgba(11,43,28,0.35)]">
+        <div className="relative rounded-[42px] bg-[image:var(--phone-frame)] p-[9px] shadow-[0_46px_70px_-34px_rgba(11,43,28,0.55),0_18px_34px_-20px_rgba(11,43,28,0.35)]">
           <div className="rounded-[34px] bg-[#0B2B1C] p-[3px]">
-            <div className="relative aspect-[9/18.6] overflow-hidden rounded-[32px] bg-white">
+            <div className="relative aspect-[9/18.6] overflow-hidden rounded-[32px] bg-surface">
               {/* Status bar */}
               <div className="relative z-[2] flex items-center justify-between px-4 pt-2.5 text-[9px] font-bold text-ink">
                 <span>09:41</span>
@@ -386,7 +372,7 @@ function PhoneFrame({ index }: { index: number }) {
               </div>
 
               {/* Pastki navigatsiya */}
-              <div className="absolute inset-x-0 bottom-0 z-[2] border-t border-line/80 bg-white/90 px-5 pb-2.5 pt-2 backdrop-blur">
+              <div className="absolute inset-x-0 bottom-0 z-[2] border-t border-line/80 bg-surface/90 px-5 pb-2.5 pt-2 backdrop-blur">
                 <div className="flex items-center justify-between">
                   {[0, 1, 2].map((t) => {
                     const on =
@@ -397,7 +383,7 @@ function PhoneFrame({ index }: { index: number }) {
                         className="h-[5px] rounded-pill transition-all duration-500"
                         style={{
                           width: on ? 22 : 12,
-                          background: on ? "#2CC176" : "#D8E4DC",
+                          background: on ? "#2CC176" : "var(--dot-idle)",
                         }}
                       />
                     );
@@ -405,7 +391,7 @@ function PhoneFrame({ index }: { index: number }) {
                 </div>
                 <span
                   aria-hidden
-                  className="mx-auto mt-2 block h-[3px] w-[74px] rounded-pill bg-[#C3D3CA]"
+                  className="mx-auto mt-2 block h-[3px] w-[74px] rounded-pill bg-[color:var(--dot-idle)]"
                 />
               </div>
 
@@ -420,9 +406,9 @@ function PhoneFrame({ index }: { index: number }) {
         </div>
 
         {/* Yon tugmalar */}
-        <span aria-hidden className="absolute -left-[3px] top-[22%] h-9 w-[3px] rounded-pill bg-[#BFD0C6]" />
-        <span aria-hidden className="absolute -left-[3px] top-[33%] h-14 w-[3px] rounded-pill bg-[#BFD0C6]" />
-        <span aria-hidden className="absolute -right-[3px] top-[26%] h-16 w-[3px] rounded-pill bg-[#BFD0C6]" />
+        <span aria-hidden className="absolute -left-[3px] top-[22%] h-9 w-[3px] rounded-pill bg-[color:var(--phone-side)]" />
+        <span aria-hidden className="absolute -left-[3px] top-[33%] h-14 w-[3px] rounded-pill bg-[color:var(--phone-side)]" />
+        <span aria-hidden className="absolute -right-[3px] top-[26%] h-16 w-[3px] rounded-pill bg-[color:var(--phone-side)]" />
       </motion.div>
     </div>
   );
@@ -431,6 +417,7 @@ function PhoneFrame({ index }: { index: number }) {
 /* ===== Boʻlim ===== */
 
 export default function HowItWorks() {
+  const t = useT();
   const reduce = useReducedMotion();
   const ref = useRef<HTMLElement>(null);
   const inView = useInView(ref, { amount: 0.3 });
@@ -454,29 +441,28 @@ export default function HowItWorks() {
     <section
       ref={ref}
       id="qanday-ishlaydi"
-      className="relative scroll-mt-24 overflow-hidden pb-24 pt-16 sm:pb-32 sm:pt-24"
-      style={{ backgroundColor: "#fbfdfb" }}
+      className="section-page relative scroll-mt-24 overflow-hidden pb-24 pt-16 sm:pb-32 sm:pt-24"
     >
       {/* ===== Fon nurlari ===== */}
       <div
         aria-hidden
-        className="pointer-events-none absolute -inset-x-[10%] bottom-[6%] top-[8%] bg-[radial-gradient(56%_52%_at_56%_44%,rgba(79,209,137,0.28),rgba(79,209,137,0)_72%)]"
+        className="decor-glow pointer-events-none absolute -inset-x-[10%] bottom-[6%] top-[8%] bg-[radial-gradient(56%_52%_at_56%_44%,rgba(79,209,137,0.28),rgba(79,209,137,0)_72%)]"
       />
       <motion.div
         aria-hidden
-        className="pointer-events-none absolute -right-[10%] top-[14%] h-[520px] w-[520px] rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(79,209,137,0.44),rgba(79,209,137,0)_70%)] blur-2xl"
+        className="decor-glow pointer-events-none absolute -right-[10%] top-[14%] h-[520px] w-[520px] rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(79,209,137,0.44),rgba(79,209,137,0)_70%)] blur-2xl"
         animate={reduce ? undefined : { x: [0, -34, 0], y: [0, 26, 0], scale: [1, 1.08, 1] }}
         transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
       />
       <motion.div
         aria-hidden
-        className="pointer-events-none absolute -left-[12%] top-[8%] h-[460px] w-[460px] rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(31,182,232,0.28),rgba(31,182,232,0)_70%)] blur-2xl"
+        className="decor-glow pointer-events-none absolute -left-[12%] top-[8%] h-[460px] w-[460px] rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(31,182,232,0.28),rgba(31,182,232,0)_70%)] blur-2xl"
         animate={reduce ? undefined : { x: [0, 30, 0], y: [0, -22, 0], scale: [1, 1.1, 1] }}
         transition={{ duration: 21, repeat: Infinity, ease: "easeInOut", delay: 1.2 }}
       />
       <motion.div
         aria-hidden
-        className="pointer-events-none absolute bottom-[-10%] left-[22%] h-[420px] w-[620px] rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(44,193,118,0.32),rgba(44,193,118,0)_72%)] blur-2xl"
+        className="decor-glow pointer-events-none absolute bottom-[-10%] left-[22%] h-[420px] w-[620px] rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(44,193,118,0.32),rgba(44,193,118,0)_72%)] blur-2xl"
         animate={reduce ? undefined : { x: [0, -26, 0], scale: [1, 1.06, 1] }}
         transition={{ duration: 23, repeat: Infinity, ease: "easeInOut", delay: 0.6 }}
       />
@@ -484,23 +470,23 @@ export default function HowItWorks() {
       {/* ===== Suyuq tomchilar ===== */}
       <div
         aria-hidden
-        className="pointer-events-none absolute left-[5%] top-[28%] hidden h-[18px] w-[18px] animate-liquid rounded-full bg-[radial-gradient(circle_at_32%_28%,rgba(255,255,255,0.9)_0%,rgba(190,230,60,0.5)_38%,rgba(79,209,137,0.6)_78%)] shadow-[0_3px_8px_rgba(11,43,28,0.16)] sm:block"
+        className="decor-glow pointer-events-none absolute left-[5%] top-[28%] hidden h-[18px] w-[18px] animate-liquid rounded-full bg-[radial-gradient(circle_at_32%_28%,rgba(255,255,255,0.9)_0%,rgba(190,230,60,0.5)_38%,rgba(79,209,137,0.6)_78%)] shadow-[0_3px_8px_rgba(11,43,28,0.16)] sm:block"
         style={{ animationDuration: "5.6s" }}
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute bottom-[24%] right-[7%] hidden h-4 w-4 animate-liquid rounded-full bg-[radial-gradient(circle_at_32%_28%,rgba(255,255,255,0.85)_0%,rgba(155,221,244,0.5)_38%,rgba(31,146,201,0.5)_78%)] shadow-[0_3px_8px_rgba(11,43,28,0.14)] blur-[1px] sm:block"
+        className="decor-glow pointer-events-none absolute bottom-[24%] right-[7%] hidden h-4 w-4 animate-liquid rounded-full bg-[radial-gradient(circle_at_32%_28%,rgba(255,255,255,0.85)_0%,rgba(155,221,244,0.5)_38%,rgba(31,146,201,0.5)_78%)] shadow-[0_3px_8px_rgba(11,43,28,0.14)] blur-[1px] sm:block"
         style={{ animationDelay: "1.8s", animationDuration: "6.4s" }}
       />
 
       {/* Qoʻshni boʻlimlar bilan yumshoq tutashuv */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 top-0 h-[220px] bg-[linear-gradient(to_bottom,#fbfdfb_0%,#fbfdfb_26%,rgba(251,253,251,0.7)_52%,rgba(251,253,251,0)_100%)] sm:h-[300px]"
+        className="pointer-events-none absolute inset-x-0 top-0 h-[220px] fade-top sm:h-[300px]"
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-[200px] bg-[linear-gradient(to_top,#fbfdfb_0%,#fbfdfb_26%,rgba(251,253,251,0.7)_52%,rgba(251,253,251,0)_100%)] sm:h-[280px]"
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-[200px] fade-bottom sm:h-[280px]"
       />
 
       <div className="relative z-[2] mx-auto max-w-[1240px] px-5 sm:px-8">
@@ -511,10 +497,10 @@ export default function HowItWorks() {
             whileInView={{ opacity: 1, y: 0, scale: 1 }}
             viewport={{ once: true, amount: 0.6 }}
             transition={{ type: "spring", stiffness: 140, damping: 16 }}
-            className="badge-pill inline-flex items-center gap-2 rounded-pill py-[7px] pl-3 pr-4 text-[13.5px] font-semibold text-[#1F4433] shadow-[0_6px_16px_-8px_rgba(11,43,28,0.25)]"
+            className="badge-pill inline-flex items-center gap-2 rounded-pill py-[7px] pl-3 pr-4 text-[13.5px] font-semibold shadow-[0_6px_16px_-8px_rgba(11,43,28,0.25)]"
           >
             <Image src="/cuocces.png" alt="" width={19} height={20} className="h-[19px] w-[18px]" />
-            Mutaxassis qanday ishlaydi?
+            {t.howitworks.badge}
           </motion.span>
 
           <div className="relative mt-5">
@@ -531,7 +517,7 @@ export default function HowItWorks() {
               transition={{ duration: 0.7, ease: [0.22, 0.9, 0.3, 1] }}
               className="font-display text-[26px] font-extrabold leading-[1.2] tracking-[-0.01em] text-ink sm:text-[34px] lg:text-[40px]"
             >
-              BARCHA JARAYON MOBIL ILOVADA
+              {t.howitworks.title}
             </motion.h2>
           </div>
 
@@ -542,8 +528,9 @@ export default function HowItWorks() {
             transition={{ duration: 0.6, delay: 0.15 }}
             className="mx-auto mt-4 max-w-[640px] text-[14px] leading-[1.65] text-body sm:text-[15.5px]"
           >
-            Onlayn Hamshira <span className="font-semibold text-ink">Mutaxassis</span> ilovasi
-            orqali siz quyidagi ishlarni bir joyda bajarasiz:
+            {t.howitworks.leadStart}
+            <span className="font-semibold text-ink">{t.howitworks.leadBold}</span>
+            {t.howitworks.leadEnd}
           </motion.p>
         </div>
 
@@ -566,14 +553,14 @@ export default function HowItWorks() {
             <div className="mt-6 flex items-center justify-center gap-1.5">
               {STEPS.map((s, i) => (
                 <button
-                  key={s.title}
+                  key={i}
                   type="button"
                   onClick={() => select(i)}
-                  aria-label={`${i + 1}-qadam: ${s.title}`}
+                  aria-label={`${t.howitworks.stepLabel} ${i + 1}: ${t.howitworks.steps[i].title}`}
                   className="h-[7px] rounded-pill transition-all duration-500 hover:opacity-80"
                   style={{
                     width: i === active ? 26 : 8,
-                    background: i === active ? s.tone : "#D3E1D9",
+                    background: i === active ? s.tone : "var(--dot-idle)",
                   }}
                 />
               ))}
@@ -589,8 +576,9 @@ export default function HowItWorks() {
           >
             {STEPS.map((step, i) => (
               <StepCard
-                key={step.title}
+                key={i}
                 step={step}
+                text={t.howitworks.steps[i]}
                 index={i}
                 active={i === active}
                 playing={playing}
@@ -613,14 +601,14 @@ export default function HowItWorks() {
             whileHover={reduce ? undefined : { scale: 1.05, y: -3 }}
             whileTap={reduce ? undefined : { scale: 0.97 }}
             transition={{ type: "spring", stiffness: 320, damping: 18 }}
-            className="btn-primary group relative inline-flex items-center gap-2.5 overflow-hidden rounded-pill px-8 py-[14px] font-display text-[15px] font-bold text-ink sm:text-[16px]"
+            className="btn-primary group relative inline-flex items-center gap-2.5 overflow-hidden rounded-pill px-8 py-[14px] font-display text-[15px] font-bold text-onbrand sm:text-[16px]"
           >
             {/* Tugma boʻylab oʻtuvchi yaltiroq */}
             <span
               aria-hidden
               className="pointer-events-none absolute -inset-y-6 -left-1/2 w-1/3 -translate-x-full rotate-[18deg] bg-[linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,0.8),rgba(255,255,255,0))] transition-transform duration-[900ms] ease-out group-hover:translate-x-[520%]"
             />
-            <span className="relative">Hamkorlikni boshlash</span>
+            <span className="relative">{t.howitworks.cta}</span>
             <motion.span
               aria-hidden
               className="relative grid h-[26px] w-[26px] place-items-center rounded-full bg-white/70 shadow-[inset_0_1px_0_rgba(255,255,255,0.9)]"
@@ -640,7 +628,7 @@ export default function HowItWorks() {
           </motion.a>
 
           <p className="text-[12.5px] font-medium text-mute sm:text-[13.5px]">
-            Roʻyxatdan oʻtish bepul · Ilova iOS va Android uchun
+            {t.howitworks.ctaNote}
           </p>
         </motion.div>
       </div>

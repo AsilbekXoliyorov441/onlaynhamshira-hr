@@ -2,41 +2,307 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ============================================================
+   DIZAYN TOKENLARI
+   `:root` — yorugʻ rejim (default), `.dark` — toʻq rejim.
+   Ranglar `R G B` koʻrinishida saqlanadi: Tailwind ularni
+   `rgb(var(--token) / <alpha-value>)` orqali oʻqiydi, shu bois
+   `text-ink/70` kabi shaffoflik modifikatorlari ishlayveradi.
+   ============================================================ */
 @layer base {
+  :root {
+    color-scheme: light;
+
+    /* Matn */
+    --c-ink: 11 43 28;
+    --c-body: 84 103 94;
+    --c-mute: 124 141 133;
+    --c-line: 228 237 231;
+
+    /* Yuzalar */
+    --c-page: 251 253 251;
+    --c-surface: 255 255 255;
+    --c-surface-2: 244 249 246;
+
+    /* Brend shkalasi */
+    --c-brand-50: 240 251 243;
+    --c-brand-100: 220 246 227;
+    --c-brand-200: 182 236 198;
+    --c-brand-300: 134 224 165;
+    --c-brand-400: 79 209 137;
+    --c-brand-500: 44 193 118;
+    --c-brand-600: 27 164 99;
+    --c-brand-700: 22 127 78;
+
+    /* Shisha (glass) yuzalar */
+    --glass-1: rgba(255, 255, 255, 0.8);
+    --glass-2: rgba(255, 255, 255, 0.42);
+    --glass-border: rgba(255, 255, 255, 0.75);
+    --glass-shadow: 0 20px 44px -22px rgba(15, 64, 40, 0.22),
+      inset 0 1px 0 rgba(255, 255, 255, 0.6);
+
+    --panel-1: rgba(255, 255, 255, 0.55);
+    --panel-2: rgba(255, 255, 255, 0.12);
+    --panel-border: rgba(255, 255, 255, 0.6);
+
+    /* Nishon (badge) */
+    --badge-1: rgba(220, 248, 228, 0.95);
+    --badge-2: rgba(238, 252, 242, 0.7);
+    --badge-border: rgba(255, 255, 255, 0.9);
+    --badge-fg: #1f4433;
+
+    /* Ikkilamchi tugma */
+    --btn2-bg: #ffffff;
+    --btn2-shadow: inset 0 3px 6px rgba(255, 255, 255, 1),
+      inset 0 -3px 6px rgba(0, 0, 0, 0.05), 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+    --btn2-shadow-hover: inset 0 3px 6px rgba(255, 255, 255, 1),
+      inset 0 -3px 6px rgba(0, 0, 0, 0.05), 0 14px 32px -5px rgba(0, 0, 0, 0.14);
+    --btn2-shadow-active: inset 0 3px 7px rgba(0, 0, 0, 0.08),
+      inset 0 -1px 3px rgba(255, 255, 255, 0.6), 0 6px 16px -6px rgba(0, 0, 0, 0.1);
+
+    /* Header */
+    --header-bg: rgba(255, 255, 255, 0.5);
+    --nav-fg: #395145;
+
+    /* Ilova maketi (telefon ekrani) ichidagi yordamchi ranglar */
+    --track: #e4ede7;
+    --map-bg: #edf3ef;
+    --map-bg-2: #e9f0eb;
+    --dot-idle: #b7c7bf;
+    --chip-warn-bg: #ffefd6;
+    --chip-warn-fg: #b4740f;
+    --chip-danger-bg: #fff6f7;
+    --chip-danger-fg: #c6435a;
+    --chip-danger-border: #f3d4d9;
+    --note-1: rgba(255, 250, 238, 0.92);
+    --note-2: rgba(255, 244, 222, 0.62);
+    --note-fg: #6b4e12;
+    --map-fill: #dce8df;
+    --map-line: #d0ded4;
+    --map-line-2: #c3d6c8;
+    --phone-frame: linear-gradient(150deg, #f4f8f5 0%, #d9e5de 38%, #afc3b8 100%);
+    --phone-side: #bfd0c6;
+
+    /* Logotipdagi soʻz-belgi */
+    --logo-word: #112e45;
+
+    /* Fokus halqasi */
+    --focus: #0f7a4a;
+
+    /* Soyalar */
+    --shadow-nav: 0 2px 14px rgba(11, 43, 28, 0.05);
+    --shadow-card: 0 12px 34px -12px rgba(11, 43, 28, 0.18),
+      0 2px 6px rgba(11, 43, 28, 0.04);
+    --shadow-float: 0 18px 40px -16px rgba(11, 43, 28, 0.22),
+      0 2px 8px rgba(11, 43, 28, 0.05);
+    --shadow-cta: 0 14px 30px -10px rgba(44, 193, 118, 0.55);
+    --shadow-phone: 0 60px 90px -40px rgba(11, 43, 28, 0.45),
+      0 30px 60px -30px rgba(11, 43, 28, 0.28);
+  }
+
+  .dark {
+    color-scheme: dark;
+
+    --c-ink: 233 246 239;
+    --c-body: 183 203 193;
+    --c-mute: 143 167 156;
+    --c-line: 38 56 47;
+
+    --c-page: 8 19 15;
+    --c-surface: 16 32 26;
+    --c-surface-2: 22 41 33;
+
+    /* Toʻq fonda oʻqilishi uchun shkala teskari yoʻnaltirilgan:
+       50/100/200 — fon va chegara, 300–700 — aksent/matn ranglari */
+    --c-brand-50: 15 36 25;
+    --c-brand-100: 22 48 31;
+    --c-brand-200: 44 92 65;
+    --c-brand-300: 134 224 165;
+    --c-brand-400: 79 209 137;
+    --c-brand-500: 63 208 136;
+    --c-brand-600: 111 226 165;
+    --c-brand-700: 154 235 186;
+
+    --glass-1: rgba(25, 45, 36, 0.92);
+    --glass-2: rgba(15, 30, 24, 0.86);
+    --glass-border: rgba(134, 224, 165, 0.16);
+    --glass-shadow: 0 22px 48px -24px rgba(0, 0, 0, 0.8),
+      inset 0 1px 0 rgba(255, 255, 255, 0.05);
+
+    --panel-1: rgba(31, 55, 44, 0.75);
+    --panel-2: rgba(16, 32, 26, 0.45);
+    --panel-border: rgba(134, 224, 165, 0.2);
+
+    --badge-1: rgba(30, 66, 48, 0.85);
+    --badge-2: rgba(20, 44, 33, 0.6);
+    --badge-border: rgba(134, 224, 165, 0.24);
+    --badge-fg: #b9ecd0;
+
+    --btn2-bg: #172c24;
+    --btn2-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07),
+      inset 0 0 0 1px rgba(134, 224, 165, 0.16), 0 10px 25px -8px rgba(0, 0, 0, 0.7);
+    --btn2-shadow-hover: inset 0 1px 0 rgba(255, 255, 255, 0.1),
+      inset 0 0 0 1px rgba(134, 224, 165, 0.3), 0 14px 32px -8px rgba(0, 0, 0, 0.8);
+    --btn2-shadow-active: inset 0 2px 6px rgba(0, 0, 0, 0.5),
+      inset 0 0 0 1px rgba(134, 224, 165, 0.24), 0 6px 16px -8px rgba(0, 0, 0, 0.6);
+
+    --header-bg: rgba(10, 24, 19, 0.62);
+    --nav-fg: #c2d7cb;
+
+    --track: #223328;
+    --map-bg: #16261f;
+    --map-bg-2: #12201a;
+    --dot-idle: #3c5a4b;
+    --chip-warn-bg: rgba(180, 116, 15, 0.2);
+    --chip-warn-fg: #f5c877;
+    --chip-danger-bg: rgba(198, 67, 90, 0.16);
+    --chip-danger-fg: #f7a3b1;
+    --chip-danger-border: rgba(247, 163, 177, 0.28);
+    --note-1: rgba(64, 49, 16, 0.65);
+    --note-2: rgba(48, 37, 14, 0.45);
+    --note-fg: #f0d9a4;
+    --map-fill: #1c3128;
+    --map-line: #24402f;
+    --map-line-2: #2c4c39;
+    --phone-frame: linear-gradient(150deg, #2b3d36 0%, #1c2b24 38%, #101c17 100%);
+    --phone-side: #33463c;
+
+    --logo-word: #e5f2ea;
+
+    --focus: #7fe7b4;
+
+    --shadow-nav: 0 2px 16px rgba(0, 0, 0, 0.55);
+    --shadow-card: 0 14px 36px -14px rgba(0, 0, 0, 0.75),
+      0 2px 6px rgba(0, 0, 0, 0.4);
+    --shadow-float: 0 20px 44px -18px rgba(0, 0, 0, 0.8),
+      0 2px 8px rgba(0, 0, 0, 0.45);
+    --shadow-cta: 0 14px 30px -12px rgba(44, 193, 118, 0.45);
+    --shadow-phone: 0 60px 90px -40px rgba(0, 0, 0, 0.85),
+      0 30px 60px -30px rgba(0, 0, 0, 0.6);
+  }
+
   html {
     scroll-behavior: smooth;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    background-color: rgb(var(--c-page));
   }
 
   body {
-    @apply bg-white text-body font-sans;
+    @apply bg-page text-body font-sans;
+  }
+
+  /* Mavzu almashganda rangli oʻtish — lekin faqat mavzu tugmasi
+     bosilgan lahzada (`.theme-switching`), shunda odatiy hover
+     animatsiyalari sekinlashib qolmaydi */
+  .theme-switching,
+  .theme-switching *,
+  .theme-switching *::before,
+  .theme-switching *::after {
+    transition: background-color 220ms ease, border-color 220ms ease,
+      color 220ms ease, fill 220ms ease, stroke 220ms ease !important;
   }
 
   ::selection {
-    background: #b6ecc6;
-    color: #0b2b1c;
+    background: rgb(var(--c-brand-200));
+    color: rgb(var(--c-ink));
   }
 
   :focus-visible {
-    outline: 2px solid #1ba463;
+    outline: 2px solid var(--focus);
     outline-offset: 3px;
     border-radius: 6px;
   }
 }
 
 @layer components {
+  /* ---------- Boʻlim foni va chetlarni yumshatuvchi qatlamlar ---------- */
+
+  /* Har bir boʻlimning bazaviy foni */
+  .section-page {
+    background-color: rgb(var(--c-page));
+  }
+
+  /* Boʻlim tepasi/pasti — qoʻshni boʻlimlar bilan chiziqsiz tutashishi uchun */
+  .fade-top {
+    background-image: linear-gradient(
+      to bottom,
+      rgb(var(--c-page)) 0%,
+      rgb(var(--c-page)) 26%,
+      rgb(var(--c-page) / 0.7) 52%,
+      rgb(var(--c-page) / 0) 100%
+    );
+  }
+  .fade-bottom {
+    background-image: linear-gradient(
+      to top,
+      rgb(var(--c-page)) 0%,
+      rgb(var(--c-page)) 26%,
+      rgb(var(--c-page) / 0.7) 52%,
+      rgb(var(--c-page) / 0) 100%
+    );
+  }
+  .fade-top-long {
+    background-image: linear-gradient(
+      to bottom,
+      rgb(var(--c-page)) 0%,
+      rgb(var(--c-page)) 28%,
+      rgb(var(--c-page) / 0.72) 50%,
+      rgb(var(--c-page) / 0.34) 74%,
+      rgb(var(--c-page) / 0) 100%
+    );
+  }
+  .fade-bottom-long {
+    background-image: linear-gradient(
+      to top,
+      rgb(var(--c-page)) 0%,
+      rgb(var(--c-page)) 28%,
+      rgb(var(--c-page) / 0.72) 50%,
+      rgb(var(--c-page) / 0.34) 74%,
+      rgb(var(--c-page) / 0) 100%
+    );
+  }
+  .fade-top-soft {
+    background-image: linear-gradient(
+      to bottom,
+      rgb(var(--c-page)),
+      rgb(var(--c-page) / 0)
+    );
+  }
+  .fade-bottom-soft {
+    background-image: linear-gradient(
+      to top,
+      rgb(var(--c-page)),
+      rgb(var(--c-page) / 0)
+    );
+  }
+  /* Ikkala chetni birdan yumshatadigan variant (About, Prefers, Timeline) */
+  .edge-fade-y {
+    background-image: linear-gradient(
+      to bottom,
+      rgb(var(--c-page)) 0%,
+      rgb(var(--c-page) / 0) 10%,
+      rgb(var(--c-page) / 0) 90%,
+      rgb(var(--c-page)) 100%
+    );
+  }
+
+  /* Bezak nurlari — toʻq rejimda matn kontrastini saqlash uchun soʻndiriladi */
+  .dark .decor-glow {
+    opacity: 0.4;
+  }
+
   /* Sahifa foni: chapdan yashil nur, oʻngdan moviy-siyoh tuman */
   .hero-canvas {
-    background-color: #fbfdfb;
+    background-color: rgb(var(--c-page));
     background-image:
       /* Pastki qirrada aniq oʻzgarish sezilmasligi uchun bazaviy rangga
          yumshoq tekislovchi qatlam — quyidagi boʻlimlar bilan tutashadi */
       linear-gradient(
         to bottom,
-        rgba(251, 253, 253, 0) 0%,
-        rgba(251, 253, 253, 0) 65%,
-        rgba(251, 253, 253, 1) 100%
+        rgb(var(--c-page) / 0) 0%,
+        rgb(var(--c-page) / 0) 65%,
+        rgb(var(--c-page)) 100%
       ),
       radial-gradient(
         62% 78% at 4% 26%,
@@ -70,6 +336,45 @@
       );
   }
 
+  .dark .hero-canvas {
+    background-image: linear-gradient(
+        to bottom,
+        rgb(var(--c-page) / 0) 0%,
+        rgb(var(--c-page) / 0) 65%,
+        rgb(var(--c-page)) 100%
+      ),
+      radial-gradient(
+        62% 78% at 4% 26%,
+        rgba(31, 122, 78, 0.42) 0%,
+        rgba(31, 122, 78, 0) 62%
+      ),
+      radial-gradient(
+        46% 52% at 24% 2%,
+        rgba(24, 92, 60, 0.4) 0%,
+        rgba(24, 92, 60, 0) 70%
+      ),
+      radial-gradient(
+        44% 60% at 96% 8%,
+        rgba(22, 74, 58, 0.38) 0%,
+        rgba(22, 74, 58, 0) 68%
+      ),
+      radial-gradient(
+        48% 55% at 74% 62%,
+        rgba(24, 66, 96, 0.4) 0%,
+        rgba(24, 66, 96, 0) 70%
+      ),
+      radial-gradient(
+        40% 46% at 99% 96%,
+        rgba(20, 76, 96, 0.34) 0%,
+        rgba(20, 76, 96, 0) 70%
+      ),
+      radial-gradient(
+        34% 40% at 6% 96%,
+        rgba(24, 84, 56, 0.32) 0%,
+        rgba(24, 84, 56, 0) 70%
+      );
+  }
+
   /* Sarlavha ortidagi yumshoq yashil yorugʻlik */
   .hero-glow {
     background: radial-gradient(
@@ -79,30 +384,27 @@
     );
     filter: blur(30px);
   }
+  .dark .hero-glow {
+    background: radial-gradient(
+      50% 50% at 50% 50%,
+      rgba(46, 150, 96, 0.4) 0%,
+      rgba(46, 150, 96, 0) 70%
+    );
+  }
 
   .glass-panel {
-    background: linear-gradient(
-      145deg,
-      rgba(255, 255, 255, 0.55),
-      rgba(255, 255, 255, 0.12)
-    );
-    border: 1px solid rgba(255, 255, 255, 0.6);
+    background: linear-gradient(145deg, var(--panel-1), var(--panel-2));
+    border: 1px solid var(--panel-border);
     backdrop-filter: blur(6px);
   }
 
   /* Xizmat kartochkalari: shaffof shisha + orqa nur oʻtib turadi */
   .glass-card {
-    background: linear-gradient(
-      160deg,
-      rgba(255, 255, 255, 0.8),
-      rgba(255, 255, 255, 0.42)
-    );
-    border: 1px solid rgba(255, 255, 255, 0.75);
+    background: linear-gradient(160deg, var(--glass-1), var(--glass-2));
+    border: 1px solid var(--glass-border);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
-    box-shadow:
-      0 20px 44px -22px rgba(15, 64, 40, 0.22),
-      inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    box-shadow: var(--glass-shadow);
   }
 
   /* Asosiy CTA: yumshoq hajmli (soft 3D) — ichki yorugʻlik + ichki soya + tashqi nur */
@@ -132,26 +434,17 @@
       0 10px 20px -10px rgba(52, 211, 153, 0.5);
   }
 
-  /* Ikkinchi darajali CTA: oq, yumshoq hajmli */
+  /* Ikkinchi darajali CTA: yumshoq hajmli */
   .btn-secondary {
-    background-color: #fff;
-    box-shadow:
-      inset 0 3px 6px rgba(255, 255, 255, 1),
-      inset 0 -3px 6px rgba(0, 0, 0, 0.05),
-      0 10px 25px -5px rgba(0, 0, 0, 0.1);
+    background-color: var(--btn2-bg);
+    box-shadow: var(--btn2-shadow);
     transition: box-shadow 0.3s ease, transform 0.3s ease;
   }
   .btn-secondary:hover {
-    box-shadow:
-      inset 0 3px 6px rgba(255, 255, 255, 1),
-      inset 0 -3px 6px rgba(0, 0, 0, 0.05),
-      0 14px 32px -5px rgba(0, 0, 0, 0.14);
+    box-shadow: var(--btn2-shadow-hover);
   }
   .btn-secondary:active {
-    box-shadow:
-      inset 0 3px 7px rgba(0, 0, 0, 0.08),
-      inset 0 -1px 3px rgba(255, 255, 255, 0.6),
-      0 6px 16px -6px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--btn2-shadow-active);
   }
 
   /* Toʻyingan variant: oq matn kerak boʻlgan joylarda (telefon ekrani, mobil menyu) */
@@ -174,12 +467,9 @@
   }
 
   .badge-pill {
-    background: linear-gradient(
-      100deg,
-      rgba(220, 248, 228, 0.95),
-      rgba(238, 252, 242, 0.7)
-    );
-    border: 1px solid rgba(255, 255, 255, 0.9);
+    background: linear-gradient(100deg, var(--badge-1), var(--badge-2));
+    border: 1px solid var(--badge-border);
+    color: var(--badge-fg);
   }
 }
 

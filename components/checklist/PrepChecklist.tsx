@@ -10,6 +10,8 @@ import {
   useReducedMotion,
   type Variants,
 } from "framer-motion";
+import { useT } from "@/lib/i18n/LanguageProvider";
+import { useTheme } from "@/components/theme/ThemeProvider";
 import {
   Certificate3D,
   Diploma3D,
@@ -29,9 +31,8 @@ import {
  * emas, haqiqiy tayyorgarlik vositasini beradi.
  */
 
+/** Matnlar lugʻatdan (t.checklist.items) shu tartibda olinadi */
 type Item = {
-  title: string;
-  hint: string;
   icon: ComponentType<SVGProps<SVGSVGElement>>;
   /** Kartochka ostidagi yumshoq aura */
   glow: string;
@@ -39,44 +40,30 @@ type Item = {
 
 const ITEMS: Item[] = [
   {
-    title: "Shaxsni tasdiqlovchi hujjat",
-    hint: "Pasport yoki ID karta — asosiy maʼlumot sahifasi",
     icon: IdCard3D,
     glow: "rgba(42,127,182,0.28)",
   },
   {
-    title: "Tibbiy diplom",
-    hint: "Tibbiyot bilim yurti yoki oliy taʼlim diplomi",
     icon: Diploma3D,
     glow: "rgba(255,196,79,0.30)",
   },
   {
-    title: "Malaka / toifa sertifikatlari",
-    hint: "Amaldagi sertifikat va toifa hujjatlari",
     icon: Certificate3D,
     glow: "rgba(79,209,137,0.30)",
   },
   {
-    title: "Ish tajribasi haqidagi maʼlumot",
-    hint: "Qayerda, qancha muddat va qaysi yoʻnalishda ishlagansiz",
     icon: Experience3D,
     glow: "rgba(31,146,201,0.28)",
   },
   {
-    title: "Profil uchun sifatli fotosurat",
-    hint: "Yorugʻ fonda, yuz aniq koʻrinadigan surat",
     icon: PhotoPortrait3D,
     glow: "rgba(169,146,236,0.30)",
   },
   {
-    title: "Qisqa video yozish imkoniyati",
-    hint: "Oʻzingiz va tajribangiz haqida bir daqiqalik video",
     icon: VideoRecord3D,
     glow: "rgba(249,137,159,0.28)",
   },
   {
-    title: "Internetga ulangan smartfon",
-    hint: "Mutaxassis ilovasi iOS va Android uchun mavjud",
     icon: SmartphoneWifi3D,
     glow: "rgba(44,193,118,0.30)",
   },
@@ -104,15 +91,28 @@ const rowVariants: Variants = {
 /* ===== Belgilash katakchasi ===== */
 
 function CheckBox({ on }: { on: boolean }) {
+  /* framer-motion `var()` qiymatlarini interpolyatsiya qila olmaydi, shu bois
+     belgilanmagan holat rangi mavzuga qarab JS'da tanlanadi */
+  const { theme } = useTheme();
+  const dark = theme === "dark";
+
   return (
     <motion.span
       animate={{
         background: on
           ? "linear-gradient(150deg,#7FE7B4 0%,#2CC176 55%,#12855A 100%)"
+          : dark
+          ? "linear-gradient(150deg,#1C3529,#132821)"
           : "linear-gradient(150deg,#FFFFFF,#F1F6F3)",
-        borderColor: on ? "rgba(79,209,137,0.9)" : "rgba(215,228,220,1)",
+        borderColor: on
+          ? "rgba(79,209,137,0.9)"
+          : dark
+          ? "rgba(134,224,165,0.22)"
+          : "rgba(215,228,220,1)",
         boxShadow: on
           ? "0 12px 22px -12px rgba(23,164,104,0.95), inset 0 1px 0 rgba(255,255,255,0.6)"
+          : dark
+          ? "inset 0 1px 0 rgba(255,255,255,0.06)"
           : "inset 0 1px 0 rgba(255,255,255,0.9)",
       }}
       transition={{ duration: 0.32, ease: [0.22, 0.9, 0.3, 1] }}
@@ -161,17 +161,25 @@ function CheckBox({ on }: { on: boolean }) {
 
 function PrepRow({
   item,
+  text,
   index,
   on,
   onToggle,
 }: {
   item: Item;
+  text: { title: string; hint: string };
   index: number;
   on: boolean;
   onToggle: () => void;
 }) {
   const reduce = useReducedMotion();
   const Icon = item.icon;
+
+  /* Sarlavha rangi framer-motion orqali animatsiyalanadi — `var()` bu yerda
+     ishlamaydi, shu bois qiymatlar mavzuga qarab tanlanadi */
+  const { theme } = useTheme();
+  const headingOn = theme === "dark" ? "#EAF6EF" : "#0B2B1C";
+  const headingOff = theme === "dark" ? "#9FB8AB" : "#2A4438";
 
   const mx = useMotionValue(50);
   const my = useMotionValue(50);
@@ -246,19 +254,19 @@ function PrepRow({
           >
             <Icon className="h-[44px] w-[44px] sm:h-[48px] sm:w-[48px]" />
           </motion.span>
-          <span className="absolute -left-1 -top-1 grid h-[17px] w-[17px] place-items-center rounded-full bg-white/90 font-display text-[9.5px] font-extrabold text-mute shadow-[0_3px_8px_-4px_rgba(11,43,28,0.6)]">
+          <span className="absolute -left-1 -top-1 grid h-[17px] w-[17px] place-items-center rounded-full bg-surface/90 font-display text-[9.5px] font-extrabold text-mute shadow-[0_3px_8px_-4px_rgba(11,43,28,0.6)]">
             {index + 1}
           </span>
         </span>
 
         <div className="min-w-0 flex-1">
           <motion.h3
-            animate={{ color: on ? "#0B2B1C" : "#2A4438" }}
+            animate={{ color: on ? headingOn : headingOff }}
             className="font-display text-[14px] font-extrabold leading-[1.3] sm:text-[15px]"
           >
-            {item.title}
+            {text.title}
           </motion.h3>
-          <p className="mt-1 text-[12px] leading-[1.5] text-mute sm:text-[12.5px]">{item.hint}</p>
+          <p className="mt-1 text-[12px] leading-[1.5] text-mute sm:text-[12.5px]">{text.hint}</p>
         </div>
 
         <CheckBox on={on} />
@@ -269,15 +277,28 @@ function PrepRow({
 
 /* ===== Chapdagi progress paneli ===== */
 
+type PanelLabels = {
+  ready: string;
+  panelTitle: string;
+  panelDesc: string;
+  doneTitle: string;
+  doneDesc: string;
+  checkAll: string;
+  reset: string;
+};
+
 function ProgressPanel({
   count,
   onAll,
   onReset,
+  labels,
 }: {
   count: number;
   onAll: () => void;
   onReset: () => void;
+  labels: PanelLabels;
 }) {
+  const { ready } = labels;
   const reduce = useReducedMotion();
   const ratio = count / TOTAL;
   const full = count === TOTAL;
@@ -290,14 +311,14 @@ function ProgressPanel({
         aria-hidden
         animate={{ opacity: full ? 1 : 0 }}
         transition={{ duration: 0.6 }}
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(70%_60%_at_50%_0%,rgba(79,209,137,0.35),rgba(79,209,137,0)_70%)]"
+        className="decor-glow pointer-events-none absolute inset-0 bg-[radial-gradient(70%_60%_at_50%_0%,rgba(79,209,137,0.35),rgba(79,209,137,0)_70%)]"
       />
 
       {/* Halqa */}
       <div className="relative mx-auto aspect-square w-full max-w-[220px]">
         <motion.div
           aria-hidden
-          className="pointer-events-none absolute inset-[10%] rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(79,209,137,0.4),rgba(79,209,137,0)_70%)] blur-2xl"
+          className="decor-glow pointer-events-none absolute inset-[10%] rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(79,209,137,0.4),rgba(79,209,137,0)_70%)] blur-2xl"
           animate={reduce ? undefined : { opacity: [0.6, 1, 0.6], scale: [0.95, 1.06, 0.95] }}
           transition={{ duration: 6.5, repeat: Infinity, ease: "easeInOut" }}
         />
@@ -311,7 +332,7 @@ function ProgressPanel({
             </linearGradient>
           </defs>
 
-          <circle cx="100" cy="100" r="78" fill="none" stroke="#E4EDE7" strokeWidth="16" />
+          <circle cx="100" cy="100" r="78" fill="none" stroke="var(--track)" strokeWidth="16" />
 
           {/* Bandlar orasidagi ajratuvchi tirqishlar */}
           {Array.from({ length: TOTAL }).map((_, i) => (
@@ -321,7 +342,7 @@ function ProgressPanel({
               y1="100"
               x2={100 + 96 * Math.cos(((i / TOTAL) * 360 - 90) * (Math.PI / 180))}
               y2={100 + 96 * Math.sin(((i / TOTAL) * 360 - 90) * (Math.PI / 180))}
-              stroke="#fbfdfb"
+              stroke="rgb(var(--c-page))"
               strokeWidth="4"
             />
           ))}
@@ -358,7 +379,7 @@ function ProgressPanel({
               <span className="text-mute">/{TOTAL}</span>
             </div>
             <p className="mt-1.5 text-[12px] font-semibold uppercase tracking-[0.12em] text-mute">
-              tayyor · {percent}%
+              {ready} · {percent}%
             </p>
           </div>
         </div>
@@ -377,20 +398,19 @@ function ProgressPanel({
             {full ? (
               <>
                 <p className="font-display text-[16px] font-extrabold text-ink">
-                  Hammasi tayyor! 🎉
+                  {labels.doneTitle}
                 </p>
                 <p className="mt-1.5 text-[13px] leading-[1.55] text-body">
-                  Endi ilovada arizani bemalol toʻldirishingiz mumkin.
+                  {labels.doneDesc}
                 </p>
               </>
             ) : (
               <>
                 <p className="font-display text-[16px] font-extrabold text-ink">
-                  Tayyorgarlik roʻyxati
+                  {labels.panelTitle}
                 </p>
                 <p className="mt-1.5 text-[13px] leading-[1.55] text-body">
-                  Tayyor boʻlgan bandlarni belgilab boring — nima qolganini
-                  darrov koʻrasiz.
+                  {labels.panelDesc}
                 </p>
               </>
             )}
@@ -407,16 +427,16 @@ function ProgressPanel({
           whileTap={reduce ? undefined : { scale: 0.96 }}
           className="btn-secondary rounded-pill px-4 py-2 font-display text-[12.5px] font-bold text-ink"
         >
-          Barchasini belgilash
+          {labels.checkAll}
         </motion.button>
         <motion.button
           type="button"
           onClick={onReset}
           whileHover={reduce ? undefined : { scale: 1.04 }}
           whileTap={reduce ? undefined : { scale: 0.96 }}
-          className="rounded-pill border border-line bg-white/60 px-4 py-2 font-display text-[12.5px] font-bold text-mute transition-colors hover:text-ink"
+          className="rounded-pill border border-line bg-surface/60 px-4 py-2 font-display text-[12.5px] font-bold text-mute transition-colors hover:text-ink"
         >
-          Tozalash
+          {labels.reset}
         </motion.button>
       </div>
 
@@ -447,6 +467,7 @@ function ProgressPanel({
 /* ===== Boʻlim ===== */
 
 export default function PrepChecklist() {
+  const t = useT();
   const reduce = useReducedMotion();
   const [checked, setChecked] = useState<boolean[]>(() => ITEMS.map(() => false));
 
@@ -462,29 +483,28 @@ export default function PrepChecklist() {
   return (
     <section
       id="tayyorgarlik"
-      className="relative scroll-mt-24 overflow-hidden pb-24 pt-16 sm:pb-32 sm:pt-24"
-      style={{ backgroundColor: "#fbfdfb" }}
+      className="section-page relative scroll-mt-24 overflow-hidden pb-24 pt-16 sm:pb-32 sm:pt-24"
     >
       {/* ===== Fon nurlari ===== */}
       <div
         aria-hidden
-        className="pointer-events-none absolute -inset-x-[10%] bottom-[8%] top-[8%] bg-[radial-gradient(56%_52%_at_38%_44%,rgba(79,209,137,0.26),rgba(79,209,137,0)_72%)]"
+        className="decor-glow pointer-events-none absolute -inset-x-[10%] bottom-[8%] top-[8%] bg-[radial-gradient(56%_52%_at_38%_44%,rgba(79,209,137,0.26),rgba(79,209,137,0)_72%)]"
       />
       <motion.div
         aria-hidden
-        className="pointer-events-none absolute -left-[10%] top-[10%] h-[500px] w-[500px] rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(79,209,137,0.44),rgba(79,209,137,0)_70%)] blur-2xl"
+        className="decor-glow pointer-events-none absolute -left-[10%] top-[10%] h-[500px] w-[500px] rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(79,209,137,0.44),rgba(79,209,137,0)_70%)] blur-2xl"
         animate={reduce ? undefined : { x: [0, 32, 0], y: [0, -20, 0], scale: [1, 1.08, 1] }}
         transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
       />
       <motion.div
         aria-hidden
-        className="pointer-events-none absolute -right-[12%] top-[18%] h-[470px] w-[470px] rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(169,146,236,0.24),rgba(169,146,236,0)_70%)] blur-2xl"
+        className="decor-glow pointer-events-none absolute -right-[12%] top-[18%] h-[470px] w-[470px] rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(169,146,236,0.24),rgba(169,146,236,0)_70%)] blur-2xl"
         animate={reduce ? undefined : { x: [0, -26, 0], y: [0, 26, 0], scale: [1, 1.1, 1] }}
         transition={{ duration: 21, repeat: Infinity, ease: "easeInOut", delay: 1.1 }}
       />
       <motion.div
         aria-hidden
-        className="pointer-events-none absolute bottom-[-8%] left-[28%] h-[420px] w-[580px] rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(44,193,118,0.30),rgba(44,193,118,0)_72%)] blur-2xl"
+        className="decor-glow pointer-events-none absolute bottom-[-8%] left-[28%] h-[420px] w-[580px] rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(44,193,118,0.30),rgba(44,193,118,0)_72%)] blur-2xl"
         animate={reduce ? undefined : { x: [0, 26, 0], scale: [1, 1.06, 1] }}
         transition={{ duration: 23, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
       />
@@ -492,23 +512,23 @@ export default function PrepChecklist() {
       {/* ===== Suyuq tomchilar ===== */}
       <div
         aria-hidden
-        className="pointer-events-none absolute left-[4%] top-[30%] hidden h-[17px] w-[17px] animate-liquid rounded-full bg-[radial-gradient(circle_at_32%_28%,rgba(255,255,255,0.9)_0%,rgba(190,230,60,0.5)_38%,rgba(79,209,137,0.6)_78%)] shadow-[0_3px_8px_rgba(11,43,28,0.16)] sm:block"
+        className="decor-glow pointer-events-none absolute left-[4%] top-[30%] hidden h-[17px] w-[17px] animate-liquid rounded-full bg-[radial-gradient(circle_at_32%_28%,rgba(255,255,255,0.9)_0%,rgba(190,230,60,0.5)_38%,rgba(79,209,137,0.6)_78%)] shadow-[0_3px_8px_rgba(11,43,28,0.16)] sm:block"
         style={{ animationDuration: "5.8s" }}
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute bottom-[22%] right-[6%] hidden h-4 w-4 animate-liquid rounded-full bg-[radial-gradient(circle_at_32%_28%,rgba(255,255,255,0.85)_0%,rgba(196,180,245,0.5)_38%,rgba(98,68,184,0.4)_78%)] shadow-[0_3px_8px_rgba(11,43,28,0.14)] blur-[1px] sm:block"
+        className="decor-glow pointer-events-none absolute bottom-[22%] right-[6%] hidden h-4 w-4 animate-liquid rounded-full bg-[radial-gradient(circle_at_32%_28%,rgba(255,255,255,0.85)_0%,rgba(196,180,245,0.5)_38%,rgba(98,68,184,0.4)_78%)] shadow-[0_3px_8px_rgba(11,43,28,0.14)] blur-[1px] sm:block"
         style={{ animationDelay: "2s", animationDuration: "6.4s" }}
       />
 
       {/* Qoʻshni boʻlimlar bilan yumshoq tutashuv */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 top-0 h-[220px] bg-[linear-gradient(to_bottom,#fbfdfb_0%,#fbfdfb_26%,rgba(251,253,251,0.7)_52%,rgba(251,253,251,0)_100%)] sm:h-[300px]"
+        className="pointer-events-none absolute inset-x-0 top-0 h-[220px] fade-top sm:h-[300px]"
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-[200px] bg-[linear-gradient(to_top,#fbfdfb_0%,#fbfdfb_26%,rgba(251,253,251,0.7)_52%,rgba(251,253,251,0)_100%)] sm:h-[280px]"
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-[200px] fade-bottom sm:h-[280px]"
       />
 
       <div className="relative z-[2] mx-auto max-w-[1240px] px-5 sm:px-8">
@@ -519,10 +539,10 @@ export default function PrepChecklist() {
             whileInView={{ opacity: 1, y: 0, scale: 1 }}
             viewport={{ once: true, amount: 0.6 }}
             transition={{ type: "spring", stiffness: 140, damping: 16 }}
-            className="badge-pill inline-flex items-center gap-2 rounded-pill py-[7px] pl-3 pr-4 text-[13.5px] font-semibold text-[#1F4433] shadow-[0_6px_16px_-8px_rgba(11,43,28,0.25)]"
+            className="badge-pill inline-flex items-center gap-2 rounded-pill py-[7px] pl-3 pr-4 text-[13.5px] font-semibold shadow-[0_6px_16px_-8px_rgba(11,43,28,0.25)]"
           >
             <Image src="/cuocces.png" alt="" width={19} height={20} className="h-[19px] w-[18px]" />
-            Onboarding boshlashdan oldin
+            {t.checklist.badge}
           </motion.span>
 
           <div className="relative mt-5">
@@ -539,7 +559,7 @@ export default function PrepChecklist() {
               transition={{ duration: 0.7, ease: [0.22, 0.9, 0.3, 1] }}
               className="font-display text-[26px] font-extrabold leading-[1.2] tracking-[-0.01em] text-ink sm:text-[34px] lg:text-[40px]"
             >
-              QUYIDAGILARNI TAYYORLAB QOʻYING
+              {t.checklist.title}
             </motion.h2>
           </div>
 
@@ -550,8 +570,7 @@ export default function PrepChecklist() {
             transition={{ duration: 0.6, delay: 0.15 }}
             className="mx-auto mt-4 max-w-[640px] text-[14px] leading-[1.65] text-body sm:text-[15.5px]"
           >
-            Ilovada ariza qoldirish uchun quyidagilar kerak boʻladi. Tayyor bandlarni
-            belgilab boring — roʻyxat siz bilan birga toʻladi.
+            {t.checklist.desc}
           </motion.p>
         </div>
 
@@ -563,7 +582,7 @@ export default function PrepChecklist() {
             viewport={{ once: true, amount: 0.3 }}
             transition={{ type: "spring", stiffness: 90, damping: 18 }}
           >
-            <ProgressPanel count={count} onAll={checkAll} onReset={reset} />
+            <ProgressPanel count={count} onAll={checkAll} onReset={reset} labels={t.checklist} />
           </motion.div>
 
           <motion.div
@@ -575,8 +594,9 @@ export default function PrepChecklist() {
           >
             {ITEMS.map((item, i) => (
               <PrepRow
-                key={item.title}
+                key={i}
                 item={item}
+                text={t.checklist.items[i]}
                 index={i}
                 on={checked[i]}
                 onToggle={() => toggle(i)}
@@ -603,8 +623,24 @@ export default function PrepChecklist() {
             </svg>
           </span>
           <p className="text-[13px] leading-[1.6] text-body sm:text-[14px]">
-            Hujjatlarning aniq roʻyxati mutaxassislikka qarab farq qilishi mumkin.
+            {t.checklist.note}
           </p>
+        </motion.div>
+
+        {/* ===== Chaqiriq tugmasi ===== */}
+        <motion.div
+          initial={{ opacity: 0, y: 18 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.6 }}
+          transition={{ duration: 0.6, delay: 0.2, ease: [0.22, 0.9, 0.3, 1] }}
+          className="mt-8 flex justify-center sm:mt-10"
+        >
+          <a
+            href="#onboarding"
+            className="btn-primary rounded-pill px-8 py-4 font-display text-[16px] font-bold text-onbrand transition-all duration-300 hover:scale-105 active:scale-100"
+          >
+            {t.checklist.cta}
+          </a>
         </motion.div>
       </div>
     </section>

@@ -1,26 +1,46 @@
 import type { Config } from "tailwindcss";
 
+/** Barcha ranglar CSS oʻzgaruvchilariga bogʻlangan — `globals.css` dagi
+ *  `:root` (yorugʻ) va `.dark` (toʻq) bloklari ularning qiymatini beradi.
+ *  `<alpha-value>` saqlangani uchun `text-ink/70` kabi shaffoflik ishlaydi. */
+const token = (name: string) => `rgb(var(${name}) / <alpha-value>)`;
+
 const config: Config = {
-  content: ["./app/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}"],
+  darkMode: "class",
+  content: [
+    "./app/**/*.{ts,tsx}",
+    "./components/**/*.{ts,tsx}",
+    "./lib/**/*.{ts,tsx}",
+  ],
   theme: {
     extend: {
       screens: {
         nav: "1120px",
       },
       colors: {
-        ink: "#0B2B1C",
-        body: "#54675E",
-        mute: "#7C8D85",
-        line: "#E4EDE7",
+        /* Matn */
+        ink: token("--c-ink"),
+        body: token("--c-body"),
+        mute: token("--c-mute"),
+        line: token("--c-line"),
+
+        /* Yuzalar */
+        page: token("--c-page"),
+        surface: token("--c-surface"),
+        "surface-2": token("--c-surface-2"),
+
+        /* Yashil CTA ustidagi matn — ikkala rejimda ham toʻq qoladi */
+        onbrand: "#0B2B1C",
+
         brand: {
-          50: "#F0FBF3",
-          100: "#DCF6E3",
-          200: "#B6ECC6",
-          300: "#86E0A5",
-          400: "#4FD189",
-          500: "#2CC176",
-          600: "#1BA463",
-          700: "#167F4E",
+          50: token("--c-brand-50"),
+          100: token("--c-brand-100"),
+          200: token("--c-brand-200"),
+          300: token("--c-brand-300"),
+          400: token("--c-brand-400"),
+          500: token("--c-brand-500"),
+          600: token("--c-brand-600"),
+          700: token("--c-brand-700"),
         },
       },
       fontFamily: {
@@ -33,12 +53,11 @@ const config: Config = {
         phone: "52px",
       },
       boxShadow: {
-        nav: "0 2px 14px rgba(11,43,28,0.05)",
-        card: "0 12px 34px -12px rgba(11,43,28,0.18), 0 2px 6px rgba(11,43,28,0.04)",
-        float: "0 18px 40px -16px rgba(11,43,28,0.22), 0 2px 8px rgba(11,43,28,0.05)",
-        cta: "0 14px 30px -10px rgba(44,193,118,0.55)",
-        phone:
-          "0 60px 90px -40px rgba(11,43,28,0.45), 0 30px 60px -30px rgba(11,43,28,0.28)",
+        nav: "var(--shadow-nav)",
+        card: "var(--shadow-card)",
+        float: "var(--shadow-float)",
+        cta: "var(--shadow-cta)",
+        phone: "var(--shadow-phone)",
       },
       keyframes: {
         rise: {

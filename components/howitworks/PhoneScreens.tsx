@@ -1,6 +1,7 @@
 "use client";
 
 import { motion, type Variants } from "framer-motion";
+import { useT } from "@/lib/i18n/LanguageProvider";
 
 /*
  * Telefon ekranida koʻrsatiladigan sakkizta "ilova oynasi".
@@ -61,7 +62,7 @@ function OrderCard({
       custom={i + 1}
       initial="hidden"
       animate="visible"
-      className={`relative flex items-center gap-2 rounded-[14px] border bg-white p-2 ${
+      className={`relative flex items-center gap-2 rounded-[14px] border bg-surface p-2 ${
         active
           ? "border-brand-300 shadow-[0_10px_20px_-14px_rgba(27,164,99,0.9)]"
           : "border-line/90"
@@ -77,7 +78,7 @@ function OrderCard({
           <motion.span
             animate={{ opacity: [1, 0.45, 1] }}
             transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
-            className="rounded-pill bg-[#FFEFD6] px-1.5 py-[2px] text-[8px] font-bold text-[#B4740F]"
+            className="rounded-pill bg-[color:var(--chip-warn-bg)] px-1.5 py-[2px] text-[8px] font-bold text-[color:var(--chip-warn-fg)]"
           >
             {badge}
           </motion.span>
@@ -107,7 +108,7 @@ function InfoRow({
       custom={i}
       initial="hidden"
       animate="visible"
-      className="flex items-center gap-2 rounded-[13px] border border-line/90 bg-white p-2"
+      className="flex items-center gap-2 rounded-[13px] border border-line/90 bg-surface p-2"
     >
       <span
         className="grid h-7 w-7 shrink-0 place-items-center rounded-[9px]"
@@ -146,13 +147,33 @@ const ic = {
 
 /* ===== 1. Yangi buyurtmalar ===== */
 export function ScreenOrders() {
+  const t = useT();
   return (
     <div>
-      <ScreenTitle sub="3 ta faol soʻrov">Yangi buyurtmalar</ScreenTitle>
+      <ScreenTitle sub={t.screens.ordersSub}>{t.screens.ordersTitle}</ScreenTitle>
       <div className="space-y-1.5">
-        <OrderCard i={0} name="Nodira A." service="Ukol qilish · Chilonzor" time="09:40" badge="Yangi" active />
-        <OrderCard i={1} name="Sardor T." service="Bogʻlam · Yunusobod" time="10:15" tone="#1FB6E8" />
-        <OrderCard i={2} name="Malika R." service="Kapelnitsa · Mirzo Ulugʻbek" time="11:00" tone="#F6A45A" />
+        <OrderCard
+          i={0}
+          name={t.screens.orders[0].name}
+          service={t.screens.orders[0].meta}
+          time="09:40"
+          badge={t.screens.badgeNew}
+          active
+        />
+        <OrderCard
+          i={1}
+          name={t.screens.orders[1].name}
+          service={t.screens.orders[1].meta}
+          time="10:15"
+          tone="#1FB6E8"
+        />
+        <OrderCard
+          i={2}
+          name={t.screens.orders[2].name}
+          service={t.screens.orders[2].meta}
+          time="11:00"
+          tone="#F6A45A"
+        />
       </div>
       <motion.div
         variants={pop}
@@ -161,7 +182,7 @@ export function ScreenOrders() {
         animate="visible"
         className="mt-2 rounded-[13px] border border-dashed border-brand-200 bg-brand-50/70 p-2 text-center text-[9px] font-semibold text-brand-700"
       >
-        Yangi soʻrovlar real vaqtda keladi
+        {t.screens.ordersFoot}
       </motion.div>
     </div>
   );
@@ -169,10 +190,17 @@ export function ScreenOrders() {
 
 /* ===== 2. Qabul qilish yoki rad etish ===== */
 export function ScreenAccept() {
+  const t = useT();
   return (
     <div>
-      <ScreenTitle sub="Javob berish uchun 5 daqiqa">Buyurtma #1284</ScreenTitle>
-      <OrderCard i={0} name="Nodira A." service="Ukol qilish · 2 marta" time="09:40" active />
+      <ScreenTitle sub={t.screens.decisionSub}>{t.screens.decisionTitle}</ScreenTitle>
+      <OrderCard
+        i={0}
+        name={t.screens.orders[0].name}
+        service={t.screens.decisionOrder}
+        time="09:40"
+        active
+      />
       <div className="mt-3 grid grid-cols-2 gap-2">
         <motion.button
           type="button"
@@ -187,7 +215,7 @@ export function ScreenAccept() {
             animate={{ scale: [1, 0.94, 1] }}
             transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut", times: [0, 0.12, 0.3] }}
           >
-            Qabul qilish
+            {t.screens.accept}
           </motion.span>
         </motion.button>
         <motion.button
@@ -196,9 +224,9 @@ export function ScreenAccept() {
           custom={2}
           initial="hidden"
           animate="visible"
-          className="rounded-[13px] border border-[#F3D4D9] bg-[#FFF6F7] py-2 font-display text-[10.5px] font-bold text-[#C6435A]"
+          className="rounded-[13px] border border-[color:var(--chip-danger-border)] bg-[color:var(--chip-danger-bg)] py-2 font-display text-[10.5px] font-bold text-[color:var(--chip-danger-fg)]"
         >
-          Rad etish
+          {t.screens.decline}
         </motion.button>
       </div>
       <motion.p
@@ -208,7 +236,7 @@ export function ScreenAccept() {
         animate="visible"
         className="mt-2.5 text-center text-[9px] font-medium leading-[1.5] text-mute"
       >
-        Tanlov faqat sizda — jadvalingizga qarab hal qilasiz
+        {t.screens.decisionFoot}
       </motion.p>
     </div>
   );
@@ -216,23 +244,24 @@ export function ScreenAccept() {
 
 /* ===== 3. Xizmat turi va manzil ===== */
 export function ScreenAddress() {
+  const t = useT();
   return (
     <div>
-      <ScreenTitle sub="Buyurtma tafsilotlari">Xizmat maʼlumoti</ScreenTitle>
+      <ScreenTitle sub={t.screens.detailSub}>{t.screens.detailTitle}</ScreenTitle>
       <div className="space-y-1.5">
-        <InfoRow i={1} label="Xizmat turi" value="Mushak ichiga ukol" icon={ic.syringe} />
-        <InfoRow i={2} label="Manzil" value="Chilonzor 9-kv, 12-uy" tone="#E7F3FB" icon={ic.pin} />
-        <InfoRow i={3} label="Vaqt" value="Bugun, 09:40" tone="#FFF4E2" icon={ic.clock} />
+        <InfoRow i={1} {...t.screens.detailRows[0]} icon={ic.syringe} />
+        <InfoRow i={2} {...t.screens.detailRows[1]} tone="#E7F3FB" icon={ic.pin} />
+        <InfoRow i={3} {...t.screens.detailRows[2]} tone="#FFF4E2" icon={ic.clock} />
       </div>
       <motion.div
         variants={pop}
         custom={4}
         initial="hidden"
         animate="visible"
-        className="relative mt-2 h-[76px] overflow-hidden rounded-[13px] border border-line/90 bg-[#EDF3EF]"
+        className="relative mt-2 h-[76px] overflow-hidden rounded-[13px] border border-line/90 bg-[color:var(--map-bg)]"
       >
         <svg viewBox="0 0 200 90" className="absolute inset-0 h-full w-full">
-          <rect width="200" height="90" fill="#E9F0EB" />
+          <rect width="200" height="90" fill="var(--map-bg-2)" />
           <path d="M8 58c14-16 30-24 52-22s34 12 54 6 40-16 62-6l16 8v46H8V58Z" fill="#DCE8DF" />
           <path d="M0 34h200M0 62h200M46 0v90M108 0v90M162 0v90" stroke="#D0DED4" strokeWidth="1" />
           <motion.path
@@ -247,7 +276,7 @@ export function ScreenAddress() {
           />
         </svg>
         <motion.span
-          className="absolute left-[70%] top-[36%] grid h-5 w-5 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-white shadow-[0_4px_10px_-4px_rgba(11,43,28,0.5)]"
+          className="absolute left-[70%] top-[36%] grid h-5 w-5 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-surface shadow-[0_4px_10px_-4px_rgba(11,43,28,0.5)]"
           animate={{ y: [0, -3, 0] }}
           transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
         >
@@ -260,6 +289,7 @@ export function ScreenAddress() {
 
 /* ===== 4. Mijoz bilan bogʻlanish ===== */
 export function ScreenCall() {
+  const t = useT();
   return (
     <div className="flex h-full flex-col items-center justify-center pb-2 text-center">
       <div className="relative mb-3">
@@ -281,10 +311,10 @@ export function ScreenCall() {
         </motion.span>
       </div>
       <motion.p variants={pop} custom={1} initial="hidden" animate="visible" className="font-display text-[13px] font-extrabold text-ink">
-        Nodira A.
+        {t.screens.orders[0].name}
       </motion.p>
       <motion.p variants={pop} custom={2} initial="hidden" animate="visible" className="mt-1 text-[9.5px] font-medium text-mute">
-        Mijoz bilan bogʻlanmoqda…
+        {t.screens.contacting}
       </motion.p>
       <motion.div variants={pop} custom={3} initial="hidden" animate="visible" className="mt-3.5 flex items-center gap-2.5">
         <span className="grid h-10 w-10 place-items-center rounded-full bg-[linear-gradient(150deg,#5CD79A,#17A468)] shadow-[0_10px_18px_-10px_rgba(23,164,104,0.95)]">
@@ -292,7 +322,7 @@ export function ScreenCall() {
             <path d="M6.6 3.4c.7-.6 1.8-.5 2.3.3l1.6 2.2c.4.6.3 1.4-.3 1.9l-1 .8c-.2.2-.3.5-.2.8a11 11 0 0 0 4.6 4.6c.3.1.6 0 .8-.2l.8-1c.5-.6 1.3-.7 1.9-.3l2.2 1.6c.8.5.9 1.6.3 2.3l-1.1 1.2c-.7.7-1.8 1-2.8.6a20 20 0 0 1-10.6-10.6c-.4-1-.1-2.1.6-2.8l1-1.1Z" />
           </svg>
         </span>
-        <span className="grid h-10 w-10 place-items-center rounded-full border border-line bg-white shadow-[0_8px_16px_-10px_rgba(11,43,28,0.5)]">
+        <span className="grid h-10 w-10 place-items-center rounded-full border border-line bg-surface shadow-[0_8px_16px_-10px_rgba(11,43,28,0.5)]">
           <svg viewBox="0 0 24 24" className="h-[17px] w-[17px]" fill="none">
             <path d="M4 6.4A2.4 2.4 0 0 1 6.4 4h11.2A2.4 2.4 0 0 1 20 6.4v7.2a2.4 2.4 0 0 1-2.4 2.4H9.6L5 19.6V6.4Z" stroke="#1BA463" strokeWidth="1.9" strokeLinejoin="round" />
           </svg>
@@ -304,9 +334,10 @@ export function ScreenCall() {
 
 /* ===== 5. Xizmatni boshlash ===== */
 export function ScreenStart() {
+  const t = useT();
   return (
     <div className="flex h-full flex-col justify-center pb-2">
-      <ScreenTitle sub="Buyurtma #1284 · Nodira A.">Xizmatni boshlash</ScreenTitle>
+      <ScreenTitle sub={t.screens.startSub}>{t.screens.startTitle}</ScreenTitle>
       <motion.div
         variants={pop}
         custom={1}
@@ -315,7 +346,7 @@ export function ScreenStart() {
         className="relative mx-auto mt-1 grid h-[104px] w-[104px] place-items-center rounded-full"
       >
         <svg viewBox="0 0 104 104" className="absolute inset-0 h-full w-full -rotate-90">
-          <circle cx="52" cy="52" r="46" fill="none" stroke="#E4EDE7" strokeWidth="7" />
+          <circle cx="52" cy="52" r="46" fill="none" stroke="var(--track)" strokeWidth="7" />
           <motion.circle
             cx="52"
             cy="52"
@@ -331,7 +362,7 @@ export function ScreenStart() {
         </svg>
         <div className="text-center">
           <p className="font-display text-[19px] font-extrabold leading-none text-ink">12:40</p>
-          <p className="mt-1 text-[8.5px] font-semibold uppercase tracking-[0.1em] text-mute">davom etmoqda</p>
+          <p className="mt-1 text-[8.5px] font-semibold uppercase tracking-[0.1em] text-mute">{t.screens.inProgress}</p>
         </div>
       </motion.div>
       <motion.div
@@ -347,7 +378,7 @@ export function ScreenStart() {
           animate={{ x: ["0%", "460%"] }}
           transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut", repeatDelay: 0.9 }}
         />
-        Xizmat boshlandi
+        {t.screens.started}
       </motion.div>
     </div>
   );
@@ -355,6 +386,7 @@ export function ScreenStart() {
 
 /* ===== 6. Xizmatni yakunlash ===== */
 export function ScreenDone() {
+  const t = useT();
   return (
     <div className="flex h-full flex-col items-center justify-center pb-2 text-center">
       <motion.span
@@ -383,18 +415,17 @@ export function ScreenDone() {
       </motion.span>
 
       <motion.p variants={pop} custom={1} initial="hidden" animate="visible" className="mt-3 font-display text-[13px] font-extrabold text-ink">
-        Xizmat yakunlandi
+        {t.screens.finished}
       </motion.p>
 
       <motion.div variants={pop} custom={2} initial="hidden" animate="visible" className="mt-3 w-full space-y-1.5">
-        {[
-          ["Davomiylik", "42 daqiqa"],
-          ["Xizmat", "Ukol qilish"],
-          ["Holat", "Tasdiqlandi"],
-        ].map(([k, v]) => (
-          <div key={k} className="flex items-center justify-between rounded-[11px] border border-line/90 bg-white px-2.5 py-1.5">
-            <span className="text-[9px] font-semibold text-mute">{k}</span>
-            <span className="font-display text-[9.5px] font-bold text-ink">{v}</span>
+        {t.screens.doneRows.map((row) => (
+          <div
+            key={row.label}
+            className="flex items-center justify-between rounded-[11px] border border-line/90 bg-surface px-2.5 py-1.5"
+          >
+            <span className="text-[9px] font-semibold text-mute">{row.label}</span>
+            <span className="font-display text-[9.5px] font-bold text-ink">{row.value}</span>
           </div>
         ))}
       </motion.div>
@@ -403,22 +434,20 @@ export function ScreenDone() {
 }
 
 /* ===== 7. Buyurtmalar tarixi ===== */
+const HISTORY_TONES = ["#4FD189", "#1FB6E8", "#F6A45A", "#B79BE8"];
+
 export function ScreenHistory() {
-  const rows = [
-    ["Nodira A.", "18-avg · Ukol qilish", "#4FD189"],
-    ["Sardor T.", "17-avg · Bogʻlam", "#1FB6E8"],
-    ["Malika R.", "16-avg · Kapelnitsa", "#F6A45A"],
-    ["Javohir X.", "15-avg · Parvarish", "#B79BE8"],
-  ];
+  const t = useT();
+  const rows = t.screens.history.map((r, i) => [r.name, r.meta, HISTORY_TONES[i]] as const);
   return (
     <div>
-      <ScreenTitle sub="Oxirgi 30 kun">Buyurtmalar tarixi</ScreenTitle>
+      <ScreenTitle sub={t.screens.historySub}>{t.screens.historyTitle}</ScreenTitle>
       <motion.div
         variants={pop}
         custom={1}
         initial="hidden"
         animate="visible"
-        className="mb-2 flex items-end gap-1.5 rounded-[13px] border border-line/90 bg-white p-2"
+        className="mb-2 flex items-end gap-1.5 rounded-[13px] border border-line/90 bg-surface p-2"
       >
         {[38, 56, 44, 72, 60, 88, 68].map((h, i) => (
           <motion.span
@@ -438,7 +467,7 @@ export function ScreenHistory() {
             custom={i + 2}
             initial="hidden"
             animate="visible"
-            className="flex items-center gap-2 rounded-[13px] border border-line/90 bg-white p-1.5"
+            className="flex items-center gap-2 rounded-[13px] border border-line/90 bg-surface p-1.5"
           >
             <Avatar initials={name.slice(0, 2).toUpperCase()} tone={tone} />
             <div className="min-w-0 flex-1">
@@ -457,6 +486,7 @@ export function ScreenHistory() {
 
 /* ===== 8. Profil va reyting ===== */
 export function ScreenProfile() {
+  const t = useT();
   return (
     <div className="flex h-full flex-col justify-center pb-1">
       <motion.div
@@ -469,8 +499,8 @@ export function ScreenProfile() {
         <span className="grid h-[54px] w-[54px] place-items-center rounded-full bg-[linear-gradient(150deg,#9AD6F5,#2A7FB6)] font-display text-[17px] font-extrabold text-white shadow-[0_14px_22px_-14px_rgba(11,43,28,0.85)]">
           MK
         </span>
-        <p className="mt-2 font-display text-[13px] font-extrabold text-ink">Malika Karimova</p>
-        <p className="mt-0.5 text-[9px] font-medium text-mute">Hamshira · 6 yillik tajriba</p>
+        <p className="mt-2 font-display text-[13px] font-extrabold text-ink">{t.screens.profileName}</p>
+        <p className="mt-0.5 text-[9px] font-medium text-mute">{t.screens.profileRole}</p>
       </motion.div>
 
       <motion.div
@@ -505,14 +535,15 @@ export function ScreenProfile() {
         animate="visible"
         className="mt-3 grid grid-cols-3 gap-1.5"
       >
-        {[
-          ["128", "buyurtma"],
-          ["98%", "qabul"],
-          ["6 oy", "tajriba"],
-        ].map(([v, k]) => (
-          <div key={k} className="rounded-[11px] border border-line/90 bg-white px-1 py-1.5 text-center">
-            <p className="font-display text-[11px] font-extrabold leading-none text-ink">{v}</p>
-            <p className="mt-1 text-[8px] font-semibold text-mute">{k}</p>
+        {t.screens.stats.map((stat) => (
+          <div
+            key={stat.label}
+            className="rounded-[11px] border border-line/90 bg-surface px-1 py-1.5 text-center"
+          >
+            <p className="font-display text-[11px] font-extrabold leading-none text-ink">
+              {stat.value}
+            </p>
+            <p className="mt-1 text-[8px] font-semibold text-mute">{stat.label}</p>
           </div>
         ))}
       </motion.div>

@@ -1,4 +1,7 @@
+"use client";
+
 import Image from "next/image";
+import { useT } from "@/lib/i18n/LanguageProvider";
 import { ChevronRight, PinIcon, SyringeIcon } from "./Icons";
 
 /*
@@ -16,21 +19,21 @@ const SCREEN_TRANSFORM =
 /* Ilova ekranidagi kichik xarita */
 function MiniMap() {
   return (
-    <div className="relative h-[86px] overflow-hidden rounded-xl bg-[#EDF2EE]">
+    <div className="relative h-[86px] overflow-hidden rounded-xl bg-[color:var(--map-bg)]">
       <svg viewBox="0 0 200 90" className="absolute inset-0 h-full w-full">
-        <rect width="200" height="90" fill="#E9F0EB" />
+        <rect width="200" height="90" fill="var(--map-bg-2)" />
         <path
           d="M8 58c14-16 30-24 52-22s34 12 54 6 40-16 62-6l16 8v46H8V58Z"
-          fill="#DCE8DF"
+          fill="var(--map-fill)"
         />
         <path
           d="M0 34h200M0 62h200M46 0v90M108 0v90M162 0v90"
-          stroke="#D0DED4"
+          stroke="var(--map-line)"
           strokeWidth="1"
         />
         <path
           d="M30 74c26-10 44-30 72-30s44 14 70 6"
-          stroke="#C3D6C8"
+          stroke="var(--map-line-2)"
           strokeWidth="3"
           fill="none"
         />
@@ -50,9 +53,10 @@ function MiniMap() {
 
 /* Ekranga proyeksiyalanadigan ilova kontenti (246x480 lokal boʻshliq) */
 function ScreenContent() {
+  const t = useT();
   return (
     <div
-      className="absolute overflow-hidden rounded-[36px] bg-white"
+      className="absolute overflow-hidden rounded-[36px] bg-surface"
       style={{
         left: 395.1,
         top: 4.8,
@@ -78,24 +82,24 @@ function ScreenContent() {
       {/* Kontent */}
       <div className="relative -mt-6 space-y-2 px-3 pb-3.5">
         {/* Bemor manzili */}
-        <div className="rounded-2xl bg-white p-2.5 shadow-card">
+        <div className="rounded-2xl bg-surface p-2.5 shadow-card">
           <p className="mb-2 text-[10.5px] font-semibold text-ink">
-            Bemor manzili
+            {t.phone.address}
           </p>
           <MiniMap />
         </div>
 
         {/* Xizmat turi */}
-        <button className="flex w-full items-center gap-2.5 rounded-2xl bg-white p-2.5 text-left shadow-card">
+        <button className="flex w-full items-center gap-2.5 rounded-2xl bg-surface p-2.5 text-left shadow-card">
           <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-brand-100 text-brand-600">
             <SyringeIcon className="h-[17px] w-[17px]" />
           </span>
           <span className="min-w-0 flex-1">
             <span className="block text-[11px] font-semibold text-ink">
-              Ukol qilish
+              {t.phone.service}
             </span>
             <span className="block truncate text-[9.5px] text-mute">
-              Tomchilatma
+              {t.phone.serviceSub}
             </span>
           </span>
           <ChevronRight className="h-3.5 w-3.5 shrink-0 text-mute" />
@@ -103,16 +107,16 @@ function ScreenContent() {
 
         {/* Narx */}
         <div className="flex items-center justify-between px-1.5 pt-0.5">
-          <span className="text-[11px] text-mute">Toʻlov</span>
+          <span className="text-[11px] text-mute">{t.phone.payment}</span>
           <span className="font-display text-[13px] font-extrabold text-ink">
-            350 000 soʻm
+            {t.phone.price}
           </span>
         </div>
 
         {/* Qabul qilish */}
         <div className="btn-solid flex h-[36px] items-center justify-center rounded-pill shadow-[0_8px_18px_-8px_rgba(23,164,104,0.7)]">
           <span className="text-[11px] font-semibold text-white">
-            Qabul qilish
+            {t.phone.accept}
           </span>
         </div>
       </div>

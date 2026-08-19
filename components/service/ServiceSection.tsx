@@ -11,6 +11,7 @@ import {
   type SVGProps,
 } from "react";
 import Reveal from "../Reveal";
+import { useT } from "@/lib/i18n/LanguageProvider";
 import { HeartPlus3D, Stethoscope3D, DashedLinks } from "../Decor";
 import {
   SyringeVial3D,
@@ -25,9 +26,8 @@ import {
   Microscope3D,
 } from "./ServiceIcons";
 
+/** Matnlar lugʻatdan (t.service.items) shu tartibda olinadi */
 type Service = {
-  title: string;
-  desc: string;
   icon: ComponentType<SVGProps<SVGSVGElement>>;
   /** Kartochka ostidagi "aura" rangi — ikonka bilan uygʻun */
   glow: string;
@@ -35,50 +35,34 @@ type Service = {
 
 const SERVICES: Service[] = [
   {
-    title: "Ukol qilish",
-    desc: "Mushak va vena ichiga ukol — shifokor tayinlagan dori hamda dozaga qatʼiy rioya qilinadi.",
     icon: SyringeVial3D,
     glow: "rgba(240,80,126,0.30)",
   },
   {
-    title: "Tomchilatib davolash",
-    desc: "Kapelnitsani steril oʻrnatish, tomchilash tezligi va bemor holatini nazorat qilish.",
     icon: IvDrip3D,
     glow: "rgba(27,146,201,0.30)",
   },
   {
-    title: "Bogʻlam va yara parvarishi",
-    desc: "Jarohat va operatsiyadan keyingi choklarni steril tozalash hamda bogʻlash.",
     icon: Bandage3D,
     glow: "rgba(233,162,119,0.32)",
   },
   {
-    title: "Uy sharoitida parvarish",
-    desc: "Yotoq rejimidagi bemorga kundalik parvarish, gigiyena va holatini kuzatib borish.",
     icon: HeartCare3D,
     glow: "rgba(246,90,114,0.30)",
   },
   {
-    title: "Koʻrsatkichlarni nazorat qilish",
-    desc: "Qon bosimi, puls va haroratni oʻlchab, natijalarni shifokorga yetkazish.",
     icon: BloodPressure3D,
     glow: "rgba(44,193,118,0.32)",
   },
   {
-    title: "Shifokor tavsiyasi boʻyicha muolaja",
-    desc: "Tibbiy muolajalar faqat shifokorning yozma tavsiyasi asosida bajariladi.",
     icon: Prescription3D,
     glow: "rgba(79,209,137,0.32)",
   },
   {
-    title: "Massaj xizmatlari",
-    desc: "Chaqaloq, bolalar va ayollar uchun — mutaxassisning sertifikatiga muvofiq.",
     icon: Massage3D,
     glow: "rgba(233,162,119,0.30)",
   },
   {
-    title: "Mutaxassislikka mos boshqa xizmatlar",
-    desc: "Mutaxassisning malakasi, hujjatlari va vakolati doirasidagi boshqa xizmatlar.",
     icon: MedicalBag3D,
     glow: "rgba(23,164,104,0.30)",
   },
@@ -114,6 +98,7 @@ const AUTOPLAY_MS = 4000;
  *  3) autoplay va strelka/nuqta bosilganda `scrollTo`ni chaqiradi.
  */
 export default function ServiceSection() {
+  const t = useT();
   const sectionRef = useRef<HTMLElement>(null);
   const scrollerRef = useRef<HTMLDivElement>(null);
   /** Kartochkalarning oldindan oʻlchangan joylashuvi — scroll paytida qayta oʻlchanmaydi */
@@ -295,27 +280,27 @@ export default function ServiceSection() {
     <section
       ref={sectionRef}
       id="xizmatlar"
-      className="relative isolate overflow-hidden py-16 sm:py-20 lg:py-24"
+      className="scroll-mt-24 relative isolate overflow-hidden py-16 sm:py-20 lg:py-24"
     >
       {/* ===== Fon: oldingi boʻlimdan davom etuvchi yashil-moviy nur =====
           Barchasi statik qatlam — bir marta rasterlanadi, scroll paytida
           qayta hisoblanmaydi */}
-      <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 bg-[#fbfdfb]" />
+      <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 bg-page" />
       <div
         aria-hidden
-        className="pointer-events-none absolute -left-[12%] top-[6%] -z-10 h-[520px] w-[520px] rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(79,209,137,0.52),rgba(79,209,137,0)_70%)]"
+        className="decor-glow pointer-events-none absolute -left-[12%] top-[6%] -z-10 h-[520px] w-[520px] rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(79,209,137,0.52),rgba(79,209,137,0)_70%)]"
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute -right-[10%] top-[2%] -z-10 h-[480px] w-[480px] rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(31,182,232,0.34),rgba(31,182,232,0)_70%)]"
+        className="decor-glow pointer-events-none absolute -right-[10%] top-[2%] -z-10 h-[480px] w-[480px] rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(31,182,232,0.34),rgba(31,182,232,0)_70%)]"
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute bottom-[-12%] left-[24%] -z-10 h-[520px] w-[620px] rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(44,193,118,0.42),rgba(44,193,118,0)_72%)]"
+        className="decor-glow pointer-events-none absolute bottom-[-12%] left-[24%] -z-10 h-[520px] w-[620px] rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(44,193,118,0.42),rgba(44,193,118,0)_72%)]"
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute bottom-[8%] right-[8%] -z-10 h-[320px] w-[320px] rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(190,230,60,0.24),rgba(190,230,60,0)_70%)]"
+        className="decor-glow pointer-events-none absolute bottom-[8%] right-[8%] -z-10 h-[320px] w-[320px] rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(190,230,60,0.24),rgba(190,230,60,0)_70%)]"
       />
 
       {/* ===== Dekor: 3D elementlar ===== */}
@@ -355,23 +340,23 @@ export default function ServiceSection() {
       <div
         aria-hidden
         style={decorStyle(undefined, "5.5s")}
-        className="pointer-events-none absolute left-[18%] top-[18%] -z-10 hidden h-4 w-4 animate-liquid rounded-full bg-[radial-gradient(circle_at_32%_28%,rgba(255,255,255,0.9)_0%,rgba(190,230,60,0.5)_38%,rgba(79,209,137,0.6)_78%)] shadow-[0_3px_8px_rgba(11,43,28,0.16)] sm:block"
+        className="decor-glow pointer-events-none absolute left-[18%] top-[18%] -z-10 hidden h-4 w-4 animate-liquid rounded-full bg-[radial-gradient(circle_at_32%_28%,rgba(255,255,255,0.9)_0%,rgba(190,230,60,0.5)_38%,rgba(79,209,137,0.6)_78%)] shadow-[0_3px_8px_rgba(11,43,28,0.16)] sm:block"
       />
       <div
         aria-hidden
         style={decorStyle("1.9s", "6.5s")}
-        className="pointer-events-none absolute bottom-[16%] right-[20%] -z-10 hidden h-5 w-5 animate-liquid rounded-full bg-[radial-gradient(circle_at_32%_28%,rgba(255,255,255,0.88)_0%,rgba(143,233,247,0.5)_38%,rgba(27,146,201,0.5)_78%)] shadow-[0_3px_8px_rgba(11,43,28,0.14)] sm:block"
+        className="decor-glow pointer-events-none absolute bottom-[16%] right-[20%] -z-10 hidden h-5 w-5 animate-liquid rounded-full bg-[radial-gradient(circle_at_32%_28%,rgba(255,255,255,0.88)_0%,rgba(143,233,247,0.5)_38%,rgba(27,146,201,0.5)_78%)] shadow-[0_3px_8px_rgba(11,43,28,0.14)] sm:block"
       />
 
       {/* Yuqori/pastki chetlarni bazaviy rangga tekislaydi — qoʻshni boʻlimlar bilan
           qattiq chiziqsiz tutashishi uchun */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[220px] bg-[linear-gradient(to_bottom,#fbfdfb_0%,#fbfdfb_26%,rgba(251,253,251,0.7)_52%,rgba(251,253,251,0)_100%)] sm:h-[320px]"
+        className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[220px] fade-top sm:h-[320px]"
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 bottom-0 -z-10 h-[200px] bg-[linear-gradient(to_top,#fbfdfb_0%,#fbfdfb_26%,rgba(251,253,251,0.7)_52%,rgba(251,253,251,0)_100%)] sm:h-[300px]"
+        className="pointer-events-none absolute inset-x-0 bottom-0 -z-10 h-[200px] fade-bottom sm:h-[300px]"
       />
 
       <div className="relative mx-auto max-w-[1240px] px-5 sm:px-8">
@@ -382,12 +367,11 @@ export default function ServiceSection() {
             className="hero-glow pointer-events-none absolute left-1/2 top-1/2 -z-10 h-[190px] w-[560px] max-w-[112%] -translate-x-1/2 -translate-y-1/2 rounded-full"
           />
           <h2 className="font-display text-[27px] font-extrabold leading-[1.18] tracking-[-0.015em] text-ink sm:text-[36px] lg:text-[44px]">
-            Mutaxassislar qanday xizmatlar{" "}
-            <span className="whitespace-nowrap">koʻrsatishi mumkin?</span>
+            {t.service.title}{" "}
+            <span className="whitespace-nowrap">{t.service.titleTail}</span>
           </h2>
           <p className="mx-auto mt-3 max-w-[620px] text-[14px] leading-[1.6] text-body sm:mt-4 sm:text-[15.5px]">
-            Platformadagi xizmatlar mutaxassisning malakasi, hujjatlari va vakolatiga
-            qarab belgilanadi.
+            {t.service.desc}
           </p>
         </Reveal>
 
@@ -404,8 +388,18 @@ export default function ServiceSection() {
           onFocusCapture={() => setPaused(true)}
           onBlurCapture={() => setPaused(false)}
         >
-          <NavButton side="left" onClick={() => step(-1)} />
-          <NavButton side="right" onClick={() => step(1)} />
+          <NavButton
+            side="left"
+            onClick={() => step(-1)}
+            prevLabel={t.service.prev}
+            nextLabel={t.service.next}
+          />
+          <NavButton
+            side="right"
+            onClick={() => step(1)}
+            prevLabel={t.service.prev}
+            nextLabel={t.service.next}
+          />
 
           {/*
             Vertikal `padding` ataylab kengaytirilgan: `overflow-x` qoʻyilganda
@@ -416,7 +410,7 @@ export default function ServiceSection() {
             ref={scrollerRef}
             role="group"
             aria-roledescription="karusel"
-            aria-label="Koʻrsatiladigan xizmatlar"
+            aria-label={t.service.carouselLabel}
             tabIndex={0}
             onKeyDown={(e) => {
               if (e.key === "ArrowLeft") {
@@ -434,14 +428,14 @@ export default function ServiceSection() {
                 /* Tashqi oʻram — faqat kirish animatsiyasi (transform'lar
                    aralashib ketmasligi uchun hover/active alohida qatlamda) */
                 <div
-                  key={`${copy}-${service.title}`}
+                  key={`${copy}-${i}`}
                   /* Nusxalar ekran oʻqigichlar uchun takrorlanmasin */
                   aria-hidden={copy === 1 ? undefined : true}
                   data-in={shown ? "true" : "false"}
                   style={{ animationDelay: `${i * 70}ms` }}
                   className="w-[80%] shrink-0 snap-center opacity-0 data-[in=true]:animate-rise sm:w-[46%] lg:w-[calc((100%-4rem)/5)]"
                 >
-                  <ServiceCard service={service} isActive={i === active} />
+                  <ServiceCard service={service} text={t.service.items[i]} isActive={i === active} />
                 </div>
               ))
             )}
@@ -451,15 +445,15 @@ export default function ServiceSection() {
           <div className="relative mt-0 flex items-center justify-center gap-2">
             {SERVICES.map((service, i) => (
               <button
-                key={service.title}
+                key={i}
                 type="button"
-                aria-label={`${i + 1}-xizmat: ${service.title}`}
+                aria-label={`${t.service.dotLabel} ${i + 1}: ${t.service.items[i].title}`}
                 aria-current={i === active}
                 onClick={() => goToService(i)}
                 className={`h-2 rounded-pill transition-all duration-300 ${
                   i === active
                     ? "w-7 bg-[linear-gradient(100deg,#7FE7B4,#17A468)] shadow-[0_4px_10px_-3px_rgba(23,164,104,0.7)]"
-                    : "w-2 bg-[#CBDED3] hover:bg-brand-300"
+                    : "w-2 bg-[color:var(--dot-idle)] hover:bg-brand-300"
                 }`}
               />
             ))}
@@ -468,14 +462,13 @@ export default function ServiceSection() {
 
         {/* ===== Eslatma ===== */}
         <Reveal delay="120ms" className="mt-8 sm:mt-10">
-          <div className="mx-auto flex max-w-[720px] items-start justify-center gap-3 rounded-[18px] border border-white/80 bg-[linear-gradient(120deg,rgba(255,255,255,0.9),rgba(230,250,238,0.75))] px-5 py-3.5 shadow-[0_16px_38px_-22px_rgba(15,64,40,0.4),inset_0_1px_0_rgba(255,255,255,0.9)] sm:items-center">
+          <div className="mx-auto flex max-w-[720px] items-start justify-center gap-3 rounded-[18px] border border-[color:var(--glass-border)] bg-[image:linear-gradient(120deg,var(--glass-1),var(--glass-2))] px-5 py-3.5 shadow-[0_16px_38px_-22px_rgba(15,64,40,0.4),inset_0_1px_0_rgba(255,255,255,0.9)] sm:items-center">
             <span aria-hidden className="text-[18px] leading-none">
               💡
             </span>
             <p className="text-[13.5px] leading-[1.55] text-body sm:text-center sm:text-[14.5px]">
-              <span className="font-semibold text-ink">Muhim eslatma:</span> Har bir
-              xizmat faqat mutaxassisning malakasi va amaldagi tibbiy talablar doirasida
-              koʻrsatilishi kerak.
+              <span className="font-semibold text-ink">{t.service.noteLabel}</span>{" "}
+              {t.service.note}
             </p>
           </div>
         </Reveal>
@@ -491,9 +484,11 @@ export default function ServiceSection() {
 
 const ServiceCard = memo(function ServiceCard({
   service,
+  text,
   isActive,
 }: {
   service: Service;
+  text: { title: string; desc: string };
   isActive: boolean;
 }) {
   const Icon = service.icon;
@@ -501,8 +496,8 @@ const ServiceCard = memo(function ServiceCard({
   return (
     <article
       data-active={isActive ? "true" : "false"}
-      className="group relative flex h-full flex-col rounded-[24px] border border-white/75 bg-[linear-gradient(160deg,rgba(255,255,255,0.88),rgba(255,255,255,0.5))] px-5 pb-6 pt-6 text-left shadow-[0_22px_48px_-24px_rgba(15,64,40,0.28),inset_0_1px_0_rgba(255,255,255,0.75)] backdrop-blur-[8px] transition-[transform,box-shadow,border-color] duration-300 ease-[cubic-bezier(.22,.9,.3,1)] will-change-transform hover:-translate-y-2.5 sm:px-[22px]
-        data-[active=true]:-translate-y-2 data-[active=true]:border-white
+      className="group relative flex h-full flex-col rounded-[24px] border border-[color:var(--glass-border)] bg-[image:linear-gradient(160deg,var(--glass-1),var(--glass-2))] px-5 pb-6 pt-6 text-left shadow-[0_22px_48px_-24px_rgba(15,64,40,0.28),inset_0_1px_0_rgba(255,255,255,0.75)] backdrop-blur-[8px] transition-[transform,box-shadow,border-color] duration-300 ease-[cubic-bezier(.22,.9,.3,1)] will-change-transform hover:-translate-y-2.5 sm:px-[22px]
+        data-[active=true]:-translate-y-2 data-[active=true]:border-[color:var(--glass-border)]
         data-[active=true]:shadow-[0_34px_66px_-26px_rgba(15,64,40,0.42),0_0_0_1px_rgba(255,255,255,0.7),inset_0_1px_0_rgba(255,255,255,0.9)]
         lg:data-[active=true]:scale-[1.05]"
     >
@@ -544,7 +539,7 @@ const ServiceCard = memo(function ServiceCard({
         barcha kartochkalarda tavsif matni bir xil balandlikdan boshlanadi.
       */}
       <h3 className="font-display text-[16px] font-extrabold leading-[1.32] tracking-[-0.005em] text-ink sm:min-h-[2.64em] sm:text-[16.5px]">
-        {service.title}
+        {text.title}
       </h3>
 
       {/* Ingichka ajratkich — sarlavha va tavsif orasidagi vizual nafas */}
@@ -553,7 +548,7 @@ const ServiceCard = memo(function ServiceCard({
         className="mt-3 block h-px w-9 rounded-pill bg-[linear-gradient(90deg,#7FE7B4,rgba(127,231,180,0))] transition-[width] duration-300 group-hover:w-14 group-data-[active=true]:w-14"
       />
 
-      <p className="mt-3 text-[13.5px] leading-[1.68] text-body">{service.desc}</p>
+      <p className="mt-3 text-[13.5px] leading-[1.68] text-body">{text.desc}</p>
     </article>
   );
 });
@@ -561,12 +556,22 @@ const ServiceCard = memo(function ServiceCard({
 /* ───────────────────── Yon tomondagi strelkalar ─────────────────────
    Halqa cheksiz — shuning uchun ular hech qachon "oʻchgan" holatda boʻlmaydi */
 
-function NavButton({ side, onClick }: { side: "left" | "right"; onClick: () => void }) {
+function NavButton({
+  side,
+  onClick,
+  prevLabel,
+  nextLabel,
+}: {
+  side: "left" | "right";
+  onClick: () => void;
+  prevLabel: string;
+  nextLabel: string;
+}) {
   return (
     <button
       type="button"
       onClick={onClick}
-      aria-label={side === "left" ? "Oldingi xizmat" : "Keyingi xizmat"}
+      aria-label={side === "left" ? prevLabel : nextLabel}
       className={`glass-card absolute top-1/2 z-10 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full text-ink transition-all duration-300 hover:scale-110 hover:shadow-float sm:flex ${
         side === "left" ? "-left-3 lg:-left-7" : "-right-3 lg:-right-7"
       }`}

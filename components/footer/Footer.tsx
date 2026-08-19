@@ -2,43 +2,30 @@
 
 import { motion, useReducedMotion, type Variants } from "framer-motion";
 import { LogoMark } from "@/components/Icons";
+import { useT } from "@/lib/i18n/LanguageProvider";
+import LanguageSwitcher from "@/lib/i18n/LanguageSwitcher";
 
 /* Sahifaning yakuni — toʻq yashil, vazmin footer.
    Yuqori qirrasi yumaloqlangan: ochiq fonli sahifadan yumshoq oʻtish. */
 
 const TELEGRAM = "https://t.me/Onlayn_Hamshira_Admin";
 
-const LINKS: { label: string; href: string; external?: boolean }[] = [
-  { label: "Onlayn Hamshira haqida", href: "#platforma-haqida" },
-  { label: "Hamkorlik shartlari", href: "#talablar" },
+/* Matnlar lugʻatdan (t.footer.links) shu tartibda olinadi */
+const LINK_HREFS: { href: string; external?: boolean }[] = [
+  { href: "#platforma-haqida" },
+  { href: "#talablar" },
   // TODO: huquqiy sahifalar tayyor boʻlgach, havolalarni qoʻying
-  { label: "Maxfiylik siyosati", href: "#" },
-  { label: "Foydalanish shartlari", href: "#" },
-  { label: "Koʻp beriladigan savollar", href: "#savollar" },
-  { label: "Support", href: TELEGRAM, external: true },
+  { href: "#" },
+  { href: "#" },
+  { href: "#savollar" },
+  { href: TELEGRAM, external: true },
 ];
 
+/* Sarlavhalar lugʻatdan (t.footer.contacts) olinadi, qiymatlar oʻzgarmaydi */
 const CONTACTS = [
-  {
-    label: "Telefon",
-    value: "+998 91 676 88 66",
-    href: "tel:+998916768866",
-    icon: PhoneIcon,
-  },
-  {
-    label: "Telegram",
-    value: "@Onlayn_Hamshira_Admin",
-    href: TELEGRAM,
-    icon: TelegramIcon,
-    external: true,
-  },
-  {
-    label: "Veb-sayt",
-    value: "onlaynhamshira.uz",
-    href: "https://onlaynhamshira.uz",
-    icon: GlobeIcon,
-    external: true,
-  },
+  { key: "phone" as const, value: "+998 91 676 88 66", href: "tel:+998916768866", icon: PhoneIcon },
+  { key: "telegram" as const, value: "@Onlayn_Hamshira_Admin", href: TELEGRAM, icon: TelegramIcon, external: true },
+  { key: "website" as const, value: "onlaynhamshira.uz", href: "https://onlaynhamshira.uz", icon: GlobeIcon, external: true },
 ];
 
 /* ===== Ingichka chiziqli ikonkalar ===== */
@@ -111,21 +98,22 @@ const itemVariants: Variants = {
 };
 
 export default function Footer() {
+  const t = useT();
   const reduce = useReducedMotion();
 
   return (
-    <footer className="relative bg-[#fbfdfb] pt-6 sm:pt-10">
+    <footer className="relative bg-page pt-6 sm:pt-10">
       <div className="relative overflow-hidden rounded-t-[36px] bg-[linear-gradient(168deg,#0F4C36_0%,#0A3826_52%,#062419_100%)] sm:rounded-t-[56px]">
         {/* ===== Fon nurlari — juda vazmin ===== */}
         <motion.div
           aria-hidden
-          className="pointer-events-none absolute -left-[8%] -top-[18%] h-[460px] w-[460px] rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(44,193,118,0.24),rgba(44,193,118,0)_70%)] blur-2xl"
+          className="decor-glow pointer-events-none absolute -left-[8%] -top-[18%] h-[460px] w-[460px] rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(44,193,118,0.24),rgba(44,193,118,0)_70%)] blur-2xl"
           animate={reduce ? undefined : { x: [0, 30, 0], y: [0, 20, 0] }}
           transition={{ duration: 30, repeat: Infinity, ease: "easeInOut" }}
         />
         <motion.div
           aria-hidden
-          className="pointer-events-none absolute -right-[10%] bottom-[-14%] h-[420px] w-[420px] rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(15,124,170,0.2),rgba(15,124,170,0)_70%)] blur-2xl"
+          className="decor-glow pointer-events-none absolute -right-[10%] bottom-[-14%] h-[420px] w-[420px] rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(15,124,170,0.2),rgba(15,124,170,0)_70%)] blur-2xl"
           animate={reduce ? undefined : { x: [0, -24, 0], y: [0, -18, 0] }}
           transition={{ duration: 34, repeat: Infinity, ease: "easeInOut", delay: 2.5 }}
         />
@@ -147,7 +135,7 @@ export default function Footer() {
             <motion.div variants={itemVariants}>
               <LogoMark className="h-[42px] w-auto" wordFill="#EAF6F0" />
               <p className="mt-5 max-w-[320px] text-[14px] leading-[1.65] text-[#A9C9BA]">
-                Tibbiy mutaxassislar va mijozlarni bogʻlovchi zamonaviy platforma.
+                {t.footer.tagline}
               </p>
 
               <a
@@ -157,25 +145,25 @@ export default function Footer() {
                 className="group mt-6 inline-flex items-center gap-2.5 rounded-pill border border-white/15 bg-white/[0.07] px-5 py-2.5 text-[14px] font-semibold text-[#EAF6F0] backdrop-blur-sm transition-all duration-300 hover:border-white/30 hover:bg-white/[0.12]"
               >
                 <TelegramIcon className="h-[18px] w-[18px] text-brand-300" />
-                Administrator bilan bogʻlanish
+                {t.footer.contactCta}
               </a>
             </motion.div>
 
             {/* ===== Havolalar ===== */}
-            <motion.nav variants={itemVariants} aria-label="Footer havolalari">
+            <motion.nav variants={itemVariants} aria-label={t.footer.navLabel}>
               <h3 className="font-display text-[13px] font-bold uppercase tracking-[0.14em] text-[#7FB79C]">
-                Havolalar
+                {t.footer.linksTitle}
               </h3>
               <ul className="mt-5 flex flex-col gap-3">
-                {LINKS.map((link) => (
-                  <li key={link.label}>
+                {LINK_HREFS.map((link, i) => (
+                  <li key={i}>
                     <a
                       href={link.href}
                       {...(link.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
                       className="group inline-flex items-center gap-1.5 text-[14.5px] text-[#CBE3D7] transition-colors duration-300 hover:text-white"
                     >
                       <span className="relative">
-                        {link.label}
+                        {t.footer.links[i]}
                         <span
                           aria-hidden
                           className="absolute -bottom-0.5 left-0 h-px w-0 bg-brand-300 transition-all duration-300 group-hover:w-full"
@@ -193,21 +181,21 @@ export default function Footer() {
             {/* ===== Aloqa ===== */}
             <motion.div variants={itemVariants}>
               <h3 className="font-display text-[13px] font-bold uppercase tracking-[0.14em] text-[#7FB79C]">
-                Aloqa maʼlumotlari
+                {t.footer.contactsTitle}
               </h3>
               <ul className="mt-5 flex flex-col gap-4">
                 {CONTACTS.map((c) => (
-                  <li key={c.label}>
+                  <li key={c.key}>
                     <a
                       href={c.href}
                       {...(c.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
                       className="group flex items-start gap-3.5"
                     >
-                      <span className="mt-0.5 grid h-9 w-9 shrink-0 place-items-center rounded-[12px] border border-white/12 bg-white/[0.06] text-brand-300 transition-all duration-300 group-hover:border-white/25 group-hover:bg-white/[0.12] group-hover:text-brand-200">
+                      <span className="mt-0.5 grid h-9 w-9 shrink-0 place-items-center rounded-[12px] border border-white/12 bg-white/[0.06] text-brand-300 transition-all duration-300 group-hover:border-white/25 group-hover:bg-white/[0.12] group-hover:text-[#C8F5D9]">
                         <c.icon className="h-[18px] w-[18px]" />
                       </span>
                       <span className="min-w-0">
-                        <span className="block text-[12.5px] text-[#7FB79C]">{c.label}</span>
+                        <span className="block text-[12.5px] text-[#7FB79C]">{t.footer.contacts[c.key]}</span>
                         <span className="block break-words text-[14.5px] font-semibold text-[#EAF6F0] transition-colors duration-300 group-hover:text-white">
                           {c.value}
                         </span>
@@ -224,9 +212,12 @@ export default function Footer() {
             variants={itemVariants}
             className="mt-12 border-t border-white/10 pt-6 sm:mt-14 sm:pt-7"
           >
-            <p className="text-center text-[13px] text-[#7FB79C] sm:text-left">
-              © Onlayn Hamshira. Barcha huquqlar himoyalangan.
-            </p>
+            <div className="flex flex-col items-center gap-4 sm:flex-row sm:items-center sm:justify-between">
+              <p className="text-center text-[13px] text-[#7FB79C] sm:text-left">
+                {t.footer.copyright}
+              </p>
+              <LanguageSwitcher tone="dark" />
+            </div>
           </motion.div>
         </motion.div>
       </div>

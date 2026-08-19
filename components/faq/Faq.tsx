@@ -4,51 +4,9 @@ import Image from "next/image";
 import { useId, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion, type Variants } from "framer-motion";
 import faqHero from "@/assets/faq/faq-hero.png";
+import { useT } from "@/lib/i18n/LanguageProvider";
 
 type Qa = { q: string; a: string };
-
-const FAQ: Qa[] = [
-  {
-    q: "Onlayn Hamshirada ishlash uchun asosiy ish joyimdan boʻshashim kerakmi?",
-    a: "Yoʻq. Platformada asosiy ishingizdan tashqari, boʻsh vaqtingizda ham faoliyat yuritishingiz mumkin.",
-  },
-  {
-    q: "Buyurtmalarni majburiy qabul qilish kerakmi?",
-    a: "Yoʻq. Sizga mos keladigan buyurtmalarni mustaqil ravishda qabul qilasiz.",
-  },
-  {
-    q: "Onboarding pullikmi?",
-    a: "Yoʻq. Dastlabki onboarding va ariza topshirish jarayoni bepul.",
-  },
-  {
-    q: "Roʻyxatdan oʻtish uchun qaysi hujjatlar kerak?",
-    a: "Odatda shaxsni tasdiqlovchi hujjat, diplom, malaka sertifikatlari va professional tajriba haqidagi maʼlumotlar talab qilinadi.",
-  },
-  {
-    q: "Komissiya qancha?",
-    a: "Har bir yakunlangan buyurtmadan tushgan mablagʻning 70 foizi mutaxassisga, 30 foizi platformaga ajratiladi.",
-  },
-  {
-    q: "Hujjatlarim darhol tasdiqlanadimi?",
-    a: "Yoʻq. Taqdim etilgan hujjatlar va maʼlumotlar administrator tomonidan tekshiriladi.",
-  },
-  {
-    q: "Arizam rad etilsa nima boʻladi?",
-    a: "Rad etish sababi sizga koʻrsatiladi. Zarur hollarda maʼlumotlarni toʻgʻrilab, qayta ariza topshirish imkoniyati berilishi mumkin.",
-  },
-  {
-    q: "Onlayn Hamshira buyurtmalarni kafolatlaydimi?",
-    a: "Platforma mijozlar va mutaxassislarni bogʻlaydi, xolos — shuning uchun platforma buyurtmalarni kafolatlamaydi. Buyurtmalar soni hudud, talab, mutaxassislik va reytingga bogʻliq boʻladi.",
-  },
-  {
-    q: "Mijoz xizmat haqini kimga toʻlaydi?",
-    a: "Toʻlov tartibi platformaning amaldagi qoidalari asosida amalga oshiriladi va onboarding jarayonida batafsil tushuntiriladi.",
-  },
-  {
-    q: "Savollarim boʻlsa kimga murojaat qilaman?",
-    a: "Onlayn Hamshira support xizmati orqali administrator bilan bogʻlanishingiz mumkin.",
-  },
-];
 
 /* ===== Animatsiya sxemalari ===== */
 
@@ -175,57 +133,57 @@ function FaqItem({
 /* ===== Boʻlim ===== */
 
 export default function Faq() {
+  const t = useT();
   const reduce = useReducedMotion();
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   return (
     <section
       id="savollar"
-      className="relative scroll-mt-24 overflow-hidden pb-24 pt-16 sm:pb-32 sm:pt-24"
-      style={{ backgroundColor: "#fbfdfb" }}
+      className="section-page relative scroll-mt-24 overflow-hidden pb-24 pt-16 sm:pb-32 sm:pt-24"
     >
       {/* ===== Fon nurlari ===== */}
       <div
         aria-hidden
-        className="pointer-events-none absolute -inset-x-[10%] bottom-[6%] top-[8%] bg-[radial-gradient(56%_50%_at_50%_42%,rgba(79,209,137,0.3),rgba(79,209,137,0)_72%)]"
+        className="decor-glow pointer-events-none absolute -inset-x-[10%] bottom-[6%] top-[8%] bg-[radial-gradient(56%_50%_at_50%_42%,rgba(79,209,137,0.3),rgba(79,209,137,0)_72%)]"
       />
       <motion.div
         aria-hidden
-        className="pointer-events-none absolute -left-[12%] top-[20%] h-[500px] w-[500px] rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(44,193,118,0.4),rgba(44,193,118,0)_70%)] blur-2xl"
+        className="decor-glow pointer-events-none absolute -left-[12%] top-[20%] h-[500px] w-[500px] rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(44,193,118,0.4),rgba(44,193,118,0)_70%)] blur-2xl"
         animate={reduce ? undefined : { x: [0, 34, 0], y: [0, -26, 0], scale: [1, 1.08, 1] }}
         transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
       />
       <motion.div
         aria-hidden
-        className="pointer-events-none absolute -right-[10%] top-[14%] h-[460px] w-[460px] rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(31,182,232,0.26),rgba(31,182,232,0)_70%)] blur-2xl"
+        className="decor-glow pointer-events-none absolute -right-[10%] top-[14%] h-[460px] w-[460px] rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(31,182,232,0.26),rgba(31,182,232,0)_70%)] blur-2xl"
         animate={reduce ? undefined : { x: [0, -30, 0], y: [0, 24, 0], scale: [1, 1.1, 1] }}
         transition={{ duration: 21, repeat: Infinity, ease: "easeInOut", delay: 1.3 }}
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute bottom-[4%] left-[42%] h-[320px] w-[320px] rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(190,230,60,0.2),rgba(190,230,60,0)_70%)] blur-2xl"
+        className="decor-glow pointer-events-none absolute bottom-[4%] left-[42%] h-[320px] w-[320px] rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(190,230,60,0.2),rgba(190,230,60,0)_70%)] blur-2xl"
       />
 
       {/* ===== Suyuq tomchilar ===== */}
       <div
         aria-hidden
-        className="pointer-events-none absolute left-[5%] top-[30%] hidden h-4 w-4 animate-liquid rounded-full bg-[radial-gradient(circle_at_32%_28%,rgba(255,255,255,0.9)_0%,rgba(190,230,60,0.5)_38%,rgba(79,209,137,0.6)_78%)] shadow-[0_3px_8px_rgba(11,43,28,0.16)] sm:block"
+        className="decor-glow pointer-events-none absolute left-[5%] top-[30%] hidden h-4 w-4 animate-liquid rounded-full bg-[radial-gradient(circle_at_32%_28%,rgba(255,255,255,0.9)_0%,rgba(190,230,60,0.5)_38%,rgba(79,209,137,0.6)_78%)] shadow-[0_3px_8px_rgba(11,43,28,0.16)] sm:block"
         style={{ animationDuration: "5.6s" }}
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute bottom-[16%] right-[6%] hidden h-5 w-5 animate-liquid rounded-full bg-[radial-gradient(circle_at_32%_28%,rgba(255,255,255,0.85)_0%,rgba(190,230,60,0.45)_38%,rgba(79,209,137,0.5)_78%)] shadow-[0_3px_8px_rgba(11,43,28,0.14)] blur-[1px] sm:block"
+        className="decor-glow pointer-events-none absolute bottom-[16%] right-[6%] hidden h-5 w-5 animate-liquid rounded-full bg-[radial-gradient(circle_at_32%_28%,rgba(255,255,255,0.85)_0%,rgba(190,230,60,0.45)_38%,rgba(79,209,137,0.5)_78%)] shadow-[0_3px_8px_rgba(11,43,28,0.14)] blur-[1px] sm:block"
         style={{ animationDelay: "2.8s", animationDuration: "6.4s" }}
       />
 
       {/* Qoʻshni boʻlimlar bilan chiziqsiz tutashish uchun chekka tekislovchilar */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 top-0 h-[200px] bg-[linear-gradient(to_bottom,#fbfdfb_0%,#fbfdfb_26%,rgba(251,253,251,0.7)_52%,rgba(251,253,251,0)_100%)] sm:h-[280px]"
+        className="pointer-events-none absolute inset-x-0 top-0 h-[200px] fade-top sm:h-[280px]"
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-[190px] bg-[linear-gradient(to_top,#fbfdfb_0%,#fbfdfb_26%,rgba(251,253,251,0.7)_52%,rgba(251,253,251,0)_100%)] sm:h-[260px]"
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-[190px] fade-bottom sm:h-[260px]"
       />
 
       <div className="relative z-[2] mx-auto max-w-[980px] px-5 sm:px-8">
@@ -259,10 +217,10 @@ export default function Faq() {
             whileInView={{ opacity: 1, y: 0, scale: 1 }}
             viewport={{ once: true, amount: 0.6 }}
             transition={{ type: "spring", stiffness: 140, damping: 16, delay: 0.08 }}
-            className="badge-pill inline-flex items-center gap-2 rounded-pill py-[7px] pl-3 pr-4 text-[13.5px] font-semibold text-[#1F4433] shadow-[0_6px_16px_-8px_rgba(11,43,28,0.25)]"
+            className="badge-pill inline-flex items-center gap-2 rounded-pill py-[7px] pl-3 pr-4 text-[13.5px] font-semibold shadow-[0_6px_16px_-8px_rgba(11,43,28,0.25)]"
           >
             <Image src="/cuocces.png" alt="" width={19} height={20} className="h-[19px] w-[18px]" />
-            Savol-javob
+            {t.faq.badge}
           </motion.span>
 
           <div className="relative mt-5">
@@ -280,7 +238,7 @@ export default function Faq() {
               transition={{ duration: 0.7, ease: [0.22, 0.9, 0.3, 1] }}
               className="font-display text-[26px] font-extrabold leading-[1.2] tracking-[-0.01em] text-ink sm:text-[34px] lg:text-[40px]"
             >
-              KOʻP BERILADIGAN SAVOLLAR
+              {t.faq.title}
             </motion.h2>
           </div>
         </div>
@@ -293,9 +251,9 @@ export default function Faq() {
           viewport={{ once: true, amount: 0.1 }}
           className="mt-9 flex flex-col gap-3 sm:mt-12 sm:gap-3.5"
         >
-          {FAQ.map((item, i) => (
+          {t.faq.items.map((item, i) => (
             <FaqItem
-              key={item.q}
+              key={i}
               item={item}
               index={i}
               open={openIndex === i}

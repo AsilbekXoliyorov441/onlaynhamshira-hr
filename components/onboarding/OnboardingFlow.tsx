@@ -15,6 +15,8 @@ import {
   type MotionValue,
   type Variants,
 } from "framer-motion";
+import { useT } from "@/lib/i18n/LanguageProvider";
+import { useTheme } from "@/components/theme/ThemeProvider";
 import {
   IntroIcon,
   QualificationIcon,
@@ -32,56 +34,37 @@ import {
  * ketma-ket amalga oshiriladi" degan qoidani vizual tarzda koʻrsatadi.
  */
 
+/** Matnlar lugʻatdan (t.onboarding.stages) shu tartibda olinadi */
 type Stage = {
   n: string;
-  title: string;
-  /** Sarlavha ostidagi inglizcha nomlanish */
-  tag: string;
-  text: string;
   icon: ComponentType<SVGProps<SVGSVGElement>>;
 };
+
+type StageText = { title: string; tag: string; text: string };
 
 const STAGES: Stage[] = [
   {
     n: "01",
-    title: "Introduction",
-    tag: "Tanishuv",
-    text: "Onlayn Hamshira va hamkorlik jarayoni bilan qisqacha tanishuv.",
     icon: IntroIcon,
   },
   {
     n: "02",
-    title: "Qualification",
-    tag: "Saralash",
-    text: "Maʼlumot, tajriba va mutaxassislik boʻyicha dastlabki savollar.",
     icon: QualificationIcon,
   },
   {
     n: "03",
-    title: "Education va mini-test",
-    tag: "Oʻquv",
-    text: "Platformaning asosiy qoidalarini oʻrganish va qisqa testdan oʻtish.",
     icon: EducationIcon,
   },
   {
     n: "04",
-    title: "Video xabar",
-    tag: "Motivatsiya",
-    text: "Oʻzingiz, tajribangiz va hamkorlik motivatsiyangiz haqida qisqa video yuborish.",
     icon: MotivationIcon,
   },
   {
     n: "05",
-    title: "Batafsil video darsliklar",
-    tag: "Amaliyot",
-    text: "Mobil ilova, buyurtmalar va xizmat standartlarini oʻrganish.",
     icon: AppLessonsIcon,
   },
   {
     n: "06",
-    title: "Roʻyxatdan oʻtish",
-    tag: "Ariza",
-    text: "Profil va hujjatlarni toʻldirib, ariza topshirish.",
     icon: RegisterIcon,
   },
 ];
@@ -135,6 +118,9 @@ function RailSegment({
 
 function StageNode({ stage, open }: { stage: Stage; open: boolean }) {
   const reduce = useReducedMotion();
+  /* framer-motion `var()` ni interpolyatsiya qilmaydi — mavzuni JS'da olamiz */
+  const { theme } = useTheme();
+  const dark = theme === "dark";
 
   return (
     <span className="relative z-[2] grid h-[56px] w-[56px] shrink-0 place-items-center">
@@ -166,13 +152,17 @@ function StageNode({ stage, open }: { stage: Stage; open: boolean }) {
         animate={{
           background: open
             ? "linear-gradient(150deg,#7FE7B4 0%,#2CC176 55%,#12855A 100%)"
+            : dark
+            ? "linear-gradient(150deg,#1C3529 0%,#132821 100%)"
             : "linear-gradient(150deg,#FFFFFF 0%,#EFF5F1 100%)",
           boxShadow: open
             ? "inset 0 2px 4px rgba(255,255,255,0.55), 0 16px 26px -14px rgba(23,164,104,0.95)"
+            : dark
+            ? "inset 0 2px 4px rgba(255,255,255,0.05), 0 10px 20px -14px rgba(0,0,0,0.7)"
             : "inset 0 2px 4px rgba(255,255,255,0.9), 0 10px 20px -14px rgba(11,43,28,0.5)",
         }}
         transition={{ duration: 0.5, ease: [0.22, 0.9, 0.3, 1] }}
-        className="relative grid h-full w-full place-items-center rounded-full border border-white/80"
+        className="relative grid h-full w-full place-items-center rounded-full border border-[color:var(--glass-border)]"
       >
         <AnimatePresence mode="wait" initial={false}>
           {open ? (
@@ -196,8 +186,8 @@ function StageNode({ stage, open }: { stage: Stage; open: boolean }) {
               className="grid place-items-center"
             >
               <svg viewBox="0 0 24 24" className="h-[19px] w-[19px]" fill="none">
-                <rect x="4.6" y="10.4" width="14.8" height="9.8" rx="3.2" stroke="#9FB3A9" strokeWidth="2" />
-                <path d="M8.4 10.2V8a3.6 3.6 0 0 1 7.2 0v2.2" stroke="#9FB3A9" strokeWidth="2" strokeLinecap="round" />
+                <rect x="4.6" y="10.4" width="14.8" height="9.8" rx="3.2" stroke="rgb(var(--c-mute))" strokeWidth="2" />
+                <path d="M8.4 10.2V8a3.6 3.6 0 0 1 7.2 0v2.2" stroke="rgb(var(--c-mute))" strokeWidth="2" strokeLinecap="round" />
               </svg>
             </motion.span>
           )}
@@ -209,7 +199,15 @@ function StageNode({ stage, open }: { stage: Stage; open: boolean }) {
 
 /* ===== Bosqich kartochkasi ===== */
 
-function StageCard({ stage, open }: { stage: Stage; open: boolean }) {
+function StageCard({
+  stage,
+  text,
+  open,
+}: {
+  stage: Stage;
+  text: StageText;
+  open: boolean;
+}) {
   const reduce = useReducedMotion();
   const Icon = stage.icon;
 
@@ -274,12 +272,12 @@ function StageCard({ stage, open }: { stage: Stage; open: boolean }) {
 
         <div className="min-w-0">
           <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-brand-600">
-            {stage.tag}
+            {text.tag}
           </p>
           <h3 className="mt-1 font-display text-[15px] font-extrabold leading-[1.25] text-ink lg:text-[15.5px]">
-            {stage.title}
+            {text.title}
           </h3>
-          <p className="mt-2 text-[12.5px] leading-[1.6] text-body lg:text-[12.5px]">{stage.text}</p>
+          <p className="mt-2 text-[12.5px] leading-[1.6] text-body lg:text-[12.5px]">{text.text}</p>
         </div>
       </div>
     </motion.article>
@@ -289,6 +287,7 @@ function StageCard({ stage, open }: { stage: Stage; open: boolean }) {
 /* ===== Boʻlim ===== */
 
 export default function OnboardingFlow() {
+  const t = useT();
   const reduce = useReducedMotion();
   const railRef = useRef<HTMLDivElement>(null);
 
@@ -315,29 +314,28 @@ export default function OnboardingFlow() {
   return (
     <section
       id="onboarding"
-      className="relative scroll-mt-24 overflow-hidden pb-24 pt-16 sm:pb-32 sm:pt-24"
-      style={{ backgroundColor: "#fbfdfb" }}
+      className="section-page relative scroll-mt-24 overflow-hidden pb-24 pt-16 sm:pb-32 sm:pt-24"
     >
       {/* ===== Fon nurlari ===== */}
       <div
         aria-hidden
-        className="pointer-events-none absolute -inset-x-[10%] bottom-[8%] top-[10%] bg-[radial-gradient(54%_50%_at_50%_46%,rgba(79,209,137,0.26),rgba(79,209,137,0)_72%)]"
+        className="decor-glow pointer-events-none absolute -inset-x-[10%] bottom-[8%] top-[10%] bg-[radial-gradient(54%_50%_at_50%_46%,rgba(79,209,137,0.26),rgba(79,209,137,0)_72%)]"
       />
       <motion.div
         aria-hidden
-        className="pointer-events-none absolute -left-[8%] top-[16%] h-[480px] w-[480px] rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(79,209,137,0.42),rgba(79,209,137,0)_70%)] blur-2xl"
+        className="decor-glow pointer-events-none absolute -left-[8%] top-[16%] h-[480px] w-[480px] rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(79,209,137,0.42),rgba(79,209,137,0)_70%)] blur-2xl"
         animate={reduce ? undefined : { x: [0, 30, 0], y: [0, 24, 0], scale: [1, 1.08, 1] }}
         transition={{ duration: 19, repeat: Infinity, ease: "easeInOut" }}
       />
       <motion.div
         aria-hidden
-        className="pointer-events-none absolute -right-[10%] top-[6%] h-[500px] w-[500px] rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(31,182,232,0.26),rgba(31,182,232,0)_70%)] blur-2xl"
+        className="decor-glow pointer-events-none absolute -right-[10%] top-[6%] h-[500px] w-[500px] rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(31,182,232,0.26),rgba(31,182,232,0)_70%)] blur-2xl"
         animate={reduce ? undefined : { x: [0, -28, 0], y: [0, 26, 0], scale: [1, 1.1, 1] }}
         transition={{ duration: 22, repeat: Infinity, ease: "easeInOut", delay: 1.5 }}
       />
       <motion.div
         aria-hidden
-        className="pointer-events-none absolute bottom-[-8%] left-[34%] h-[400px] w-[560px] rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(44,193,118,0.30),rgba(44,193,118,0)_72%)] blur-2xl"
+        className="decor-glow pointer-events-none absolute bottom-[-8%] left-[34%] h-[400px] w-[560px] rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(44,193,118,0.30),rgba(44,193,118,0)_72%)] blur-2xl"
         animate={reduce ? undefined : { x: [0, 24, 0], scale: [1, 1.06, 1] }}
         transition={{ duration: 24, repeat: Infinity, ease: "easeInOut", delay: 0.8 }}
       />
@@ -345,23 +343,23 @@ export default function OnboardingFlow() {
       {/* ===== Suyuq tomchilar ===== */}
       <div
         aria-hidden
-        className="pointer-events-none absolute left-[6%] top-[24%] hidden h-4 w-4 animate-liquid rounded-full bg-[radial-gradient(circle_at_32%_28%,rgba(255,255,255,0.9)_0%,rgba(190,230,60,0.5)_38%,rgba(79,209,137,0.6)_78%)] shadow-[0_3px_8px_rgba(11,43,28,0.16)] sm:block"
+        className="decor-glow pointer-events-none absolute left-[6%] top-[24%] hidden h-4 w-4 animate-liquid rounded-full bg-[radial-gradient(circle_at_32%_28%,rgba(255,255,255,0.9)_0%,rgba(190,230,60,0.5)_38%,rgba(79,209,137,0.6)_78%)] shadow-[0_3px_8px_rgba(11,43,28,0.16)] sm:block"
         style={{ animationDuration: "5.4s" }}
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute bottom-[18%] right-[5%] hidden h-[18px] w-[18px] animate-liquid rounded-full bg-[radial-gradient(circle_at_32%_28%,rgba(255,255,255,0.85)_0%,rgba(155,221,244,0.5)_38%,rgba(31,146,201,0.5)_78%)] shadow-[0_3px_8px_rgba(11,43,28,0.14)] blur-[1px] sm:block"
+        className="decor-glow pointer-events-none absolute bottom-[18%] right-[5%] hidden h-[18px] w-[18px] animate-liquid rounded-full bg-[radial-gradient(circle_at_32%_28%,rgba(255,255,255,0.85)_0%,rgba(155,221,244,0.5)_38%,rgba(31,146,201,0.5)_78%)] shadow-[0_3px_8px_rgba(11,43,28,0.14)] blur-[1px] sm:block"
         style={{ animationDelay: "2.4s", animationDuration: "6.6s" }}
       />
 
       {/* Qoʻshni boʻlimlar bilan yumshoq tutashuv */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 top-0 h-[220px] bg-[linear-gradient(to_bottom,#fbfdfb_0%,#fbfdfb_26%,rgba(251,253,251,0.7)_52%,rgba(251,253,251,0)_100%)] sm:h-[300px]"
+        className="pointer-events-none absolute inset-x-0 top-0 h-[220px] fade-top sm:h-[300px]"
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-[200px] bg-[linear-gradient(to_top,#fbfdfb_0%,#fbfdfb_26%,rgba(251,253,251,0.7)_52%,rgba(251,253,251,0)_100%)] sm:h-[280px]"
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-[200px] fade-bottom sm:h-[280px]"
       />
 
       <div className="relative z-[2] mx-auto max-w-[1240px] px-5 sm:px-8">
@@ -372,10 +370,10 @@ export default function OnboardingFlow() {
             whileInView={{ opacity: 1, y: 0, scale: 1 }}
             viewport={{ once: true, amount: 0.6 }}
             transition={{ type: "spring", stiffness: 140, damping: 16 }}
-            className="badge-pill inline-flex items-center gap-2 rounded-pill py-[7px] pl-3 pr-4 text-[13.5px] font-semibold text-[#1F4433] shadow-[0_6px_16px_-8px_rgba(11,43,28,0.25)]"
+            className="badge-pill inline-flex items-center gap-2 rounded-pill py-[7px] pl-3 pr-4 text-[13.5px] font-semibold shadow-[0_6px_16px_-8px_rgba(11,43,28,0.25)]"
           >
             <Image src="/cuocces.png" alt="" width={19} height={20} className="h-[19px] w-[18px]" />
-            Onboarding jarayoni
+            {t.onboarding.badge}
           </motion.span>
 
           <div className="relative mt-5">
@@ -392,7 +390,7 @@ export default function OnboardingFlow() {
               transition={{ duration: 0.7, ease: [0.22, 0.9, 0.3, 1] }}
               className="font-display text-[26px] font-extrabold leading-[1.2] tracking-[-0.01em] text-ink sm:text-[34px] lg:text-[40px]"
             >
-              HAMKOR BOʻLISH UCHUN NIMALARDAN OʻTASIZ?
+              {t.onboarding.title}
             </motion.h2>
           </div>
 
@@ -402,7 +400,7 @@ export default function OnboardingFlow() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.6 }}
             transition={{ duration: 0.6, delay: 0.15 }}
-            className="mt-5 inline-flex items-center gap-2.5 rounded-pill border border-white/80 bg-white/70 py-2 pl-2.5 pr-4 shadow-[0_10px_24px_-18px_rgba(11,43,28,0.6)] backdrop-blur"
+            className="mt-5 inline-flex items-center gap-2.5 rounded-pill border border-[color:var(--glass-border)] bg-surface/70 py-2 pl-2.5 pr-4 shadow-[0_10px_24px_-18px_rgba(11,43,28,0.6)] backdrop-blur"
           >
             <span className="grid h-[26px] w-[26px] place-items-center rounded-full bg-[linear-gradient(150deg,#7FE7B4,#17A468)]">
               <svg viewBox="0 0 24 24" className="h-[13px] w-[13px]" fill="none">
@@ -413,7 +411,7 @@ export default function OnboardingFlow() {
               <motion.span key={done} className="inline-block text-brand-600">
                 {done}
               </motion.span>
-              <span className="text-mute"> / {STAGES.length}</span> bosqich ochildi
+              <span className="text-mute"> / {STAGES.length}</span> {t.onboarding.opened}
             </span>
           </motion.div>
         </div>
@@ -438,7 +436,7 @@ export default function OnboardingFlow() {
             />
             {/* Toʻlish boshidagi uchqun */}
             <motion.span
-              className="absolute top-1/2 h-[15px] w-[15px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-white shadow-[0_0_0_4px_rgba(79,209,137,0.35),0_6px_14px_-4px_rgba(23,164,104,0.9)]"
+              className="absolute top-1/2 h-[15px] w-[15px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-surface shadow-[0_0_0_4px_rgba(79,209,137,0.35),0_6px_14px_-4px_rgba(23,164,104,0.9)]"
               style={{ left: sparkX, opacity: railOpacity }}
             >
               <motion.span
@@ -459,7 +457,7 @@ export default function OnboardingFlow() {
               >
                 {i < LAST && <RailSegment progress={progress} index={i} />}
                 <StageNode stage={stage} open={i < done} />
-                <StageCard stage={stage} open={i < done} />
+                <StageCard stage={stage} text={t.onboarding.stages[i]} open={i < done} />
               </motion.div>
             ))}
           </div>
@@ -483,9 +481,7 @@ export default function OnboardingFlow() {
           </span>
 
           <p className="flex-1 text-[13px] leading-[1.65] text-body sm:text-[14px]">
-            Barcha bosqichlar ketma-ket amalga oshiriladi. Jarayon davomida kiritilgan
-            maʼlumotlar saqlanadi — istalgan vaqtda toʻxtagan joyingizdan davom
-            ettirishingiz mumkin.
+            {t.onboarding.note}
           </p>
 
           <div className="flex shrink-0 flex-wrap gap-2">
@@ -495,7 +491,7 @@ export default function OnboardingFlow() {
             ].map(([label, d]) => (
               <span
                 key={label}
-                className="inline-flex items-center gap-1.5 rounded-pill border border-white/80 bg-white/70 px-3 py-1.5 text-[11.5px] font-semibold text-[#1F4433] backdrop-blur"
+                className="inline-flex items-center gap-1.5 rounded-pill border border-[color:var(--glass-border)] bg-surface/70 px-3 py-1.5 text-[11.5px] font-semibold text-ink backdrop-blur"
               >
                 <svg viewBox="0 0 24 24" className="h-[13px] w-[13px]" fill="none">
                   <path d={d} stroke="#1BA463" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />

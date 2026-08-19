@@ -20,62 +20,42 @@ import {
   RegisterIcon,
   OrderIcon,
 } from "./PartnerIcons";
+import { useT } from "@/lib/i18n/LanguageProvider";
 
+/** Bosqichning oʻzgarmas qismi — matnlar lugʻatdan (t.partner.steps) keladi */
 export type TimelineStep = {
-  title: string;
-  bracket?: string;
-  text: string;
   icon: ComponentType<SVGProps<SVGSVGElement>>;
   side: "left" | "right";
 };
 
-const DEFAULT_STEPS: TimelineStep[] = [
+type StepText = { title: string; bracket?: string; text: string };
+
+const STEPS: TimelineStep[] = [
   {
-    title: "ARIZA TOPSHIRING",
-    bracket: "Introduction",
-    text: "Onlayn Hamshira va platforma tartibi bilan tanishuv.",
     icon: IntroIcon,
     side: "left",
   },
   {
-    title: "DASTLABKI SARALASHDAN O'TING",
-    bracket: "Qualification",
-    text: "Ma'lumot, tajriba va savollarga javob bering.",
     icon: QualificationIcon,
     side: "right",
   },
   {
-    title: "O'QUV VA MINI-TEST",
-    bracket: "Education",
-    text: "Materiallarni o'rganish va mini testdan o'tish.",
     icon: EducationIcon,
     side: "left",
   },
   {
-    title: "VIDEO XABAR YUBORING",
-    bracket: "Motivation",
-    text: "Tajriba va motivatsiyangiz haqida video.",
     icon: MotivationIcon,
     side: "right",
   },
   {
-    title: "BATAFSIL VIDEO DARSLAR",
-    bracket: "Ilova bilan ishlash",
-    text: "Buyurtmalar va mijozlar bilan muloqot.",
     icon: AppLessonsIcon,
     side: "left",
   },
   {
-    title: "ILOVADA RO'YXATDAN O'TISH",
-    bracket: "Ariza topshirish",
-    text: "Profil to'ldiring, hujjat yuboring.",
     icon: RegisterIcon,
     side: "right",
   },
   {
-    title: "BUYURTMANI QABUL QILING",
-    bracket: "Buyurtma",
-    text: "Ariza tasdiqlangach, platformadagi mos buyurtmalarni qabul qiling.",
     icon: OrderIcon,
     side: "left",
   },
@@ -99,15 +79,10 @@ const cardVariants: Variants = {
   },
 };
 
-export default function PartnerTimeline({
-  steps = DEFAULT_STEPS,
-  title = "HAMKOR BO'LISH JARAONI",
-  subtitle = "Qadam-ba-qadam",
-}: {
-  steps?: TimelineStep[];
-  title?: string;
-  subtitle?: string;
-}) {
+export default function PartnerTimeline({ steps = STEPS }: { steps?: TimelineStep[] }) {
+  const t = useT();
+  const { title, subtitle, kicker } = t.partner;
+  const texts = t.partner.steps;
   const reduceMotion = useReducedMotion();
   const sectionRef = useRef<HTMLDivElement>(null);
   const tubeRef = useRef<HTMLDivElement>(null);
@@ -172,11 +147,11 @@ export default function PartnerTimeline({
   const allDone = isFilled(steps.length - 1);
 
   return (
-    <section id="qanday-ishlaydi" className={styles.section} ref={sectionRef}>
+    <section id="hamkorlik-jarayoni" className={styles.section} ref={sectionRef}>
       {/* Oldingi (Prefers) sectiondan davom etuvchi yashil "toʻyinish" — chegara bilinmasligi uchun */}
       <div
         aria-hidden
-        className="pointer-events-none absolute -inset-x-[12%] -top-[2%] h-[45%] bg-[radial-gradient(80%_100%_at_50%_0%,rgba(79,209,137,0.68),rgba(79,209,137,0)_78%)]"
+        className="decor-glow pointer-events-none absolute -inset-x-[12%] -top-[2%] h-[45%] bg-[radial-gradient(80%_100%_at_50%_0%,rgba(79,209,137,0.68),rgba(79,209,137,0)_78%)]"
       />
       <div
         aria-hidden
@@ -185,26 +160,26 @@ export default function PartnerTimeline({
       {/* Oldingi sectionlar bilan bogʻlanib ketuvchi yashil-koʻk glow'lar */}
       <div
         aria-hidden
-        className="pointer-events-none absolute -left-[10%] -top-[12%] h-[420px] w-[420px] rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(79,209,137,0.4),rgba(79,209,137,0)_70%)] blur-2xl"
+        className="decor-glow pointer-events-none absolute -left-[10%] -top-[12%] h-[420px] w-[420px] rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(79,209,137,0.4),rgba(79,209,137,0)_70%)] blur-2xl"
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute -right-[8%] top-[16%] h-[380px] w-[380px] rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(31,182,232,0.3),rgba(31,182,232,0)_70%)] blur-2xl"
+        className="decor-glow pointer-events-none absolute -right-[8%] top-[16%] h-[380px] w-[380px] rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(31,182,232,0.3),rgba(31,182,232,0)_70%)] blur-2xl"
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute bottom-[-8%] left-[28%] h-[460px] w-[460px] rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(44,193,118,0.32),rgba(44,193,118,0)_70%)] blur-2xl"
+        className="decor-glow pointer-events-none absolute bottom-[-8%] left-[28%] h-[460px] w-[460px] rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(44,193,118,0.32),rgba(44,193,118,0)_70%)] blur-2xl"
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute bottom-[10%] right-[6%] h-[320px] w-[320px] rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(190,230,60,0.26),rgba(190,230,60,0)_70%)] blur-2xl"
+        className="decor-glow pointer-events-none absolute bottom-[10%] right-[6%] h-[320px] w-[320px] rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(190,230,60,0.26),rgba(190,230,60,0)_70%)] blur-2xl"
       />
       {/* Yuqori chetni bazaviy rangga tekislaydi — Prefers bilan qattiq
           chiziqsiz tutashishi uchun (yuqoridagi glow qatlamlarini yopadi).
           Keng oq zona: chegara ustida ~1/3 qismi toʻliq oq, keyin sekin soʻnadi */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 top-0 h-[280px] bg-[linear-gradient(to_bottom,#fbfdfb_0%,#fbfdfb_28%,rgba(251,253,251,0.72)_50%,rgba(251,253,251,0.34)_74%,rgba(251,253,251,0)_100%)] sm:h-[400px]"
+        className="pointer-events-none absolute inset-x-0 top-0 h-[280px] fade-top-long sm:h-[400px]"
       />
 
       <header className={styles.header}>
@@ -224,7 +199,7 @@ export default function PartnerTimeline({
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.15 }}
         >
-          (Taymlayn formatida)
+          {kicker}
         </motion.p>
       </header>
 
@@ -243,10 +218,16 @@ export default function PartnerTimeline({
           const filled = isFilled(i);
           const isLast = i === steps.length - 1;
           return (
-            <div className={styles.row} key={step.title} data-side={step.side}>
+            <div className={styles.row} key={i} data-side={step.side}>
               <div className={styles.cell} data-active={step.side === "left"}>
                 {step.side === "left" && (
-                  <Card step={step} index={i} filled={filled} celebrate={isLast && filled} />
+                  <Card
+                    step={step}
+                    text={texts[i]}
+                    index={i}
+                    filled={filled}
+                    celebrate={isLast && filled}
+                  />
                 )}
               </div>
 
@@ -277,7 +258,13 @@ export default function PartnerTimeline({
 
               <div className={styles.cell} data-active={step.side === "right"}>
                 {step.side === "right" && (
-                  <Card step={step} index={i} filled={filled} celebrate={isLast && filled} />
+                  <Card
+                    step={step}
+                    text={texts[i]}
+                    index={i}
+                    filled={filled}
+                    celebrate={isLast && filled}
+                  />
                 )}
               </div>
             </div>
@@ -290,11 +277,13 @@ export default function PartnerTimeline({
 
 function Card({
   step,
+  text,
   index,
   filled,
   celebrate = false,
 }: {
   step: TimelineStep;
+  text: StepText;
   index: number;
   filled: boolean;
   celebrate?: boolean;
@@ -321,10 +310,10 @@ function Card({
 
       <div className={styles.body}>
         <h3 className={styles.cardTitle}>
-          {index + 1}. {step.title}{" "}
-          {step.bracket && <span className={styles.bracket}>({step.bracket})</span>}
+          {index + 1}. {text.title}{" "}
+          {text.bracket && <span className={styles.bracket}>({text.bracket})</span>}
         </h3>
-        <p className={styles.cardText}>{step.text}</p>
+        <p className={styles.cardText}>{text.text}</p>
       </div>
     </motion.article>
   );

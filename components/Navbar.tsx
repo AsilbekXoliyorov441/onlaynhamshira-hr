@@ -1,34 +1,51 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useId, useState } from "react";
 import { LogoMark } from "./Icons";
+import { useT } from "@/lib/i18n/LanguageProvider";
+import LanguageSwitcher from "@/lib/i18n/LanguageSwitcher";
+import ThemeToggle from "./theme/ThemeToggle";
 
-const NAV = [
-  { label: "Platforma haqida", href: "#platforma-haqida" },
-  { label: "Afzalliklar", href: "#afzalliklar" },
-  { label: "Qanday ishlaydi", href: "#qanday-ishlaydi" },
-  { label: "Talablar", href: "#talablar" },
-  { label: "Savol-javob", href: "#faq" },
-];
 
-function HeaderBar() {
+function HeaderBar({ sticky = false }: { sticky?: boolean }) {
+  const t = useT();
   const [open, setOpen] = useState(false);
+  const menuId = `${useId()}-mobil-menyu`;
+
+  /* Mobil menyu ochiq boʻlsa Escape uni yopadi */
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open]);
 
   return (
     <>
-      <nav className="mx-auto flex h-[74px] max-w-[1240px] items-center justify-between px-5 sm:px-8">
+      <nav
+        aria-label={sticky ? t.nav.stickyMenu : t.nav.mainMenu}
+        className="mx-auto flex h-[74px] max-w-[1240px] items-center justify-between gap-3 px-5 sm:px-8"
+      >
         {/* Logotip */}
-        <a href="#" className="flex shrink-0 items-center transition-transform duration-300 hover:scale-105">
-          <LogoMark className="h-[42px] w-auto" />
+        <a
+          href="#asosiy"
+          aria-label={t.nav.logoLabel}
+          className="flex shrink-0 items-center text-[color:var(--logo-word)] transition-transform duration-300 hover:scale-105"
+        >
+          <LogoMark aria-hidden className="h-[42px] w-auto" />
         </a>
 
         {/* Markaziy menyu */}
-        <ul className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-7 nav:flex">
-          {NAV.map((item) => (
+        {/* Markaziy menyu — oddiy flex bolasi: absolute boʻlsa oʻng tomondagi
+            tugmalar ustiga chiqib ketardi */}
+        <ul className="mx-auto hidden items-center gap-5 nav:flex xl:gap-7">
+          {t.nav.links.map((item) => (
             <li key={item.label}>
               <a
                 href={item.href}
-                className="relative text-[15px] font-medium text-[#395145] transition-colors after:absolute after:-bottom-1 after:left-0 after:h-[2px] after:w-0 after:rounded-full after:bg-brand-500 after:transition-all after:duration-300 hover:text-ink hover:after:w-full"
+                className="relative text-[15px] font-medium text-[color:var(--nav-fg)] transition-colors after:absolute after:-bottom-1 after:left-0 after:h-[2px] after:w-0 after:rounded-full after:bg-brand-500 after:transition-all after:duration-300 hover:text-ink hover:after:w-full"
               >
                 {item.label}
               </a>
@@ -36,52 +53,62 @@ function HeaderBar() {
           ))}
         </ul>
 
-        {/* Oʻng tomon */}
-        <div className="hidden nav:flex">
-          <a
-            href="#"
-            className="btn-primary rounded-pill px-6 py-[11px] font-display text-[15px] font-bold text-ink transition-all duration-300 hover:scale-105"
-          >
-            Hamkor boʻlish
-          </a>
-        </div>
+        {/* Oʻng tomon — mavzu almashtirgich barcha ekranlarda koʻrinadi */}
+        <div className="flex items-center gap-2.5 sm:gap-3">
+          <ThemeToggle />
+          <LanguageSwitcher />
 
-        {/* Mobil tugma */}
-        <button
-          type="button"
-          onClick={() => setOpen((v) => !v)}
-          aria-expanded={open}
-          aria-label="Menyuni ochish"
-          className="flex h-10 w-10 flex-col items-center justify-center gap-[5px] rounded-xl border border-[#D4E5DA] bg-white/85 nav:hidden"
-        >
-          <span
-            className={`h-[2px] w-4 rounded bg-ink transition-transform ${
-              open ? "translate-y-[7px] rotate-45" : ""
-            }`}
-          />
-          <span
-            className={`h-[2px] w-4 rounded bg-ink transition-opacity ${
-              open ? "opacity-0" : ""
-            }`}
-          />
-          <span
-            className={`h-[2px] w-4 rounded bg-ink transition-transform ${
-              open ? "-translate-y-[7px] -rotate-45" : ""
-            }`}
-          />
-        </button>
+          <a
+            href="#onboarding"
+            className="btn-primary hidden rounded-pill px-6 py-[11px] font-display text-[15px] font-bold text-onbrand transition-all duration-300 hover:scale-105 nav:block"
+          >
+            {t.nav.cta}
+          </a>
+
+          {/* Mobil tugma */}
+          <button
+            type="button"
+            onClick={() => setOpen((v) => !v)}
+            aria-expanded={open}
+            aria-controls={menuId}
+            aria-label={open ? t.nav.closeMenu : t.nav.openMenu}
+            className="flex h-11 w-11 flex-col items-center justify-center gap-[5px] rounded-xl border border-line bg-surface/85 nav:hidden"
+          >
+            <span
+              aria-hidden
+              className={`h-[2px] w-4 rounded bg-ink transition-transform ${
+                open ? "translate-y-[7px] rotate-45" : ""
+              }`}
+            />
+            <span
+              aria-hidden
+              className={`h-[2px] w-4 rounded bg-ink transition-opacity ${
+                open ? "opacity-0" : ""
+              }`}
+            />
+            <span
+              aria-hidden
+              className={`h-[2px] w-4 rounded bg-ink transition-transform ${
+                open ? "-translate-y-[7px] -rotate-45" : ""
+              }`}
+            />
+          </button>
+        </div>
       </nav>
 
       {/* Mobil menyu */}
       {open && (
-        <div className="mx-5 mb-2 rounded-card border border-line bg-white/95 p-4 shadow-card backdrop-blur nav:hidden">
+        <div
+          id={menuId}
+          className="mx-5 mb-2 rounded-card border border-line bg-surface/95 p-4 shadow-card backdrop-blur nav:hidden"
+        >
           <ul className="flex flex-col">
-            {NAV.map((item) => (
+            {t.nav.links.map((item) => (
               <li key={item.label}>
                 <a
                   href={item.href}
                   onClick={() => setOpen(false)}
-                  className="block border-b border-line py-3 text-[15px] font-medium text-[#395145] last:border-0"
+                  className="block border-b border-line py-3 text-[15px] font-medium text-[color:var(--nav-fg)] last:border-0"
                 >
                   {item.label}
                 </a>
@@ -89,11 +116,11 @@ function HeaderBar() {
             ))}
           </ul>
           <a
-            href="#"
+            href="#onboarding"
             onClick={() => setOpen(false)}
-            className="btn-primary mt-4 block rounded-pill py-2.5 text-center font-display text-[15px] font-bold text-ink"
+            className="btn-primary mt-4 block rounded-pill py-2.5 text-center font-display text-[15px] font-bold text-onbrand"
           >
-            Hamkor boʻlish
+            {t.nav.cta}
           </a>
         </div>
       )}
@@ -123,8 +150,11 @@ export default function Navbar() {
 
   return (
     <>
-      {/* Sahifa qancha scroll qilinganini koʻrsatuvchi chiziq */}
-      <div className="fixed inset-x-0 top-0 z-[60] h-[3px] bg-transparent">
+      {/* Sahifa qancha scroll qilinganini koʻrsatuvchi chiziq — sof bezak */}
+      <div
+        aria-hidden
+        className="fixed inset-x-0 top-0 z-[60] h-[3px] bg-transparent"
+      >
         <div
           className="h-full bg-[linear-gradient(90deg,#4FD189,#1BA463)] transition-[width] duration-150 ease-out"
           style={{ width: `${progress}%` }}
@@ -136,16 +166,18 @@ export default function Navbar() {
         <HeaderBar />
       </header>
 
-      {/* Scroll qilinganda sekin animatsiya bilan chiqadigan fixed header */}
+      {/* Scroll qilinganda sekin animatsiya bilan chiqadigan fixed header.
+          Yashiringan holatda `invisible` — shunda uning havolalari Tab
+          tartibidan ham chiqib ketadi (aria-hidden yolgʻiz kifoya emas). */}
       <header
         aria-hidden={!showFixed}
-        className={`fixed inset-x-0 top-0 z-50 bg-white/50 shadow-nav backdrop-blur-[8px] transition-all duration-500 ease-out ${
+        className={`fixed inset-x-0 top-0 z-50 bg-[color:var(--header-bg)] shadow-nav backdrop-blur-[8px] transition-all duration-500 ease-out ${
           showFixed
-            ? "translate-y-0 opacity-100"
-            : "pointer-events-none -translate-y-full opacity-0"
+            ? "visible translate-y-0 opacity-100"
+            : "invisible pointer-events-none -translate-y-full opacity-0"
         }`}
       >
-        <HeaderBar />
+        <HeaderBar sticky />
       </header>
     </>
   );

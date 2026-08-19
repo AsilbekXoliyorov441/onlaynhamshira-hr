@@ -1,4 +1,7 @@
+"use client";
+
 import Image from "next/image";
+import { useT } from "@/lib/i18n/LanguageProvider";
 import PhoneMockup from "./PhoneMockup";
 import FloatingCard from "./FloatingCard";
 import {
@@ -24,6 +27,7 @@ const AVATARS = [
 ];
 
 export default function Hero() {
+  const t = useT();
   return (
     <section className="relative overflow-hidden pb-16 pt-6 sm:pb-24 lg:pb-10 lg:pt-2">
       <div className="mx-auto grid max-w-[1240px] items-center gap-14 px-5 sm:px-8 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] lg:gap-6">
@@ -36,7 +40,7 @@ export default function Hero() {
 
           <div className="relative">
             {/* Yorliq */}
-            <span className="badge-pill inline-flex animate-rise items-center gap-2 rounded-pill py-[7px] pl-3 pr-4 text-[13.5px] font-semibold text-[#1F4433] shadow-[0_6px_16px_-8px_rgba(11,43,28,0.25)]">
+            <span className="badge-pill inline-flex animate-rise items-center gap-2 rounded-pill py-[7px] pl-3 pr-4 text-[13.5px] font-semibold shadow-[0_6px_16px_-8px_rgba(11,43,28,0.25)]">
               <Image
                 src="/cuocces.png"
                 alt=""
@@ -44,7 +48,7 @@ export default function Hero() {
                 height={20}
                 className="h-[19px] w-[18px]"
               />
-              Mutaxassislar uchun
+              {t.hero.badge}
             </span>
 
             {/* Sarlavha */}
@@ -52,9 +56,9 @@ export default function Hero() {
               className="mt-5 animate-rise font-display text-[clamp(2.35rem,4.6vw,4.1rem)] font-extrabold leading-[1.06] tracking-[-0.033em] text-ink lg:text-[clamp(2.1rem,3.4vw,3.3rem)]"
               style={{ animationDelay: "80ms" }}
             >
-              Tibbiy tajribangizni
-              <br className="hidden sm:block" /> yangi imkoniyatlarga
-              <br className="hidden sm:block" /> aylantiring
+              {t.hero.title[0]}
+              <br className="hidden sm:block" /> {t.hero.title[1]}
+              <br className="hidden sm:block" /> {t.hero.title[2]}
             </h1>
 
             {/* Tavsif */}
@@ -62,8 +66,7 @@ export default function Hero() {
               className="mt-5 max-w-[470px] animate-rise text-[16.5px] leading-[1.62] text-body"
               style={{ animationDelay: "160ms" }}
             >
-              Bemorlarga uy sharoitida professional tibbiy xizmat koʻrsating,
-              qoʻshimcha daromad oling va ish vaqtingizni mustaqil boshqaring.
+              {t.hero.desc}
             </p>
 
             {/* Tugmalar */}
@@ -73,15 +76,15 @@ export default function Hero() {
             >
               <a
                 href="#"
-                className="btn-primary rounded-pill px-8 py-4 font-display text-[16px] font-bold text-ink transition-all duration-300 hover:scale-105 active:scale-100"
+                className="btn-primary rounded-pill px-8 py-4 font-display text-[16px] font-bold text-onbrand transition-all duration-300 hover:scale-105 active:scale-100"
               >
-                Hamkor boʻlish
+                {t.hero.ctaPrimary}
               </a>
               <a
                 href="#"
                 className="btn-secondary rounded-pill px-8 py-4 font-display text-[16px] font-bold text-ink transition-all duration-300 hover:scale-105 active:scale-100"
               >
-                Platforma haqida bilish
+                {t.hero.ctaSecondary}
               </a>
             </div>
 
@@ -107,8 +110,7 @@ export default function Hero() {
                 ))}
               </div>
               <p className="max-w-[300px] text-[13.5px] leading-[1.5] text-body">
-                Hamshiralar, feldsherlar, shifokorlar va boshqa mutaxassislar
-                uchun.
+                {t.hero.social}
               </p>
             </div>
           </div>
@@ -179,9 +181,9 @@ export default function Hero() {
               icon={<PinIcon className="h-[15px] w-[15px]" />}
               className="left-[0%] top-[6%] w-[44%] max-w-[152px] sm:top-[13%] sm:w-[46%] sm:max-w-[188px]"
             >
-              Mijoz manzilini
+              {t.hero.cards[0][0]}
               <br />
-              aniq koʻring
+              {t.hero.cards[0][1]}
             </FloatingCard>
 
             <FloatingCard
@@ -190,9 +192,9 @@ export default function Hero() {
               delay="1.4s"
               duration="7s"
             >
-              Ilova ichidan
+              {t.hero.cards[1][0]}
               <br />
-              aloqaga chiqing
+              {t.hero.cards[1][1]}
             </FloatingCard>
 
             <FloatingCard
@@ -201,9 +203,9 @@ export default function Hero() {
               delay="0.7s"
               duration="6.5s"
             >
-              Xizmat narxini
+              {t.hero.cards[2][0]}
               <br />
-              oldindan biling
+              {t.hero.cards[2][1]}
             </FloatingCard>
 
             <FloatingCard
@@ -212,9 +214,9 @@ export default function Hero() {
               delay="2.1s"
               duration="7.5s"
             >
-              Reytingingizni
+              {t.hero.cards[3][0]}
               <br />
-              kuzatib boring
+              {t.hero.cards[3][1]}
             </FloatingCard>
           </div>
         </div>

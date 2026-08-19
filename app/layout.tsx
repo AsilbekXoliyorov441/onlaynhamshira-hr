@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 import { Manrope, Inter } from "next/font/google";
 import PageLoadGate from "@/components/loading/PageLoadGate";
+import { LanguageProvider } from "@/lib/i18n/LanguageProvider";
+import SkipLink from "@/lib/i18n/SkipLink";
+import { ThemeProvider } from "@/components/theme/ThemeProvider";
+import { uz } from "@/lib/i18n/dictionaries/uz";
 import "./globals.css";
 
 const display = Manrope({
@@ -17,11 +21,17 @@ const body = Inter({
   display: "swap",
 });
 
+/* Metadata server tomonda hosil boʻladi — u yerda tanlangan til hali
+   maʼlum emas, shuning uchun standart til (oʻzbekcha) matni ishlatiladi. */
 export const metadata: Metadata = {
-  title: "Onlayn Hamshira — tibbiy mutaxassislar uchun platforma",
-  description:
-    "Bemorlarga uy sharoitida professional tibbiy xizmat koʻrsating, qoʻshimcha daromad oling va ish vaqtingizni mustaqil boshqaring.",
+  title: uz.meta.title,
+  description: uz.meta.description,
 };
+
+/* Sahifa chizilishidan oldin ishlaydi — saqlangan tanlov `dark` boʻlsa
+   sinf darhol qoʻyiladi va yorugʻ fon "chaqnab" ketmaydi.
+   Hech narsa saqlanmagan boʻlsa standart holat — yorugʻ rejim. */
+const themeBootstrap = `(function(){try{if(localStorage.getItem("theme")==="dark"){document.documentElement.classList.add("dark")}}catch(e){}})();`;
 
 export default function RootLayout({
   children,
@@ -29,9 +39,22 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="uz" className={`${display.variable} ${body.variable}`}>
+    <html
+      lang="uz"
+      className={`${display.variable} ${body.variable}`}
+      suppressHydrationWarning
+    >
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeBootstrap }} />
+      </head>
       <body>
-        <PageLoadGate>{children}</PageLoadGate>
+        <ThemeProvider>
+          <LanguageProvider>
+            {/* Klaviatura bilan yuruvchilar uchun — kontentga oʻtish havolasi */}
+            <SkipLink />
+            <PageLoadGate>{children}</PageLoadGate>
+          </LanguageProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

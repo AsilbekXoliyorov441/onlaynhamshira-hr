@@ -3,8 +3,10 @@ import type { SVGProps } from "react";
 type I = SVGProps<SVGSVGElement>;
 
 /* ---------- Logotip ---------- */
-/** `wordFill` — soʻz-belgining rangi; toʻq fonda ochroq rang berish uchun */
-export function LogoMark({ wordFill = "#112E45", ...props }: I & { wordFill?: string }) {
+/** `wordFill` — soʻz-belgining rangi. Standart qiymat `currentColor`:
+ *  ota-elementning matn rangi qanday boʻlsa, soʻz-belgi ham shunday boʻladi,
+ *  shu bois yorugʻ/toʻq rejim almashuvi oʻz-oʻzidan ishlaydi. */
+export function LogoMark({ wordFill = "currentColor", ...props }: I & { wordFill?: string }) {
   return (
     <svg width="109" height="40" viewBox="0 0 109 40" fill="none" {...props}>
       <path

@@ -13,6 +13,7 @@ import {
   type MotionValue,
   type Variants,
 } from "framer-motion";
+import { useT } from "@/lib/i18n/LanguageProvider";
 
 /* ===== Ulushlar ===== */
 
@@ -22,13 +23,6 @@ const PLATFORM = 30;
 /** Halqadagi yoylar orasidagi kichik boʻshliq (pathLength birligida) */
 const GAP = 0.012;
 
-/** Platforma ulushi nimalarga sarflanadi */
-const PLATFORM_COSTS = [
-  "Yangi mijozlarni jalb qilish",
-  "Tizimni rivojlantirish",
-  "Texnik xizmat va support",
-  "Buyurtmalarni boshqarish",
-];
 
 /* ===== Animatsiya sxemalari ===== */
 
@@ -82,7 +76,7 @@ function useCountUp(target: number, active: boolean, duration = 1.5) {
 
 /* ===== Halqa diagramma ===== */
 
-function SplitDonut({ active }: { active: boolean }) {
+function SplitDonut({ active, label }: { active: boolean; label: string }) {
   const reduce = useReducedMotion();
   const count = useCountUp(SPECIALIST, active);
 
@@ -100,7 +94,7 @@ function SplitDonut({ active }: { active: boolean }) {
       {/* Halqa ortidagi yumshoq nur */}
       <motion.div
         aria-hidden
-        className="pointer-events-none absolute inset-[8%] rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(79,209,137,0.42),rgba(79,209,137,0)_70%)] blur-2xl"
+        className="decor-glow pointer-events-none absolute inset-[8%] rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(79,209,137,0.42),rgba(79,209,137,0)_70%)] blur-2xl"
         animate={reduce ? undefined : { opacity: [0.6, 1, 0.6], scale: [0.96, 1.06, 0.96] }}
         transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
       />
@@ -133,7 +127,7 @@ function SplitDonut({ active }: { active: boolean }) {
           cy="130"
           r="102"
           fill="none"
-          stroke="#E4EDE7"
+          stroke="var(--track)"
           strokeWidth="26"
           opacity="0.65"
         />
@@ -184,7 +178,7 @@ function SplitDonut({ active }: { active: boolean }) {
             <span className="text-brand-600">%</span>
           </div>
           <p className="mt-1.5 text-[12.5px] font-semibold uppercase tracking-[0.12em] text-mute sm:text-[13px]">
-            mutaxassisga
+            {label}
           </p>
         </div>
       </div>
@@ -292,6 +286,7 @@ function ShareCard({
 /* ===== Boʻlim ===== */
 
 export default function IncomeSplit() {
+  const t = useT();
   const reduce = useReducedMotion();
   const ref = useRef<HTMLElement>(null);
   const inView = useInView(ref, { once: true, amount: 0.25 });
@@ -300,29 +295,28 @@ export default function IncomeSplit() {
     <section
       ref={ref}
       id="daromad"
-      className="relative scroll-mt-24 overflow-hidden pb-24 pt-16 sm:pb-32 sm:pt-24"
-      style={{ backgroundColor: "#fbfdfb" }}
+      className="section-page relative scroll-mt-24 overflow-hidden pb-24 pt-16 sm:pb-32 sm:pt-24"
     >
       {/* ===== Fon nurlari ===== */}
       <div
         aria-hidden
-        className="pointer-events-none absolute -inset-x-[10%] bottom-[6%] top-[8%] bg-[radial-gradient(58%_54%_at_42%_46%,rgba(79,209,137,0.30),rgba(79,209,137,0)_72%)]"
+        className="decor-glow pointer-events-none absolute -inset-x-[10%] bottom-[6%] top-[8%] bg-[radial-gradient(58%_54%_at_42%_46%,rgba(79,209,137,0.30),rgba(79,209,137,0)_72%)]"
       />
       <motion.div
         aria-hidden
-        className="pointer-events-none absolute -left-[10%] top-[18%] h-[500px] w-[500px] rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(79,209,137,0.46),rgba(79,209,137,0)_70%)] blur-2xl"
+        className="decor-glow pointer-events-none absolute -left-[10%] top-[18%] h-[500px] w-[500px] rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(79,209,137,0.46),rgba(79,209,137,0)_70%)] blur-2xl"
         animate={reduce ? undefined : { x: [0, 36, 0], y: [0, -24, 0], scale: [1, 1.08, 1] }}
         transition={{ duration: 17, repeat: Infinity, ease: "easeInOut" }}
       />
       <motion.div
         aria-hidden
-        className="pointer-events-none absolute -right-[12%] top-[10%] h-[470px] w-[470px] rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(31,182,232,0.30),rgba(31,182,232,0)_70%)] blur-2xl"
+        className="decor-glow pointer-events-none absolute -right-[12%] top-[10%] h-[470px] w-[470px] rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(31,182,232,0.30),rgba(31,182,232,0)_70%)] blur-2xl"
         animate={reduce ? undefined : { x: [0, -30, 0], y: [0, 28, 0], scale: [1, 1.1, 1] }}
         transition={{ duration: 20, repeat: Infinity, ease: "easeInOut", delay: 1.4 }}
       />
       <motion.div
         aria-hidden
-        className="pointer-events-none absolute bottom-[-8%] left-[30%] h-[440px] w-[600px] rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(44,193,118,0.36),rgba(44,193,118,0)_72%)] blur-2xl"
+        className="decor-glow pointer-events-none absolute bottom-[-8%] left-[30%] h-[440px] w-[600px] rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(44,193,118,0.36),rgba(44,193,118,0)_72%)] blur-2xl"
         animate={reduce ? undefined : { x: [0, 28, 0], scale: [1, 1.06, 1] }}
         transition={{ duration: 22, repeat: Infinity, ease: "easeInOut", delay: 0.7 }}
       />
@@ -330,23 +324,23 @@ export default function IncomeSplit() {
       {/* ===== Suyuq tomchilar ===== */}
       <div
         aria-hidden
-        className="pointer-events-none absolute left-[4%] top-[34%] hidden h-4 w-4 animate-liquid rounded-full bg-[radial-gradient(circle_at_32%_28%,rgba(255,255,255,0.9)_0%,rgba(190,230,60,0.5)_38%,rgba(79,209,137,0.6)_78%)] shadow-[0_3px_8px_rgba(11,43,28,0.16)] sm:block"
+        className="decor-glow pointer-events-none absolute left-[4%] top-[34%] hidden h-4 w-4 animate-liquid rounded-full bg-[radial-gradient(circle_at_32%_28%,rgba(255,255,255,0.9)_0%,rgba(190,230,60,0.5)_38%,rgba(79,209,137,0.6)_78%)] shadow-[0_3px_8px_rgba(11,43,28,0.16)] sm:block"
         style={{ animationDuration: "5.2s" }}
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute bottom-[20%] right-[6%] hidden h-5 w-5 animate-liquid rounded-full bg-[radial-gradient(circle_at_32%_28%,rgba(255,255,255,0.85)_0%,rgba(155,221,244,0.5)_38%,rgba(31,146,201,0.5)_78%)] shadow-[0_3px_8px_rgba(11,43,28,0.14)] blur-[1px] sm:block"
+        className="decor-glow pointer-events-none absolute bottom-[20%] right-[6%] hidden h-5 w-5 animate-liquid rounded-full bg-[radial-gradient(circle_at_32%_28%,rgba(255,255,255,0.85)_0%,rgba(155,221,244,0.5)_38%,rgba(31,146,201,0.5)_78%)] shadow-[0_3px_8px_rgba(11,43,28,0.14)] blur-[1px] sm:block"
         style={{ animationDelay: "2.2s", animationDuration: "6.2s" }}
       />
 
       {/* Qoʻshni boʻlimlar bilan yumshoq tutashuv */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 top-0 h-[220px] bg-[linear-gradient(to_bottom,#fbfdfb_0%,#fbfdfb_26%,rgba(251,253,251,0.7)_52%,rgba(251,253,251,0)_100%)] sm:h-[300px]"
+        className="pointer-events-none absolute inset-x-0 top-0 h-[220px] fade-top sm:h-[300px]"
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-[200px] bg-[linear-gradient(to_top,#fbfdfb_0%,#fbfdfb_26%,rgba(251,253,251,0.7)_52%,rgba(251,253,251,0)_100%)] sm:h-[280px]"
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-[200px] fade-bottom sm:h-[280px]"
       />
 
       <div className="relative z-[2] mx-auto max-w-[1240px] px-5 sm:px-8">
@@ -357,10 +351,10 @@ export default function IncomeSplit() {
             whileInView={{ opacity: 1, y: 0, scale: 1 }}
             viewport={{ once: true, amount: 0.6 }}
             transition={{ type: "spring", stiffness: 140, damping: 16 }}
-            className="badge-pill inline-flex items-center gap-2 rounded-pill py-[7px] pl-3 pr-4 text-[13.5px] font-semibold text-[#1F4433] shadow-[0_6px_16px_-8px_rgba(11,43,28,0.25)]"
+            className="badge-pill inline-flex items-center gap-2 rounded-pill py-[7px] pl-3 pr-4 text-[13.5px] font-semibold shadow-[0_6px_16px_-8px_rgba(11,43,28,0.25)]"
           >
             <Image src="/cuocces.png" alt="" width={19} height={20} className="h-[19px] w-[18px]" />
-            Daromad va komissiya
+            {t.income.badge}
           </motion.span>
 
           <div className="relative mt-5">
@@ -377,7 +371,7 @@ export default function IncomeSplit() {
               transition={{ duration: 0.7, ease: [0.22, 0.9, 0.3, 1] }}
               className="font-display text-[26px] font-extrabold leading-[1.2] tracking-[-0.01em] text-ink sm:text-[34px] lg:text-[40px]"
             >
-              DAROMAD QANDAY TAQSIMLANADI?
+              {t.income.title}
             </motion.h2>
           </div>
 
@@ -388,8 +382,7 @@ export default function IncomeSplit() {
             transition={{ duration: 0.6, delay: 0.15 }}
             className="mx-auto mt-4 max-w-[640px] text-[14px] leading-[1.65] text-body sm:text-[15.5px]"
           >
-            Har bir muvaffaqiyatli yakunlangan buyurtmadan tushgan mablagʻ quyidagi
-            tartibda taqsimlanadi:
+            {t.income.lead}
           </motion.p>
         </div>
 
@@ -401,7 +394,7 @@ export default function IncomeSplit() {
             viewport={{ once: true, amount: 0.4 }}
             transition={{ type: "spring", stiffness: 90, damping: 18 }}
           >
-            <SplitDonut active={inView} />
+            <SplitDonut active={inView} label={t.income.donutLabel} />
           </motion.div>
 
           <motion.div
@@ -413,8 +406,8 @@ export default function IncomeSplit() {
           >
             <ShareCard
               value={SPECIALIST}
-              label="Mutaxassisga"
-              desc="Buyurtmadan tushgan mablagʻning asosiy qismi bevosita xizmatni bajargan mutaxassisga tegishli."
+              label={t.income.specialistLabel}
+              desc={t.income.specialistDesc}
               accent="rgba(79,209,137,0.30)"
               tone="#1BA463"
               ring="inset 0 0 0 1px rgba(79,209,137,0.55), 0 24px 50px -24px rgba(27,164,99,0.65)"
@@ -423,8 +416,8 @@ export default function IncomeSplit() {
 
             <ShareCard
               value={PLATFORM}
-              label="Platformaga"
-              desc="Platforma ulushi quyidagi xarajatlar uchun ishlatiladi:"
+              label={t.income.platformLabel}
+              desc={t.income.platformDesc}
               accent="rgba(31,182,232,0.28)"
               tone="#1B92C9"
               ring="inset 0 0 0 1px rgba(31,146,201,0.5), 0 24px 50px -24px rgba(27,146,201,0.6)"
@@ -434,7 +427,7 @@ export default function IncomeSplit() {
                 variants={listVariants}
                 className="relative z-[1] mt-4 grid grid-cols-1 gap-2 sm:grid-cols-2 sm:gap-x-4"
               >
-                {PLATFORM_COSTS.map((cost) => (
+                {t.income.costs.map((cost) => (
                   <motion.li
                     key={cost}
                     variants={itemVariants}
@@ -485,8 +478,7 @@ export default function IncomeSplit() {
             </svg>
           </span>
           <p className="text-[13px] leading-[1.6] text-body sm:text-[14px]">
-            Xizmat uchun toʻlov amaldagi platforma tartibi asosida amalga oshiriladi.
-            Batafsil shartlar onboarding va roʻyxatdan oʻtish jarayonida koʻrsatiladi.
+            {t.income.note}
           </p>
         </motion.div>
       </div>

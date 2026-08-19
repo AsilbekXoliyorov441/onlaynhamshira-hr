@@ -2,21 +2,18 @@
 
 import { useEffect, useId, useState } from "react";
 import styles from "./loading.module.css";
+import { useT } from "@/lib/i18n/LanguageProvider";
 const RADIUS = 150;
 const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
 
-const STEPS: ReadonlyArray<readonly [number, string]> = [
-  [0, "Ma'lumotlar yuklanmoqda"],
-  [35, "Hamshiralar ro'yxati tayyorlanmoqda"],
-  [70, "Profilingiz sozlanmoqda"],
-  [100, "Tayyor"],
-];
+/** Bosqich chegaralari — matnlar lugʻatdan (t.loading.steps) olinadi */
+const STEP_FROM = [0, 35, 70, 100];
 
-function stepLabel(value: number): string {
-  let label = STEPS[0][1];
-  for (const [from, text] of STEPS) {
-    if (value >= from) label = text;
-  }
+function stepLabel(value: number, steps: readonly string[]): string {
+  let label = steps[0];
+  STEP_FROM.forEach((from, i) => {
+    if (value >= from) label = steps[i];
+  });
   return label;
 }
 
@@ -36,6 +33,7 @@ export default function OnlaynHamshiraLoader({
   fullscreen = true,
   className,
 }: OnlaynHamshiraLoaderProps) {
+  const t = useT();
   const uid = useId().replace(/:/g, "");
   const gradientId = `oh-gradient-${uid}`;
   const shadowId = `oh-shadow-${uid}`;
@@ -61,7 +59,7 @@ export default function OnlaynHamshiraLoader({
   }, [isControlled]);
 
   const value = Math.max(0, Math.min(100, isControlled ? (progress as number) : simulated));
-  const text = label ?? stepLabel(value);
+  const text = label ?? stepLabel(value, t.loading.steps);
 
   return (
     <div
@@ -92,8 +90,8 @@ export default function OnlaynHamshiraLoader({
             <path id={bottomArcId} d="M 42 160 A 118 118 0 0 0 278 160" />
           </defs>
 
-          <circle cx="160" cy="160" r={RADIUS} fill="#fff" filter={`url(#${shadowId})`} />
-          <circle cx="160" cy="160" r={RADIUS} fill="none" stroke="#EEF3F8" strokeWidth="6" />
+          <circle cx="160" cy="160" r={RADIUS} fill="var(--oh-disc)" filter={`url(#${shadowId})`} />
+          <circle cx="160" cy="160" r={RADIUS} fill="none" stroke="var(--oh-track)" strokeWidth="6" />
           <circle
             cx="160"
             cy="160"
