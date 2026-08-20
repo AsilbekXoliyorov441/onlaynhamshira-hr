@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useState, type ReactNode } from "react";
 import { LogoMark } from "@/components/Icons";
-import { DESKTOP_HEADER_HEIGHT, HEADER_HEIGHT, Progress } from "./ui";
+import { CONTAINER, DESKTOP_HEADER_HEIGHT, HEADER_HEIGHT, Progress, READING_COLUMN } from "./ui";
 
 /*
  * Onboarding ekranlarining umumiy ramkasi.
@@ -53,15 +53,19 @@ export default function Shell({
       {/* ── Kompyuter: tepadagi boshqaruv paneli ── */}
       <header
         style={{ height: DESKTOP_HEADER_HEIGHT }}
-        className="fixed inset-x-0 top-0 z-40 hidden border-b border-line bg-page lg:block"
+        className="fixed inset-x-0 top-0 z-40 hidden border-b border-line bg-page/95 backdrop-blur-sm lg:block"
       >
-        <div className="mx-auto flex h-full w-full max-w-[1180px] flex-col justify-center px-8">
+        <div className={`${CONTAINER} flex h-full flex-col justify-center`}>
           <div className="flex items-center justify-between gap-4">
-            <Link href="/" className="inline-flex" aria-label="Bosh sahifa">
-              <LogoMark aria-hidden gradientId="lm-rail" className="h-[34px] w-auto" />
+            <Link
+              href="/"
+              className="inline-flex rounded-lg transition-opacity duration-200 hover:opacity-80"
+              aria-label="Bosh sahifa"
+            >
+              <LogoMark aria-hidden gradientId="lm-rail" className="h-[32px] w-auto" />
             </Link>
-            <div className="flex items-center gap-4">
-              <span className="text-[13px] font-semibold text-mute">
+            <div className="flex items-center gap-3.5">
+              <span className="text-[12.5px] font-semibold tabular-nums text-mute">
                 {current} / {total} {unit ?? "savol"}
               </span>
               {exitButton()}
@@ -77,21 +81,23 @@ export default function Shell({
         style={{ height: HEADER_HEIGHT }}
         className="fixed inset-x-0 top-0 z-40 flex items-center border-b border-line bg-page lg:hidden"
       >
-        <div className="mx-auto w-full max-w-[620px] px-4 sm:px-8">
-          <Progress
-            stage={stage}
-            current={current}
-            total={total}
-            steps={steps}
-            unit={unit}
-            exitSlot={exitButton("w-full")}
-          />
+        <div className={CONTAINER}>
+          <div className={READING_COLUMN}>
+            <Progress
+              stage={stage}
+              current={current}
+              total={total}
+              steps={steps}
+              unit={unit}
+              exitSlot={exitButton("w-full")}
+            />
+          </div>
         </div>
       </header>
 
       {/* Kompyuterda kontent oq kartochka ichida, ekran oʻrtasida.
          Tepadagi joy — `fixed` panellar uchun (+ havo). */}
-      <main className="w-full lg:px-8 lg:pb-12">
+      <main className="w-full lg:pb-14">
         {/* `fixed` panellar uchun joy + havo. Kartochkadan TASHQARIDA:
            aks holda kompyuterda kartochka panel ostidan boshlanib,
            yuqori burchaklari koʻrinmay qoladi. */}
@@ -99,14 +105,16 @@ export default function Shell({
         <div
           aria-hidden
           className="hidden lg:block"
-          style={{ height: DESKTOP_HEADER_HEIGHT + 28 }}
+          style={{ height: DESKTOP_HEADER_HEIGHT + 32 }}
         />
-        <div
-          className={`mx-auto flex w-full max-w-[620px] flex-col px-4 pb-4 sm:px-8 lg:rounded-[26px] lg:border lg:border-line lg:bg-surface lg:px-10 lg:pb-9 lg:pt-9 lg:shadow-[0_34px_80px_-52px_rgba(11,43,28,0.42)] ${
-            wide ? "lg:max-w-[980px]" : "lg:max-w-[760px]"
-          }`}
-        >
-          {children}
+
+        {/* Konteyner tepa panel bilan bir xil — chegaralar bir chiziqda */}
+        <div className={CONTAINER}>
+          <div className="lg:rounded-[24px] lg:border lg:border-line lg:bg-surface lg:px-10 lg:pb-11 lg:pt-11 lg:shadow-[0_28px_64px_-44px_rgba(11,43,28,0.3)]">
+            {/* Kartochka keng, matn ustuni esa oʻqish uchun qulay kenglikda.
+               Yon paneli bor ekranlar (video) butun kenglikni oladi. */}
+            <div className={wide ? "w-full" : READING_COLUMN}>{children}</div>
+          </div>
         </div>
       </main>
 
@@ -151,31 +159,31 @@ export default function Shell({
 /*
  * Gorizontal bosqichlar zanjiri — faqat kompyuterda. Har bir bosqich
  * teng kenglikda, nomi ikki qatorgacha siqiladi; oʻtilganlar yashil
- * belgi, joriysi halqa bilan ajratiladi.
+ * belgi, joriysi toʻq doira va yorugʻ halqa bilan ajratiladi.
  */
 function Stepper({ steps, current }: { steps: string[]; current: number }) {
   return (
-    <ol className="mt-3 flex items-start">
+    <ol className="mt-3.5 flex items-start">
       {steps.map((label, i) => {
         const n = i + 1;
         const done = n < current;
         const active = n === current;
         return (
           <li key={label} className="flex min-w-0 flex-1 items-start">
-            <div className="flex min-w-0 flex-1 flex-col items-center gap-1.5 px-1">
+            <div className="flex min-w-0 flex-1 flex-col items-center gap-1.5">
               <span
-                className={`grid h-[26px] w-[26px] shrink-0 place-items-center rounded-full text-[12px] font-bold ${
+                className={`grid h-[24px] w-[24px] shrink-0 place-items-center rounded-full text-[11.5px] font-bold transition-colors duration-300 ${
                   done
                     ? "bg-brand-500 text-white"
                     : active
-                    ? "bg-brand-100 text-brand-700 ring-2 ring-brand-500"
+                    ? "bg-brand-600 text-white ring-4 ring-brand-100"
                     : "border border-line bg-surface text-mute"
                 }`}
               >
                 {done ? "✓" : n}
               </span>
               <span
-                className={`line-clamp-2 text-center text-[11.5px] leading-tight ${
+                className={`line-clamp-2 px-1 text-center text-[11.5px] leading-tight ${
                   active ? "font-bold text-ink" : done ? "text-body" : "text-mute"
                 }`}
               >
@@ -185,7 +193,7 @@ function Stepper({ steps, current }: { steps: string[]; current: number }) {
             {n < steps.length && (
               <span
                 aria-hidden
-                className={`mt-[13px] h-[2px] w-4 shrink-0 rounded-pill xl:w-8 ${
+                className={`mt-[11px] h-[2px] w-3 shrink-0 rounded-pill transition-colors duration-300 xl:w-6 ${
                   done ? "bg-brand-400" : "bg-[color:var(--c-line)]"
                 }`}
               />

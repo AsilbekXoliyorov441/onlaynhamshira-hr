@@ -9,7 +9,18 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
 export const HEADER_HEIGHT = 62;
 
 /* Kompyuterdagi tepa boshqaruv paneli: logotip qatori + bosqichlar zanjiri */
-export const DESKTOP_HEADER_HEIGHT = 116;
+export const DESKTOP_HEADER_HEIGHT = 120;
+
+/*
+ * Butun onboarding uchun BITTA konteyner. Tepa panel, kontent
+ * kartochkasi va pastdagi tugmalar paneli — hammasi shu kenglikda va
+ * shu yon boʻshliqda. Shu bois har qanday ekranda chap va oʻng
+ * chegaralar bir chiziqda turadi.
+ */
+export const CONTAINER = "mx-auto w-full max-w-[960px] px-4 sm:px-6 lg:px-8";
+
+/* Matn ustuni: kartochka keng boʻlsa ham oʻqish qulay qolishi uchun */
+export const READING_COLUMN = "mx-auto w-full max-w-[720px]";
 
 /* ─────────────────────────── Progress ───────────────────────────
    Mobil ekranga 8 ta yorliq sigʻmaydi, shuning uchun ingichka chiziq +
@@ -264,9 +275,9 @@ export function Nav({
 
       <div
         ref={barRef}
-        className="fixed inset-x-0 bottom-0 z-30 border-t border-line bg-page px-4 pb-[max(14px,env(safe-area-inset-bottom))] pt-3 shadow-[0_-8px_24px_-16px_rgba(11,43,28,0.35)] sm:px-8 lg:static lg:z-auto lg:-mx-10 lg:mt-9 lg:bg-transparent lg:px-10 lg:pb-0 lg:pt-6 lg:shadow-none"
+        className="fixed inset-x-0 bottom-0 z-30 border-t border-line bg-page px-4 pb-[max(14px,env(safe-area-inset-bottom))] pt-3 shadow-[0_-8px_24px_-16px_rgba(11,43,28,0.35)] sm:px-6 lg:static lg:z-auto lg:mt-10 lg:bg-transparent lg:px-0 lg:pb-0 lg:pt-6 lg:shadow-none"
       >
-        <div className="mx-auto max-w-[620px] lg:max-w-none">
+        <div className={`${READING_COLUMN} lg:max-w-none`}>
           {hasNext && nextDisabled && disabledHint && (
             <p className="mb-2 text-center text-[13.5px] font-medium text-mute lg:mb-3 lg:text-right">
               {disabledHint}
