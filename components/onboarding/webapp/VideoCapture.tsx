@@ -58,7 +58,12 @@ export default function VideoCapture() {
   const [checking, setChecking] = useState(false);
   const [allTips, setAllTips] = useState(false);
   /* Yozib boʻlingan, lekin hali qoʻshilmagan video */
-  const [recorded, setRecorded] = useState<{ blob: Blob; url: string; seconds: number } | null>(null);
+  const [recorded, setRecorded] = useState<{
+    blob: Blob;
+    url: string;
+    seconds: number;
+    poster: string | null;
+  } | null>(null);
   /* Foydalanuvchi kamerani butunlay bloklab qoʻygan ("never allow") */
   const [blocked, setBlocked] = useState(false);
 
@@ -68,6 +73,7 @@ export default function VideoCapture() {
   const chunksRef = useRef<BlobPart[]>([]);
   const timerRef = useRef<number | null>(null);
   const secondsRef = useRef(0);
+  const posterRef = useRef<string | null>(null);
   const galleryInput = useRef<HTMLInputElement>(null);
   const deviceCameraInput = useRef<HTMLInputElement>(null);
   const attemptsRef = useRef(0);
@@ -92,6 +98,9 @@ export default function VideoCapture() {
   const stopStream = useCallback(() => {
     streamRef.current?.getTracks().forEach((track) => track.stop());
     streamRef.current = null;
+    /* `srcObject` `src` dan ustun turadi: tozalanmasa, yozilgan video
+       oʻrniga toʻxtagan oqim qoladi va ekran qop-qora koʻrinadi */
+    if (videoRef.current) videoRef.current.srcObject = null;
   }, []);
 
   const openCamera = useCallback(
@@ -170,7 +179,12 @@ export default function VideoCapture() {
   const finishRecording = useCallback((blob: Blob, recordedSeconds: number) => {
     stopStream();
     recordedRef.current = true;
-    setRecorded({ blob, url: URL.createObjectURL(blob), seconds: recordedSeconds });
+    setRecorded({
+      blob,
+      url: URL.createObjectURL(blob),
+      seconds: recordedSeconds,
+      poster: posterRef.current,
+    });
     setPhase("recorded");
   }, [stopStream]);
 
@@ -199,10 +213,30 @@ export default function VideoCapture() {
     openCamera(facing);
   };
 
+  /* Jonli oqimdan bitta kadr — yozilgan videoning "muqovasi".
+     MediaRecorder yaratgan WebM da birinchi kadr darrov chizilmaydi,
+     shu bois muqovasiz video qora kvadrat boʻlib turadi. */
+  const grabPoster = useCallback(() => {
+    const el = videoRef.current;
+    if (!el || !el.videoWidth) return null;
+    try {
+      const canvas = document.createElement("canvas");
+      canvas.width = el.videoWidth;
+      canvas.height = el.videoHeight;
+      const ctx = canvas.getContext("2d");
+      if (!ctx) return null;
+      ctx.drawImage(el, 0, 0, canvas.width, canvas.height);
+      return canvas.toDataURL("image/jpeg", 0.7);
+    } catch {
+      return null;
+    }
+  }, []);
+
   const stopRecording = useCallback(() => {
     if (timerRef.current) window.clearInterval(timerRef.current);
+    posterRef.current = grabPoster();
     if (recorderRef.current?.state === "recording") recorderRef.current.stop();
-  }, []);
+  }, [grabPoster]);
 
   const startRecording = () => {
     const stream = streamRef.current;
@@ -328,7 +362,15 @@ export default function VideoCapture() {
                  "Qoʻshish" bosilmaguncha keyingi ekranga oʻtilmaydi. */
               <>
                 <div className="mt-4 overflow-hidden rounded-[22px] bg-[#0B2B1C]">
-                  <video src={recorded.url} controls playsInline className="max-h-[52vh] w-full" />
+                  <video
+                    key="recorded"
+                    src={recorded.url}
+                    poster={recorded.poster ?? undefined}
+                    controls
+                    playsInline
+                    preload="auto"
+                    className="max-h-[52vh] w-full"
+                  />
                 </div>
 
                 <p className="mt-3 text-center text-[14px] font-medium text-body">
@@ -427,7 +469,13 @@ export default function VideoCapture() {
             ) : (
               <>
                 <div className="relative mt-4 overflow-hidden rounded-[22px] bg-[#0B2B1C]">
-                  <video ref={videoRef} playsInline muted className="aspect-[4/3] w-full object-cover" />
+                  <video
+                    key="live"
+                    ref={videoRef}
+                    playsInline
+                    muted
+                    className="aspect-[4/3] w-full object-cover"
+                  />
 
                   {/* Taymer */}
                   <span className="absolute left-4 top-4 flex items-center gap-2 rounded-pill bg-[rgba(11,43,28,0.72)] px-3 py-1.5">
