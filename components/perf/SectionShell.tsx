@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useRef, type ReactNode } from "react";
+import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from "react";
 import { useInView } from "framer-motion";
 
 /* Boʻlim hozir ekranga yaqinmi? Standart qiymat `true` — shell'siz
@@ -19,6 +19,27 @@ export function useSectionActive(): boolean {
   return useContext(ActiveContext);
 }
 
+/**
+ * Sensorli qurilmami (telefon/planshet)? CSS'dagi
+ * `@media (hover: none) and (pointer: coarse)` bilan bir xil shart —
+ * shu bois CSS va JS bir xil qurilmalarni "yengil rejim"ga oʻtkazadi.
+ *
+ * SSR paytida `false`: server qurilmani bilmaydi, birinchi render esa
+ * client bilan mos kelishi shart. Effekt hydration'dan keyin darhol
+ * toʻgʻrilaydi.
+ */
+function useTouchDevice(): boolean {
+  const [touch, setTouch] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia("(hover: none) and (pointer: coarse)");
+    setTouch(mq.matches);
+    const onChange = (e: MediaQueryListEvent) => setTouch(e.matches);
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, []);
+  return touch;
+}
+
 
 type Props = {
   children: ReactNode;
@@ -30,9 +51,15 @@ type Props = {
 
 export default function SectionShell({ children, defer = true, minHeight = 900 }: Props) {
   const ref = useRef<HTMLDivElement>(null);
+  const touch = useTouchDevice();
   /* 320px zaxira — animatsiya foydalanuvchi boʻlimga yetib kelgunicha
      allaqachon ishlab turadi, "sakrash" sezilmaydi. */
-  const active = useInView(ref, { margin: "320px 0px 320px 0px" });
+  const inView = useInView(ref, { margin: "320px 0px 320px 0px" });
+  /* Sensorli qurilmada framer'ning cheksiz bezak animatsiyalari umuman
+     ishga tushmaydi — CSS ularga yeta olmaydi, chunki framer inline
+     `style` yozadi. CSS animatsiyalarini `globals.css` dagi media
+     soʻrovi oʻchiradi. */
+  const active = inView && !touch;
 
   return (
     <div

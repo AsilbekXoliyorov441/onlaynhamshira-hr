@@ -361,3 +361,29 @@
 :global(.section-shell[data-active="false"]) .liquid {
   animation-play-state: paused;
 }
+
+/* Sensorli qurilmalarda naychaning qimmat effektlari olib tashlanadi.
+   `tCelebrate` — `filter: brightness/saturate` ni animatsiyalaydi, ya'ni
+   har kadrda butun suyuqlik gradienti qaytadan chiziladi; mobil GPU
+   uchun bu eng qimmat animatsiyalardan biri. */
+@media (hover: none) and (pointer: coarse) {
+  .liquid,
+  .surface,
+  .bubble,
+  .pulse {
+    animation: none !important;
+  }
+
+  .liquid[data-complete="true"] {
+    animation: none !important;
+  }
+
+  .surface {
+    filter: none;
+    box-shadow: none;
+  }
+
+  .icon {
+    filter: none;
+  }
+}

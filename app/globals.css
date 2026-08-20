@@ -577,3 +577,90 @@
     animation-delay: 300ms;
   }
 }
+
+
+/* ============================================================
+   Sensorli qurilmalar (telefon/planshet) uchun yengil rejim
+   ============================================================
+   Nega qurilma xususiyatlari emas, turi boʻyicha: `deviceMemory` va
+   `hardwareConcurrency` oʻrta darajali Android'larda ham 8 GB / 8 yadro
+   deb koʻrsatiladi, shu bois eski tekshiruv ularni "kuchli" deb hisoblab
+   yengil rejimni yoqmasdi. Sensorli ekran + hover yoʻqligi esa telefonni
+   aniq ajratadi va CSS'ning oʻzida ishlaydi (JS kutilmaydi).
+
+   Bu yerda uchta eng qimmat narsa olib tashlanadi:
+     1) cheksiz bezak animatsiyalari (halqalar),
+     2) katta `filter: blur(...)` qatlamlari,
+     3) `backdrop-filter` — scroll paytida fon har kadrda qayta namuna
+        olinadi, mobil GPU uchun eng ogʻir effekt.
+
+   Matn, tuzilma, kirish animatsiyalari va ranglar tegilmaydi. */
+@media (hover: none) and (pointer: coarse) {
+  /* ---- 1. Cheksiz bezak halqalari ---- */
+  .animate-liquid,
+  .animate-floaty,
+  .animate-drift {
+    animation: none !important;
+  }
+
+  /* ---- 2. `filter` — barcha HTML qatlamlarida ----
+     Ikki sabab:
+       a) bezak nurlaridagi katta blur radiuslari (ular radial-gradient
+          bilan chizilgan, blursiz ham yumshoq koʻrinadi);
+       b) MUHIMROQ: kirish animatsiyalari 41 ta joyda `filter: blur(8px)`
+          dan `blur(0px)` ga oʻtadi. Blur animatsiyasi har kadrda butun
+          kartochkani qaytadan rasterlaydi — oʻlchov: pastki boʻlimlardagi
+          rasterning katta qismi aynan shundan.
+     SVG teglari ataylab roʻyxatga kiritilmagan: 3D ikonkalar ichidagi
+     `feDropShadow` filterlari oʻz joyida qoladi. */
+  div, article, section, span, p, a, button, li, ul, ol,
+  h1, h2, h3, h4, h5, h6, header, footer, main, aside, figure, img, label {
+    filter: none !important;
+  }
+
+  /* ---- 3. backdrop-filter ----
+     Oʻrniga shisha yuzalar biroz toʻyintiriladi: fon blur qilinmagani
+     uchun sal koʻproq oʻtib ketardi, shaffoflikni kamaytirib buni
+     qoplaymiz. Natijada panel deyarli oʻsha koʻrinishda qoladi. */
+  *,
+  *::before,
+  *::after {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  :root {
+    --glass-1: rgba(255, 255, 255, 0.88);
+    --glass-2: rgba(255, 255, 255, 0.62);
+    --panel-1: rgba(255, 255, 255, 0.72);
+    --panel-2: rgba(255, 255, 255, 0.34);
+    /* Header ustidan scroll qilingan matn koʻrinib qolmasligi uchun —
+       blur yoʻqligida yarim shaffof fon yetarli emas */
+    --header-bg: rgb(255, 255, 255);
+  }
+
+  .dark {
+    --glass-1: rgba(25, 45, 36, 0.96);
+    --glass-2: rgba(15, 30, 24, 0.92);
+    --panel-1: rgba(31, 55, 44, 0.9);
+    --panel-2: rgba(16, 32, 26, 0.72);
+    --header-bg: rgb(9, 22, 17);
+  }
+
+  /* Blur'ga tayangan boshqa yarim shaffof yuzalar ham toʻyintiriladi */
+  .bg-surface\/70,
+  .bg-surface\/80,
+  .bg-surface\/90 {
+    background-color: rgb(var(--c-surface) / 0.97) !important;
+  }
+
+  /* ---- 4. Ortiqcha kompozitor qatlamlari ----
+     Har bir `will-change` alohida qatlam yaratadi; ular qurilma
+     xotirasini band qiladi va qatlam daraxti har kadrda qayta
+     hisoblanadi. */
+  *,
+  *::before,
+  *::after {
+    will-change: auto !important;
+  }
+}
