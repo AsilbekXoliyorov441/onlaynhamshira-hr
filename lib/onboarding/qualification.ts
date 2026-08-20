@@ -69,7 +69,7 @@ export const QUALIFICATION_QUESTIONS: Question[] = [
       {
         code: "OTHER",
         label: "Boshqa",
-        eligibility: { kind: "manual_review" },
+        eligibility: { kind: "eligible" },
         freeText: {
           field: "education_other",
           placeholder: "Maʼlumotingizni yozing",
@@ -163,8 +163,8 @@ export const QUALIFICATION_QUESTIONS: Question[] = [
       { code: "SECOND", label: "Ikkinchi toifa", eligibility: { kind: "eligible" } },
       /* TZ tavsiyasi: avtomatik rad etilmasin */
       { code: "NONE", label: "Toifam yoʻq", eligibility: { kind: "manual_review" } },
-      /* TZ-SAVOL: bu variant uchun Business Rules'da qoida yozilmagan.
-         Xavfsiz qaror sifatida qoʻlda tekshiruvga yuborildi. */
+      /* TZ Business Rules'da bu variant sanalmagan. TZ'ning umumiy
+         tavsiyasiga koʻra ("avtomatik rad etilmasin") qoʻlda tekshiruv. */
       { code: "CERTIFICATES", label: "Malaka oshirganman, sertifikat(lar)im bor", eligibility: { kind: "manual_review" } },
       { code: "IN_PROGRESS", label: "Malaka toifasini olish jarayonidaman", eligibility: { kind: "manual_review" } },
       { code: "NOT_REQUIRED", label: "Mening mutaxassisligim uchun toifa talab qilinmaydi", eligibility: { kind: "manual_review" } },
@@ -188,11 +188,12 @@ export const QUALIFICATION_QUESTIONS: Question[] = [
         { code: "OWN_TRANSPORT", label: "Ha, shaxsiy transportim bor", eligibility: { kind: "eligible" } },
         { code: "PUBLIC_TRANSPORT", label: "Ha, jamoat transporti yoki taksi orqali", eligibility: { kind: "eligible" } },
         { code: "NEARBY_ONLY", label: "Faqat yaqin hududlarda", eligibility: { kind: "eligible" } },
-        /* TZ'da rad etish kodi berilmagan — faqat ogohlantirish */
+        /* TZ: "«Yoʻq» javobi tanlansa, ogohlantirish koʻrsatiladi" —
+           rad etish ham, qoʻshimcha tekshiruv ham koʻrsatilmagan */
         {
           code: "NO",
           label: "Yoʻq",
-          eligibility: { kind: "manual_review" },
+          eligibility: { kind: "eligible" },
           warning:
             "Onlayn Hamshira xizmatlari asosan mijoz manzilida koʻrsatiladi. Buyurtmalarni bajarish uchun xizmat hududida harakatlana olish zarur.",
         },

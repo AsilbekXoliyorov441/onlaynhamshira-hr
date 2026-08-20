@@ -1,6 +1,6 @@
 "use client";
 
-import type { Answer, QualificationStatus, QuestionCode } from "./types";
+import type { Answer, QualificationStatus, QuestionCode, RejectionCode } from "./types";
 
 /*
  * Qualification sessiyasi — brauzer xotirasida.
@@ -22,6 +22,9 @@ export type Session = {
   answers: Answer[];
   startedAt: string | null;
   completedAt: string | null;
+  /* BR-Q-007: ichki rad etish kodi foydalanuvchiga koʻrsatilmaydi —
+     shu bois manzil satrida emas, sessiyada saqlanadi */
+  rejectionCode: RejectionCode | null;
 };
 
 const EMPTY: Session = {
@@ -31,6 +34,7 @@ const EMPTY: Session = {
   answers: [],
   startedAt: null,
   completedAt: null,
+  rejectionCode: null,
 };
 
 function newId(): string {
@@ -81,6 +85,7 @@ export function startSession(firstQuestion: QuestionCode): Session {
     answers: [],
     startedAt: new Date().toISOString(),
     completedAt: null,
+    rejectionCode: null,
   };
   saveSession(session);
   return session;

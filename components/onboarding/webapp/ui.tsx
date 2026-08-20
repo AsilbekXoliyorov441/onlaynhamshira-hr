@@ -160,17 +160,21 @@ export function Nav({
   onNext,
   nextLabel = "Keyingi",
   nextDisabled = false,
+  backLabel,
 }: {
   backHref?: string;
   onBack?: () => void;
   onNext: () => void;
   nextLabel?: string;
   nextDisabled?: boolean;
+  /** berilsa, strelka oʻrniga matnli tugma chiziladi (TZ Q-09) */
+  backLabel?: string;
 }) {
   return (
     <div className="sticky bottom-0 z-10 -mx-5 mt-auto border-t border-line bg-page/95 px-5 pb-[max(16px,env(safe-area-inset-bottom))] pt-4 backdrop-blur sm:-mx-8 sm:px-8">
-      <div className="mx-auto flex max-w-[560px] items-center gap-3">
-        {(backHref || onBack) &&
+      <div className="mx-auto flex max-w-[560px] flex-col gap-2.5 sm:flex-row-reverse sm:items-center">
+        <div className="flex items-center gap-3">
+        {(backHref || onBack) && !backLabel &&
           (backHref ? (
             <Link
               href={backHref}
@@ -206,6 +210,16 @@ export function Nav({
         >
           {nextLabel}
         </button>
+        </div>
+
+        {backLabel && backHref && (
+          <Link
+            href={backHref}
+            className="grid h-[48px] place-items-center rounded-pill border border-line bg-surface font-display text-[15px] font-semibold text-ink transition-colors duration-200 hover:border-brand-400 sm:h-[52px] sm:flex-1"
+          >
+            {backLabel}
+          </Link>
+        )}
       </div>
     </div>
   );

@@ -49,17 +49,16 @@ export const ANSWER_LABELS: Record<string, string> = {
   TERMS: "Hamkorlik shartlariga rozilik",
 };
 
-/*
- * TZ-SAVOL: Q-10C dagi "Administrator bilan bogʻlanish" uchun kanal
- * berilmagan. Haqiqiy manzil maʼlum boʻlgach shu yerni almashtiring.
- */
+/* Q-10C: "Administrator bilan bogʻlanish" — footer'dagi rasmiy kanal */
 export const SUPPORT_CONTACT = {
   label: "Administrator bilan bogʻlanish",
-  href: "https://t.me/onlaynhamshira",
+  href: "https://t.me/Onlayn_Hamshira_Admin",
 };
 
 /*
- * TZ-SAVOL: BR-Q-010 — qayta topshirish muddati koʻrsatilmagan.
- * Ekranda shu qiymat koʻrsatiladi.
+ * BR-Q-010: "Qualification qayta topshirilishi administrator ruxsati
+ * yoki belgilangan muddatdan keyin mavjud boʻladi." Muddat TZ'da
+ * koʻrsatilmagan, shu bois ekranda ham aniq son yozilmaydi.
  */
-export const RETRY_AFTER_DAYS = 30;
+export const RETRY_NOTE =
+  "Qayta topshirish administrator ruxsati yoki belgilangan muddatdan keyin mumkin boʻladi.";

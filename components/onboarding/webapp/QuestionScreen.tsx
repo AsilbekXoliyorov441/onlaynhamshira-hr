@@ -113,9 +113,15 @@ export default function QuestionScreen({ question }: { question: Question }) {
     setSession(updated);
 
     if (rejection) {
-      router.push(`/hamkor/saralash/natija?sabab=${rejection}`);
+      /* BR-Q-007: kod manzilda emas, sessiyada */
+      saveSession({ ...updated, rejectionCode: rejection });
+      router.push("/hamkor/saralash/natija");
       return;
     }
+    /* Avval rad etilgan boʻlsa va javob toʻgʻrilangan boʻlsa — eski
+       sababni tozalaymiz, aks holda natija ekrani eskisini koʻrsatadi */
+    if (updated.rejectionCode) saveSession({ ...updated, rejectionCode: null });
+
     const next = nextQuestion(question);
     router.push(next ? `/hamkor/saralash/${next.slug}` : "/hamkor/saralash/tekshirish");
   };
@@ -132,7 +138,7 @@ export default function QuestionScreen({ question }: { question: Question }) {
   }
 
   return (
-    <Shell stage="Dastlabki saralash" current={question.index} total={QUALIFICATION_TOTAL} steps={STEP_LABELS}>
+    <Shell stage="Qualification" current={question.index} total={QUALIFICATION_TOTAL} steps={STEP_LABELS}>
       <h1 className="font-display text-[22px] font-extrabold leading-snug text-ink sm:text-[25px]">
         {question.title}
       </h1>
@@ -196,7 +202,13 @@ export default function QuestionScreen({ question }: { question: Question }) {
 
       {warning && <Notice tone="warn">{warning}</Notice>}
 
-      <Nav backHref={backHref} onNext={onNext} nextDisabled={!valid || saving} />
+      {/* TZ Q-08: oxirgi savolda tugma matni "Javoblarni tekshirish" */}
+      <Nav
+        backHref={backHref}
+        onNext={onNext}
+        nextLabel={question.kind === "consent" ? "Javoblarni tekshirish" : "Keyingi"}
+        nextDisabled={!valid || saving}
+      />
     </Shell>
   );
 }

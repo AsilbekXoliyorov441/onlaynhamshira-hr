@@ -1,12 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { LogoMark } from "@/components/Icons";
 import { evaluateQualification, type Evaluation } from "@/lib/onboarding/api";
 import { loadSession, saveSession } from "@/lib/onboarding/session";
-import { RETRY_AFTER_DAYS, SUPPORT_CONTACT } from "@/lib/onboarding/describe";
+import { RETRY_NOTE, SUPPORT_CONTACT } from "@/lib/onboarding/describe";
 import { QUALIFICATION_QUESTIONS } from "@/lib/onboarding/qualification";
 import type { RejectionCode } from "@/lib/onboarding/types";
 
@@ -36,25 +36,47 @@ const REJECTION_TEXT: Record<RejectionCode, { title: string; text: string }> = {
 };
 
 export default function Result() {
-  const params = useSearchParams();
-  /* Darhol rad etilganda sabab manzil orqali keladi */
-  const immediate = params.get("sabab") as RejectionCode | null;
+  const router = useRouter();
   const [evaluation, setEvaluation] = useState<Evaluation | null>(null);
+
+  /* Q-10C: "Javoblarni qayta koʻrish" — sessiya yana IN_PROGRESS holatiga
+     qaytadi, aks holda savol ekrani kirishga ruxsat bermaydi va eski
+     rad etish sababi natijada qayta chiqib qoladi. */
+  const reviewAnswers = () => {
+    const session = loadSession();
+    saveSession({
+      ...session,
+      status: "IN_PROGRESS",
+      rejectionCode: null,
+      completedAt: null,
+    });
+    router.push(`/hamkor/saralash/${QUALIFICATION_QUESTIONS[0].slug}`);
+  };
 
   useEffect(() => {
     const session = loadSession();
 
-    if (immediate) {
-      setEvaluation({ result: "NOT_QUALIFIED", rejectionCode: immediate, requiresManualReview: false });
+    /* Savol ekranida darhol rad etilgan boʻlsa, sabab sessiyada turadi */
+    if (session.rejectionCode) {
+      setEvaluation({
+        result: "NOT_QUALIFIED",
+        rejectionCode: session.rejectionCode,
+        requiresManualReview: false,
+      });
       saveSession({ ...session, status: "NOT_QUALIFIED", completedAt: new Date().toISOString() });
       return;
     }
 
     evaluateQualification(session).then((result) => {
       setEvaluation(result);
-      saveSession({ ...session, status: result.result, completedAt: new Date().toISOString() });
+      saveSession({
+        ...session,
+        status: result.result,
+        rejectionCode: result.rejectionCode ?? null,
+        completedAt: new Date().toISOString(),
+      });
     });
-  }, [immediate]);
+  }, []);
 
   if (!evaluation) {
     return (
@@ -111,18 +133,16 @@ export default function Result() {
               </div>
             )}
 
-            <p className="mt-4 text-[13.5px] leading-relaxed text-mute">
-              Talablarga mos kelganingizdan soʻng, {RETRY_AFTER_DAYS} kundan keyin qayta
-              urinib koʻrishingiz mumkin.
-            </p>
+            <p className="mt-4 text-[13.5px] leading-relaxed text-mute">{RETRY_NOTE}</p>
 
             <div className="mt-7 flex flex-col gap-2.5">
-              <Link
-                href={`/hamkor/saralash/${QUALIFICATION_QUESTIONS[0].slug}`}
-                className="grid h-[52px] place-items-center rounded-pill border border-line bg-surface font-display text-[15.5px] font-bold text-ink transition-colors duration-200 hover:border-brand-400"
+              <button
+                type="button"
+                onClick={reviewAnswers}
+                className="h-[52px] rounded-pill border border-line bg-surface font-display text-[15.5px] font-bold text-ink transition-colors duration-200 hover:border-brand-400"
               >
                 Javoblarni qayta koʻrish
-              </Link>
+              </button>
               <a
                 href={SUPPORT_CONTACT.href}
                 target="_blank"

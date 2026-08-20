@@ -42,7 +42,7 @@ export default function Review() {
   }
 
   return (
-    <Shell stage="Dastlabki saralash" current={QUALIFICATION_TOTAL} total={QUALIFICATION_TOTAL} steps={STEP_LABELS}>
+    <Shell stage="Qualification" current={QUALIFICATION_TOTAL} total={QUALIFICATION_TOTAL} steps={STEP_LABELS}>
       <h1 className="font-display text-[24px] font-extrabold leading-snug text-ink sm:text-[27px]">
         Javoblaringizni tekshiring
       </h1>
@@ -87,6 +87,7 @@ export default function Review() {
         onNext={confirm}
         nextLabel="Tasdiqlash va natijani koʻrish"
         nextDisabled={busy}
+        backLabel="Ortga qaytish"
       />
     </Shell>
   );
