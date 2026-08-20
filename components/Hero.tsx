@@ -75,13 +75,13 @@ export default function Hero() {
               style={{ animationDelay: "240ms" }}
             >
               <a
-                href="#"
+                href="/hamkor"
                 className="btn-primary rounded-pill px-8 py-4 font-display text-[16px] font-bold text-onbrand transition-all duration-300 hover:scale-105 active:scale-100"
               >
                 {t.hero.ctaPrimary}
               </a>
               <a
-                href="#"
+                href="#platforma-haqida"
                 className="btn-secondary rounded-pill px-8 py-4 font-display text-[16px] font-bold text-ink transition-all duration-300 hover:scale-105 active:scale-100"
               >
                 {t.hero.ctaSecondary}

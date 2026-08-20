@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { LogoMark } from "@/components/Icons";
+import Standalone from "./Standalone";
 import { evaluateQualification, type Evaluation } from "@/lib/onboarding/api";
 import { loadSession, saveSession } from "@/lib/onboarding/session";
 import { RETRY_NOTE, SUPPORT_CONTACT } from "@/lib/onboarding/describe";
@@ -89,12 +89,8 @@ export default function Result() {
   const rejection = evaluation.rejectionCode ? REJECTION_TEXT[evaluation.rejectionCode] : null;
 
   return (
-    <div className="onboarding-bg min-h-screen lg:grid lg:place-items-center">
-      <div className="mx-auto w-full max-w-[620px] px-5 pb-12 pt-6 sm:px-8 lg:py-14">
-        <Link href="/" className="inline-flex" aria-label="Bosh sahifa">
-          <LogoMark aria-hidden className="h-[38px] w-auto" />
-        </Link>
-
+    <Standalone badge="Bosqich 5 / 8">
+      <>
         {evaluation.result === "QUALIFIED" && (
           <Outcome
             emoji="🎉"
@@ -155,8 +151,8 @@ export default function Result() {
             </div>
           </>
         )}
-      </div>
-    </div>
+      </>
+    </Standalone>
   );
 }
 

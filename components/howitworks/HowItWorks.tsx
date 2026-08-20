@@ -604,7 +604,7 @@ export default function HowItWorks() {
           className="mt-12 flex flex-col items-center gap-3 sm:mt-16"
         >
           <m.a
-            href="#"
+            href="/hamkor"
             whileHover={reduce ? undefined : { scale: 1.05, y: -3 }}
             whileTap={reduce ? undefined : { scale: 0.97 }}
             transition={{ type: "spring", stiffness: 320, damping: 18 }}

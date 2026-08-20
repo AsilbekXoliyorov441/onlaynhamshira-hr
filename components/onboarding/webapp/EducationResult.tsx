@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { LogoMark } from "@/components/Icons";
+import Standalone from "./Standalone";
 import { LESSONS, PASSING_PERCENTAGE } from "@/lib/onboarding/education";
 import { retryFinalTest } from "@/lib/onboarding/education-api";
 import { lastFinalAttempt, loadEducation, type FinalAttempt } from "@/lib/onboarding/education-session";
@@ -39,13 +39,9 @@ export default function EducationResult() {
   const passed = attempt.result === "PASSED";
 
   return (
-    <div className="onboarding-bg min-h-screen lg:grid lg:place-items-center">
-      <div className="mx-auto w-full max-w-[620px] px-5 pb-12 pt-6 sm:px-8 lg:py-14">
-        <Link href="/" className="inline-flex" aria-label="Bosh sahifa">
-          <LogoMark aria-hidden className="h-[38px] w-auto" />
-        </Link>
-
-        <div className="mt-8">
+    <Standalone badge="Bosqich 6 / 8">
+      <>
+        <div>
           <span aria-hidden className="text-[42px]">{passed ? "🎉" : "📘"}</span>
           <h1 className="mt-3 font-display text-[26px] font-extrabold leading-[1.18] tracking-[-0.02em] text-ink sm:text-[30px] lg:text-[34px]">
             {passed
@@ -140,7 +136,7 @@ export default function EducationResult() {
             Saqlash va chiqish
           </Link>
         </div>
-      </div>
-    </div>
+      </>
+    </Standalone>
   );
 }

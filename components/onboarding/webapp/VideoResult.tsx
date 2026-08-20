@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { LogoMark } from "@/components/Icons";
+import Standalone from "./Standalone";
 import { formatDuration, formatSize } from "@/lib/onboarding/video";
 import { replaceVideo } from "@/lib/onboarding/video-api";
 import { loadVideo, type VideoSession } from "@/lib/onboarding/video-store";
@@ -41,13 +41,9 @@ export default function VideoResult() {
   const failed = session.status === "UPLOAD_FAILED";
 
   return (
-    <div className="onboarding-bg min-h-screen lg:grid lg:place-items-center">
-      <div className="mx-auto w-full max-w-[620px] px-5 pb-12 pt-6 sm:px-8 lg:py-14">
-        <Link href="/" className="inline-flex" aria-label="Bosh sahifa">
-          <LogoMark aria-hidden className="h-[38px] w-auto" />
-        </Link>
-
-        <div className="mt-8">
+    <Standalone badge="Bosqich 7 / 8">
+      <>
+        <div>
           <span aria-hidden className="text-[42px]">
             {failed ? "📶" : "✅"}
           </span>
@@ -121,7 +117,7 @@ export default function VideoResult() {
             Saqlash va chiqish
           </Link>
         </div>
-      </div>
-    </div>
+      </>
+    </Standalone>
   );
 }

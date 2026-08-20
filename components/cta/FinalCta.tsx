@@ -152,9 +152,11 @@ export default function FinalCta() {
               {t.finalCta.primary}
             </a>
 
-            {/* TODO: support/administrator havolasini (telegram, tel yoki kontakt boʻlimi) qoʻying */}
+            {/* Administrator bilan bogʻlanish — footer'dagi rasmiy kanal */}
             <a
-              href="#"
+              href="https://t.me/Onlayn_Hamshira_Admin"
+              target="_blank"
+              rel="noopener noreferrer"
               className="btn-secondary rounded-pill px-9 py-[18px] font-display text-[16.5px] font-bold text-ink transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0"
             >
               {t.finalCta.secondary}
