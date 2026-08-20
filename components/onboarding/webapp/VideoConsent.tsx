@@ -47,7 +47,7 @@ export default function VideoConsent() {
     if (!session || !allChecked || busy) return;
     setBusy(true);
     await saveConsent(session, checked);
-    router.push("/hamkor/video/usul");
+    router.push("/hamkor/video/yozish");
   };
 
   if (!session) {
@@ -94,7 +94,7 @@ export default function VideoConsent() {
       </div>
 
       <Nav
-        backHref="/hamkor/video/korsatmalar"
+        backHref="/hamkor/video"
         onNext={onNext}
         nextLabel="Video yozishga oʻtish"
         nextDisabled={!allChecked || busy}

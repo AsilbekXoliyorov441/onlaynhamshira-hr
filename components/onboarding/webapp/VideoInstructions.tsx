@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import VideoShell from "./VideoShell";
-import { Choice, Nav } from "./ui";
+import { Nav } from "./ui";
 import {
   VIDEO_CHECKLIST,
   VIDEO_LIMITS,
@@ -14,11 +14,16 @@ import {
 } from "@/lib/onboarding/video";
 import { loadVideo } from "@/lib/onboarding/video-store";
 
-/* V-01: VIDEO_INSTRUCTIONS */
+/*
+ * Videodagi savollar va texnik talablar — maʼlumotnoma sahifasi.
+ *
+ * Maketda asosiy oqim "kirish -> rozilik -> yozish" boʻlgani uchun bu
+ * sahifa oqimdan chiqarildi: unga V-01 ekranining yon panelidagi
+ * "Savollar bilan tanishish" havolasi orqali kiriladi.
+ */
 export default function VideoInstructions() {
   const router = useRouter();
   const [ready, setReady] = useState(false);
-  const [confirmed, setConfirmed] = useState(false);
   const [scriptOpen, setScriptOpen] = useState(false);
 
   useEffect(() => {
@@ -147,21 +152,11 @@ export default function VideoInstructions() {
         ))}
       </ul>
 
-      <div className="mt-8">
-        <Choice
-          label="Video topshirigʻi va talablar bilan tanishdim"
-          multi
-          selected={confirmed}
-          onSelect={() => setConfirmed((v) => !v)}
-        />
-      </div>
-
       <Nav
-        backHref="/hamkor/video"
-        onNext={() => router.push("/hamkor/video/rozilik")}
-        nextLabel="Davom etish"
-        nextDisabled={!confirmed}
-        disabledHint="Davom etish uchun tasdiq belgisini qoʻying"
+        backHref="/hamkor/video/yozish"
+        backLabel="Orqaga"
+        onNext={() => router.push("/hamkor/video/yozish")}
+        nextLabel="Video yozishga qaytish"
       />
     </VideoShell>
   );

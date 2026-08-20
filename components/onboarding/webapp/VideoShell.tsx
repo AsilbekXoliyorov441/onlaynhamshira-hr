@@ -20,6 +20,7 @@ export default function VideoShell({ children }: { children: ReactNode }) {
       total={ONBOARDING_TOTAL}
       steps={ONBOARDING_STAGES}
       unit="bosqich"
+      wide
     >
       {children}
     </Shell>

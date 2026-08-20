@@ -3,12 +3,12 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import Standalone from "./Standalone";
+import VideoShell from "./VideoShell";
 import { formatDuration, formatSize } from "@/lib/onboarding/video";
 import { replaceVideo } from "@/lib/onboarding/video-api";
 import { loadVideo, type VideoSession } from "@/lib/onboarding/video-store";
 
-/* V-08A: VIDEO_UPLOAD_SUCCESS / V-08B: VIDEO_UPLOAD_FAILED */
+/* V-04: "Yuklash muvaffaqiyatli" (maket) / xato holati — V-08B */
 export default function VideoResult() {
   const router = useRouter();
   const [session, setSession] = useState<VideoSession | null>(null);
@@ -27,7 +27,7 @@ export default function VideoResult() {
   const pickAnother = async () => {
     if (!session) return;
     await replaceVideo(session);
-    router.push("/hamkor/video/usul");
+    router.push("/hamkor/video/yozish");
   };
 
   if (!session) {
@@ -41,63 +41,65 @@ export default function VideoResult() {
   const failed = session.status === "UPLOAD_FAILED";
 
   return (
-    <Standalone badge="Bosqich 7 / 8">
-      <>
-        <div>
-          <span aria-hidden className="text-[42px]">
-            {failed ? "📶" : "✅"}
-          </span>
-          <h1 className="mt-3 font-display text-[26px] font-extrabold leading-[1.18] tracking-[-0.02em] text-ink sm:text-[30px] lg:text-[34px]">
-            {failed ? "Videoni yuklab boʻlmadi" : "Video muvaffaqiyatli yuborildi"}
-          </h1>
-          <p className="mt-4 text-[15.5px] leading-relaxed text-body">
-            {failed
-              ? "Internet aloqasi yoki texnik muammo sababli video toʻliq yuklanmadi. Videongiz qurilmangizda saqlangan boʻlsa, qayta yuborishingiz mumkin."
-              : "Video xabaringiz saqlandi va arizangizga biriktirildi."}
-          </p>
-          {!failed && (
-            <p className="mt-3 text-[15.5px] leading-relaxed text-body">
-              Keyingi bosqichda Onlayn Hamshira platformasi, mobil ilova va buyurtmalar bilan
-              ishlash boʻyicha batafsil video darsliklarni koʻrasiz.
-            </p>
+    <VideoShell>
+      <div className="mx-auto w-full max-w-[520px] py-4 text-center">
+        <span
+          aria-hidden
+          className={`mx-auto grid h-[82px] w-[82px] place-items-center rounded-full ${
+            failed ? "bg-[#FDF3F3]" : "bg-brand-50"
+          }`}
+        >
+          {failed ? (
+            <svg viewBox="0 0 24 24" className="h-10 w-10 text-[#C24444]" fill="none">
+              <circle cx="12" cy="12" r="8.5" stroke="currentColor" strokeWidth="1.8" />
+              <path d="M12 7.5v5.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+              <circle cx="12" cy="16.2" r="1.1" fill="currentColor" />
+            </svg>
+          ) : (
+            <svg viewBox="0 0 24 24" className="h-10 w-10 text-brand-600" fill="none">
+              <circle cx="12" cy="12" r="8.5" stroke="currentColor" strokeWidth="1.8" />
+              <path
+                d="M8.2 12.3l2.6 2.6 5-5.4"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
           )}
-        </div>
+        </span>
+
+        <h1 className="mt-5 font-display text-[24px] font-extrabold leading-snug text-ink sm:text-[28px]">
+          {failed ? "Videoni yuklab boʻlmadi" : "Video muvaffaqiyatli yuklandi!"}
+        </h1>
+        <p className="mt-3 text-[15.5px] leading-relaxed text-body">
+          {failed
+            ? "Internet aloqasi yoki texnik muammo sababli video toʻliq yuklanmadi. Videongiz qurilmangizda saqlangan — qayta yuborishingiz mumkin."
+            : "Rahmat! Video administrator tomonidan koʻrib chiqiladi."}
+        </p>
 
         {session.meta && (
-          <div className="mt-6 rounded-2xl border border-line bg-surface p-4">
-            <p className="flex items-baseline justify-between gap-3 text-[14.5px]">
-              <span className="text-body">Davomiylik</span>
-              <span className="font-semibold text-ink">
-                {formatDuration(session.meta.durationSeconds)}
-              </span>
-            </p>
-            <p className="mt-2 flex items-baseline justify-between gap-3 text-[14.5px]">
-              <span className="text-body">Fayl hajmi</span>
-              <span className="font-semibold text-ink">{formatSize(session.meta.fileSize)}</span>
-            </p>
-            {!failed && (
-              <p className="mt-2 flex items-baseline justify-between gap-3 text-[14.5px]">
-                <span className="text-body">Holat</span>
-                <span className="font-semibold text-brand-700">Koʻrib chiqilmoqda</span>
-              </p>
-            )}
-          </div>
+          <dl className="mt-6 space-y-2.5 rounded-2xl border border-line bg-surface-2 p-4 text-left">
+            <Row label="Davomiyligi" value={formatDuration(session.meta.durationSeconds)} />
+            <Row label="Hajmi" value={formatSize(session.meta.fileSize)} />
+            {!failed && <Row label="Holati" value="Koʻrib chiqilmoqda" accent />}
+          </dl>
         )}
 
-        <div className="mt-8 flex flex-col gap-2.5 lg:mx-auto lg:w-full lg:max-w-[440px]">
+        <div className="mt-8 flex flex-col gap-2.5">
           {failed ? (
             <>
               <button
                 type="button"
                 onClick={retry}
-                className="btn-primary h-[56px] rounded-pill font-display text-[17px] font-bold text-onbrand transition-transform duration-300 hover:scale-[1.02]"
+                className="btn-primary h-[54px] rounded-pill font-display text-[16.5px] font-bold text-onbrand transition-transform duration-300 hover:scale-[1.02]"
               >
                 Qayta urinish
               </button>
               <button
                 type="button"
                 onClick={pickAnother}
-                className="h-[56px] rounded-pill border-2 border-line bg-surface font-display text-[16px] font-bold text-ink transition-colors duration-200 hover:border-brand-400"
+                className="h-[52px] rounded-pill border-2 border-line bg-surface font-display text-[15.5px] font-bold text-ink transition-colors duration-200 hover:border-brand-400"
               >
                 Boshqa video tanlash
               </button>
@@ -105,19 +107,33 @@ export default function VideoResult() {
           ) : (
             <Link
               href="/hamkor/darsliklar"
-              className="btn-primary grid h-[56px] place-items-center rounded-pill font-display text-[17px] font-bold text-onbrand transition-transform duration-300 hover:scale-[1.02]"
+              className="btn-primary flex h-[54px] items-center justify-center gap-2 rounded-pill font-display text-[16.5px] font-bold text-onbrand transition-transform duration-300 hover:scale-[1.02]"
             >
-              Video darsliklarga oʻtish
+              Batafsil video darsliklarga oʻtish
+              <svg viewBox="0 0 24 24" aria-hidden className="h-[18px] w-[18px]" fill="none">
+                <path d="M9 5l7 7-7 7" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
             </Link>
           )}
           <Link
             href="/"
-            className="grid h-[52px] place-items-center rounded-pill font-display text-[15.5px] font-semibold text-mute transition-colors duration-200 hover:text-ink"
+            className="grid h-[50px] place-items-center rounded-pill font-display text-[15.5px] font-semibold text-mute transition-colors duration-200 hover:text-ink"
           >
             Saqlash va chiqish
           </Link>
         </div>
-      </>
-    </Standalone>
+      </div>
+    </VideoShell>
+  );
+}
+
+function Row({ label, value, accent = false }: { label: string; value: string; accent?: boolean }) {
+  return (
+    <div className="flex items-baseline justify-between gap-3">
+      <dt className="text-[14.5px] text-body">{label}</dt>
+      <dd className={`text-[14.5px] font-semibold ${accent ? "text-brand-700" : "text-ink"}`}>
+        {value}
+      </dd>
+    </div>
   );
 }

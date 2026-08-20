@@ -91,6 +91,10 @@ function readMetadata(
 export async function validateVideo(
   file: File,
   source: VideoMeta["source"],
+  /* Brauzerda yozilgan WebM faylda davomiylik metadatasi boʻlmaydi
+     (Chrome uni `Infinity` deb qaytaradi). Shu sabab yozgich oʻzi
+     sanagan soniyalarni shu yerga uzatadi. */
+  durationHint?: number,
 ): Promise<ValidationResult> {
   /* 1. Format (BR-V-012) */
   if (!mimeAllowed(file.type) && !extensionAllowed(file.name)) {
@@ -106,11 +110,13 @@ export async function validateVideo(
   const metadata = await readMetadata(file);
   if (!metadata) return { ok: false, error: "UNREADABLE" };
 
+  const duration = metadata.duration > 0 ? metadata.duration : durationHint ?? 0;
+
   /* 4. Davomiylik (BR-V-011) */
-  if (metadata.duration > 0 && metadata.duration < VIDEO_LIMITS.minDurationSeconds) {
+  if (duration > 0 && duration < VIDEO_LIMITS.minDurationSeconds) {
     return { ok: false, error: "TOO_SHORT" };
   }
-  if (metadata.duration > VIDEO_LIMITS.maxDurationSeconds) {
+  if (duration > VIDEO_LIMITS.maxDurationSeconds) {
     return { ok: false, error: "TOO_LONG" };
   }
 
@@ -125,7 +131,7 @@ export async function validateVideo(
       fileName: file.name || (source === "camera" ? "video-xabar.webm" : "video.mp4"),
       mimeType: file.type || "video/mp4",
       fileSize: file.size,
-      durationSeconds: Math.round(metadata.duration),
+      durationSeconds: Math.round(duration),
       hasAudio: metadata.hasAudio,
       source,
     },

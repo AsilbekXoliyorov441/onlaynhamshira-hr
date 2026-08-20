@@ -40,6 +40,32 @@ export const VIDEO_CHECKLIST = [
   "Xullas, oʻzingizni bizga batafsil tanishtirishingiz kerak",
 ];
 
+/*
+ * V-00 ekranidagi "Videoda aytilishi kerak boʻlgan maʼlumotlar" kartochkalari.
+ * Maketda 8 ta savol shaklida berilgan — roʻyxat emas, savol: nomzod
+ * nima deyishini oʻylab topishi shart emas, savolga javob beradi xolos.
+ */
+export const VIDEO_QUESTIONS = [
+  { icon: "/icons/prep-photo-portrait-3d.svg", text: "Ismingiz va familiyangiz nima?" },
+  { icon: "/icons/prep-diploma-3d.svg", text: "Qaysi tibbiy mutaxassislik boʻyicha qayerda oʻqigansiz?" },
+  { icon: "/icons/service-medical-bag-3d.svg", text: "Qaysi tibbiy mutaxassislik boʻyicha ishlaysiz?" },
+  { icon: "/icons/prep-experience-3d.svg", text: "Tibbiyot sohasida necha yillik tajribangiz bor?" },
+  { icon: "/icons/how-history-list-3d.svg", text: "Hozirda qayerda ishlaysiz yoki avval qayerlarda ishlagansiz?" },
+  { icon: "/icons/how-map-pin-care-3d.svg", text: "Qaysi hududlarda xizmat koʻrsata olasiz?" },
+  { icon: "/icons/service-heart-care-3d.svg", text: "Qanday tibbiy xizmatlarni professional tarzda bajara olasiz?" },
+  { icon: "/icons/partner-motivation-icon.svg", text: "Onlayn Hamshira platformasida nima uchun ishlamoqchisiz?" },
+] as const;
+
+/** V-01 yon panelidagi qisqa tavsiyalar (maketdagi belgilar bilan) */
+export const VIDEO_RECORD_TIPS = [
+  { icon: "☀️", text: "Yorugʻ joyni tanlang" },
+  { icon: "🎥", text: "Kameraga qarab gapiring" },
+  { icon: "🔊", text: "Ovozingiz aniq eshitilsin" },
+  { icon: "🤫", text: "Tinch joyda yozing" },
+  { icon: "👥", text: "Boshqa shaxslar koʻrinmasin" },
+  { icon: "🪪", text: "Pasport yoki diplom koʻrsatmang" },
+] as const;
+
 /** V-01: texnik koʻrsatmalar */
 export const VIDEO_TECH_NOTES = [
   "Video 1–3 daqiqa boʻlishi tavsiya etiladi.",

@@ -297,13 +297,16 @@ export function Nav({
               type="button"
               onClick={onNext}
               disabled={nextDisabled}
-              className={`h-[56px] flex-1 rounded-pill font-display text-[17px] font-bold transition-all duration-300 lg:h-[52px] lg:min-w-[230px] lg:flex-none lg:px-10 lg:text-[16px] ${
+              className={`flex h-[56px] flex-1 items-center justify-center gap-2 rounded-pill font-display text-[17px] font-bold transition-all duration-300 lg:h-[52px] lg:min-w-[230px] lg:flex-none lg:px-10 lg:text-[16px] ${
                 nextDisabled
                   ? "cursor-not-allowed border-2 border-line bg-surface-2 text-mute"
                   : "btn-primary text-onbrand hover:scale-[1.02] active:scale-100"
               }`}
             >
               {nextLabel}
+              <svg viewBox="0 0 24 24" aria-hidden className="h-[18px] w-[18px] shrink-0" fill="none">
+                <path d="M9 5l7 7-7 7" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
             </button>
             )}
           </div>

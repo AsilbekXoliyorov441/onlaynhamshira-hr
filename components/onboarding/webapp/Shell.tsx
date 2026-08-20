@@ -24,6 +24,7 @@ export default function Shell({
   total,
   steps,
   unit,
+  wide = false,
   children,
 }: {
   stage: string;
@@ -31,6 +32,8 @@ export default function Shell({
   total: number;
   steps: string[];
   unit?: string;
+  /** yon paneli bor ekranlar uchun kengroq kartochka (video bosqichi) */
+  wide?: boolean;
   children: ReactNode;
 }) {
   const [confirmExit, setConfirmExit] = useState(false);
@@ -109,7 +112,7 @@ export default function Shell({
          ramka ichida ramka boʻlib joy yemasin. Tepadagi joy — `fixed` panel
          uchun (HEADER_HEIGHT) va ustiga 18px havo. */}
       <main className="w-full lg:px-8 lg:py-10 xl:px-12">
-        <div className="mx-auto flex w-full max-w-[620px] flex-col px-5 pb-4 sm:px-8 lg:max-w-[740px] lg:rounded-[26px] lg:border lg:border-line lg:bg-surface lg:px-10 lg:pb-9 lg:pt-9 lg:shadow-[0_34px_80px_-52px_rgba(11,43,28,0.42)]">
+        <div className={`mx-auto flex w-full max-w-[620px] flex-col px-5 pb-4 sm:px-8 lg:rounded-[26px] lg:border lg:border-line lg:bg-surface lg:px-10 lg:pb-9 lg:pt-9 lg:shadow-[0_34px_80px_-52px_rgba(11,43,28,0.42)] ${wide ? "lg:max-w-[920px]" : "lg:max-w-[740px]"}`}>
           {/* `fixed` panel uchun joy + 18px havo (kompyuterda panel yoʻq) */}
           <div
             aria-hidden
