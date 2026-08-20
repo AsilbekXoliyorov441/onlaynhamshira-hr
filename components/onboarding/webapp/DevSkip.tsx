@@ -21,7 +21,7 @@ import { saveVideo } from "@/lib/onboarding/video-store";
  * Tugma `app/[locale]/hamkor/layout.tsx` orqali barcha onboarding
  * ekranlarida koʻrinadi.
  */
-const DEV_SKIP = true;
+const DEV_SKIP = false;
 
 export default function DevSkip() {
   const router = useRouter();
