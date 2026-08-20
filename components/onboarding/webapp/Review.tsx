@@ -9,7 +9,8 @@ import { ANSWER_LABELS, describeAnswer } from "@/lib/onboarding/describe";
 import { completeQualification } from "@/lib/onboarding/api";
 import { answerFor, loadSession, type Session } from "@/lib/onboarding/session";
 
-const STEP_LABELS = QUALIFICATION_QUESTIONS.map((q) => q.title.replace(/\?$/, ""));
+/* Yon ustunda toʻliq savol matni emas, qisqa nom koʻrinadi */
+const STEP_LABELS = QUALIFICATION_QUESTIONS.map((q) => ANSWER_LABELS[q.code]);
 
 /* TZ Q-09: QUALIFICATION_REVIEW */
 export default function Review() {
@@ -35,7 +36,7 @@ export default function Review() {
 
   if (!session) {
     return (
-      <div className="grid min-h-screen place-items-center bg-page">
+      <div className="onboarding-bg grid min-h-screen place-items-center">
         <p className="text-[14px] text-mute">Yuklanmoqda…</p>
       </div>
     );
@@ -43,7 +44,7 @@ export default function Review() {
 
   return (
     <Shell stage="Qualification" current={QUALIFICATION_TOTAL} total={QUALIFICATION_TOTAL} steps={STEP_LABELS}>
-      <h1 className="font-display text-[24px] font-extrabold leading-snug text-ink sm:text-[27px]">
+      <h1 className="font-display text-[24px] font-extrabold leading-snug text-ink sm:text-[27px] lg:text-[31px]">
         Javoblaringizni tekshiring
       </h1>
       <p className="mt-2.5 text-[14.5px] leading-relaxed text-body">

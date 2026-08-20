@@ -80,7 +80,7 @@ export default function Result() {
 
   if (!evaluation) {
     return (
-      <div className="grid min-h-screen place-items-center bg-page">
+      <div className="onboarding-bg grid min-h-screen place-items-center">
         <p className="text-[14px] text-mute">Javoblar tekshirilmoqda…</p>
       </div>
     );
@@ -89,15 +89,10 @@ export default function Result() {
   const rejection = evaluation.rejectionCode ? REJECTION_TEXT[evaluation.rejectionCode] : null;
 
   return (
-    <div className="min-h-screen bg-page">
-      <div className="mx-auto max-w-[560px] px-5 pb-12 pt-6 sm:px-8">
-        <Link href="/" className="inline-flex items-center gap-2" aria-label="Bosh sahifa">
-          <LogoMark className="h-9 w-9" />
-          <span className="font-display text-[13px] font-extrabold leading-[1.1] text-ink">
-            ONLAYN
-            <br />
-            HAMSHIRA
-          </span>
+    <div className="onboarding-bg min-h-screen lg:grid lg:place-items-center">
+      <div className="mx-auto w-full max-w-[620px] px-5 pb-12 pt-6 sm:px-8 lg:py-14">
+        <Link href="/" className="inline-flex" aria-label="Bosh sahifa">
+          <LogoMark aria-hidden className="h-[38px] w-auto" />
         </Link>
 
         {evaluation.result === "QUALIFIED" && (
@@ -181,7 +176,7 @@ function Outcome({
       <span aria-hidden className="text-[42px]">
         {emoji}
       </span>
-      <h1 className="mt-3 font-display text-[26px] font-extrabold leading-[1.18] tracking-[-0.02em] text-ink sm:text-[30px]">
+      <h1 className="mt-3 font-display text-[26px] font-extrabold leading-[1.18] tracking-[-0.02em] text-ink sm:text-[30px] lg:text-[34px]">
         {title}
       </h1>
       <p className="mt-4 text-[15.5px] leading-relaxed text-body">{text}</p>

@@ -31,22 +31,17 @@ export default function QualificationIntro() {
   };
 
   return (
-    <div className="min-h-screen bg-page">
-      <div className="mx-auto max-w-[560px] px-5 pb-10 pt-6 sm:px-8">
-        <Link href="/" className="inline-flex items-center gap-2" aria-label="Bosh sahifa">
-          <LogoMark className="h-9 w-9" />
-          <span className="font-display text-[13px] font-extrabold leading-[1.1] text-ink">
-            ONLAYN
-            <br />
-            HAMSHIRA
-          </span>
+    <div className="onboarding-bg min-h-screen lg:grid lg:place-items-center">
+      <div className="mx-auto w-full max-w-[620px] px-5 pb-10 pt-6 sm:px-8 lg:py-14">
+        <Link href="/" className="inline-flex" aria-label="Bosh sahifa">
+          <LogoMark aria-hidden className="h-[38px] w-auto" />
         </Link>
 
         <span className="badge-pill mt-8 inline-flex items-center gap-2 rounded-pill py-[7px] pl-3 pr-4 text-[13px] font-semibold">
           Bosqich 5 / 8
         </span>
 
-        <h1 className="mt-4 font-display text-[27px] font-extrabold leading-[1.15] tracking-[-0.02em] text-ink sm:text-[32px]">
+        <h1 className="mt-4 font-display text-[27px] font-extrabold leading-[1.15] tracking-[-0.02em] text-ink sm:text-[32px] lg:text-[36px]">
           Dastlabki saralashni boshlaymiz
         </h1>
 

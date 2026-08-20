@@ -6,11 +6,13 @@ import Shell from "./Shell";
 import RegionPicker from "./RegionPicker";
 import { Choice, Nav, Notice } from "./ui";
 import { QUALIFICATION_QUESTIONS, QUALIFICATION_TOTAL, PARTNERSHIP_TERMS, nextQuestion, previousQuestion } from "@/lib/onboarding/qualification";
+import { ANSWER_LABELS } from "@/lib/onboarding/describe";
 import { saveAnswer } from "@/lib/onboarding/api";
 import { answerFor, loadSession, saveSession, type Session } from "@/lib/onboarding/session";
 import type { Answer, Option, Question, RegionSelection } from "@/lib/onboarding/types";
 
-const STEP_LABELS = QUALIFICATION_QUESTIONS.map((q) => q.title.replace(/\?$/, ""));
+/* Yon ustunda toʻliq savol matni emas, qisqa nom koʻrinadi */
+const STEP_LABELS = QUALIFICATION_QUESTIONS.map((q) => ANSWER_LABELS[q.code]);
 
 export default function QuestionScreen({ question }: { question: Question }) {
   const router = useRouter();
@@ -131,7 +133,7 @@ export default function QuestionScreen({ question }: { question: Question }) {
 
   if (!session) {
     return (
-      <div className="grid min-h-screen place-items-center bg-page">
+      <div className="onboarding-bg grid min-h-screen place-items-center">
         <p className="text-[14px] text-mute">Yuklanmoqda…</p>
       </div>
     );
@@ -139,7 +141,7 @@ export default function QuestionScreen({ question }: { question: Question }) {
 
   return (
     <Shell stage="Qualification" current={question.index} total={QUALIFICATION_TOTAL} steps={STEP_LABELS}>
-      <h1 className="font-display text-[22px] font-extrabold leading-snug text-ink sm:text-[25px]">
+      <h1 className="font-display text-[22px] font-extrabold leading-snug text-ink sm:text-[25px] lg:text-[29px]">
         {question.title}
       </h1>
       {question.note && <p className="mt-2.5 text-[14.5px] leading-relaxed text-body">{question.note}</p>}

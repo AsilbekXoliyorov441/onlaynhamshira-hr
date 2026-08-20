@@ -243,6 +243,23 @@
     contain-intrinsic-size: auto 900px;
   }
 
+  /* ---------- Onboarding (WebApp) foni ----------
+     Telefonda sof rang — ortiqcha chizish yuki boʻlmasin. Kompyuterda
+     esa yumshoq brend nuri qoʻshiladi, aks holda keng ekranda kontent
+     boʻm-boʻsh oq maydonda osilib qolgandek koʻrinadi. */
+  .onboarding-bg {
+    background-color: rgb(var(--c-page));
+  }
+
+  @media (min-width: 1024px) {
+    .onboarding-bg {
+      background-image:
+        radial-gradient(46% 42% at 82% 8%, rgba(79, 209, 137, 0.13), rgba(79, 209, 137, 0) 70%),
+        radial-gradient(40% 38% at 96% 78%, rgba(31, 182, 232, 0.1), rgba(31, 182, 232, 0) 72%);
+      background-attachment: fixed;
+    }
+  }
+
   /* ---------- Kuchsiz qurilmada ambient animatsiyalar ----------
      `low-power` sinfi `layout.tsx` dagi inline skript orqali qoʻyiladi
      (deviceMemory <= 4 GB yoki <= 4 yadro). Faqat cheksiz bezak halqalari

@@ -38,7 +38,7 @@ export default function InfoScreen({
       steps={ONBOARDING_STAGES}
       unit="bosqich"
     >
-      <h1 className="font-display text-[26px] font-extrabold leading-[1.18] tracking-[-0.02em] text-ink sm:text-[30px]">
+      <h1 className="font-display text-[26px] font-extrabold leading-[1.18] tracking-[-0.02em] text-ink sm:text-[30px] lg:text-[34px]">
         {title}
       </h1>
       {lead && <p className="mt-4 text-[15.5px] leading-relaxed text-body">{lead}</p>}

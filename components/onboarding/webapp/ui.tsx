@@ -46,37 +46,43 @@ export function Progress({
         />
       </div>
 
-      {open && (
-        <ol className="mt-3 space-y-1.5 rounded-2xl border border-line bg-surface p-3">
-          {steps.map((label, i) => {
-            const n = i + 1;
-            const done = n < current;
-            const active = n === current;
-            return (
-              <li
-                key={label}
-                className={`flex items-center gap-2.5 text-[13.5px] ${
-                  active ? "font-semibold text-ink" : done ? "text-body" : "text-mute"
-                }`}
-              >
-                <span
-                  className={`grid h-[22px] w-[22px] shrink-0 place-items-center rounded-full text-[11px] font-bold ${
-                    done
-                      ? "bg-brand-500 text-white"
-                      : active
-                      ? "bg-brand-100 text-brand-700 ring-2 ring-brand-400"
-                      : "bg-[color:var(--c-line)]/50 text-mute"
-                  }`}
-                >
-                  {done ? "✓" : n}
-                </span>
-                {label}
-              </li>
-            );
-          })}
-        </ol>
-      )}
+      {open && <div className="mt-3">{<StepList steps={steps} current={current} />}</div>}
     </div>
+  );
+}
+
+/* Bosqichlar roʻyxati — telefonda bosilganda ochiladi, kompyuterda
+   chapdagi ustunda doim koʻrinib turadi. */
+export function StepList({ steps, current }: { steps: string[]; current: number }) {
+  return (
+    <ol className="space-y-2">
+      {steps.map((label, i) => {
+        const n = i + 1;
+        const done = n < current;
+        const active = n === current;
+        return (
+          <li
+            key={label}
+            className={`flex items-center gap-2.5 text-[13.5px] leading-snug ${
+              active ? "font-semibold text-ink" : done ? "text-body" : "text-mute"
+            }`}
+          >
+            <span
+              className={`grid h-[24px] w-[24px] shrink-0 place-items-center rounded-full text-[11.5px] font-bold ${
+                done
+                  ? "bg-brand-500 text-white"
+                  : active
+                  ? "bg-brand-100 text-brand-700 ring-2 ring-brand-400"
+                  : "border border-line bg-surface text-mute"
+              }`}
+            >
+              {done ? "✓" : n}
+            </span>
+            <span className="min-w-0">{label}</span>
+          </li>
+        );
+      })}
+    </ol>
   );
 }
 
@@ -185,8 +191,8 @@ export function Nav({
   const hasBack = Boolean(backHref || onBack);
 
   return (
-    <div className="sticky bottom-0 z-10 -mx-5 mt-auto border-t border-line bg-page px-5 pb-[max(14px,env(safe-area-inset-bottom))] pt-3.5 shadow-[0_-8px_24px_-16px_rgba(11,43,28,0.35)] sm:-mx-8 sm:px-8">
-      <div className="mx-auto max-w-[560px]">
+    <div className="sticky bottom-0 z-10 -mx-5 mt-auto border-t border-line bg-page px-5 pb-[max(14px,env(safe-area-inset-bottom))] pt-3.5 shadow-[0_-8px_24px_-16px_rgba(11,43,28,0.35)] sm:-mx-8 sm:px-8 lg:static lg:mx-0 lg:border-0 lg:bg-transparent lg:px-0 lg:pb-0 lg:pt-10 lg:shadow-none">
+      <div className="mx-auto max-w-[620px]">
         {nextDisabled && disabledHint && (
           <p className="mb-2.5 text-center text-[13.5px] font-medium text-mute">{disabledHint}</p>
         )}
