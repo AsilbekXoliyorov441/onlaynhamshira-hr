@@ -145,7 +145,7 @@ export default function FinalCta() {
             className="mt-9 flex flex-col items-stretch justify-center gap-3 sm:mt-10 sm:flex-row sm:items-center sm:gap-4"
           >
             <a
-              href="#onboarding"
+              href="/hamkor"
               /* Yakuniy CTA'da toʻqroq variant — loyihadagi mavjud .btn-solid */
               className="btn-solid rounded-pill px-9 py-[18px] font-display text-[16.5px] font-bold text-white shadow-cta transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_20px_40px_-12px_rgba(23,164,104,0.7)] active:translate-y-0"
             >

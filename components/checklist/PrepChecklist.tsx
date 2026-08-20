@@ -643,7 +643,7 @@ export default function PrepChecklist() {
           className="mt-8 flex justify-center sm:mt-10"
         >
           <a
-            href="#onboarding"
+            href="/hamkor"
             className="btn-primary rounded-pill px-8 py-4 font-display text-[16px] font-bold text-onbrand transition-all duration-300 hover:scale-105 active:scale-100"
           >
             {t.checklist.cta}

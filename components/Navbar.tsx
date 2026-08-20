@@ -59,7 +59,7 @@ function HeaderBar({ sticky = false }: { sticky?: boolean }) {
           <LanguageSwitcher />
 
           <a
-            href="#onboarding"
+            href="/hamkor"
             className="btn-primary hidden rounded-pill px-6 py-[11px] font-display text-[15px] font-bold text-onbrand transition-all duration-300 hover:scale-105 nav:block"
           >
             {t.nav.cta}
@@ -116,7 +116,7 @@ function HeaderBar({ sticky = false }: { sticky?: boolean }) {
             ))}
           </ul>
           <a
-            href="#onboarding"
+            href="/hamkor"
             onClick={() => setOpen(false)}
             className="btn-primary mt-4 block rounded-pill py-2.5 text-center font-display text-[15px] font-bold text-onbrand"
           >
