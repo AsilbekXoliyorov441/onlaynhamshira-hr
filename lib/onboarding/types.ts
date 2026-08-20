@@ -117,3 +117,106 @@ export type RegionSelection = {
   region_code: string;
   district_codes: string[];
 };
+
+/* ══════════════════════════════════════════════════════════════════
+   STAGE 3: Education va Mini Test
+   ══════════════════════════════════════════════════════════════════ */
+
+/** TZ: 9. Statuslar */
+export type EducationStatus =
+  | "NOT_STARTED"
+  | "IN_PROGRESS"
+  | "LESSON_COMPLETED"
+  | "TEST_IN_PROGRESS"
+  | "RETRY_REQUIRED"
+  | "PASSED"
+  | "COMPLETED";
+
+export type LessonCode =
+  | "PLATFORM_MODEL"
+  | "SPECIALIST_RESPONSIBILITIES"
+  | "CLIENT_COMMUNICATION"
+  | "INCOME_COMMISSION"
+  | "PLATFORM_RULES";
+
+/** Dars matni bloklari.
+ *  BR-E-012: matnlar kodga qattiq biriktirilmasligi kerak — shu bois
+ *  dars mazmuni shu shakldagi maʼlumot sifatida saqlanadi va keyinchalik
+ *  backend/CMS'dan aynan shu koʻrinishda kelishi mumkin. */
+export type LessonBlock =
+  | { kind: "text"; text: string }
+  /** ketma-ket qadamlar (infografika) */
+  | { kind: "flow"; steps: string[] }
+  /** raqamlangan roʻyxat */
+  | { kind: "numbered"; items: string[] }
+  /** sarlavhali kartochkalar (qoidalar) */
+  | { kind: "cards"; items: Array<{ title: string; text: string }> }
+  | { kind: "bullets"; items: string[] }
+  /** daromad taqsimoti diagrammasi */
+  | { kind: "split"; specialist: number; platform: number }
+  /** "Muhim eslatma" */
+  | { kind: "note"; text: string }
+  /** "Muhim ogohlantirish" */
+  | { kind: "warning"; text: string };
+
+export type Lesson = {
+  code: LessonCode;
+  /** TZ'dagi Screen ID */
+  screenId: string;
+  /** manzil boʻlagi: /hamkor/oquv/<slug> */
+  slug: string;
+  /** progress uchun: 1..5 */
+  index: number;
+  /** yon ustundagi qisqa nom */
+  shortTitle: string;
+  title: string;
+  blocks: LessonBlock[];
+  /** dars oxiridagi tasdiq belgisi */
+  confirmLabel: string;
+  /** dars oxiridagi tugma matni */
+  nextLabel: string;
+};
+
+export type TestOption = {
+  /** backendga ketadigan `option_code` */
+  code: string;
+  text: string;
+  isCorrect: boolean;
+};
+
+export type TestQuestion = {
+  /** backendga ketadigan `question_code` */
+  code: string;
+  text: string;
+  options: TestOption[];
+  /** TZ: CRITICAL_QUESTION — bu savolga toʻgʻri javob majburiy */
+  isCritical?: boolean;
+  /** notoʻgʻri javob uchun izoh (BR-E-014: mini testlarda ruxsat etiladi) */
+  explanation?: string;
+  /** E-06B dagi tavsiyalar uchun mavzu */
+  topic?: string;
+};
+
+export type MiniTest = {
+  /** backendga ketadigan `test_code` */
+  code: string;
+  screenId: string;
+  title: string;
+  /** qaysi darsdan keyin turadi */
+  lesson: LessonCode;
+  questions: TestQuestion[];
+  /** oʻtish uchun kamida shuncha toʻgʻri javob */
+  minCorrect: number;
+};
+
+export type TestResult = "PASSED" | "RETRY_REQUIRED";
+
+export type TestEvaluation = {
+  correct: number;
+  total: number;
+  percentage: number;
+  criticalPassed: boolean;
+  result: TestResult;
+  /** notoʻgʻri javob berilgan mavzular (BR-E-015) */
+  topicsToReview: string[];
+};
