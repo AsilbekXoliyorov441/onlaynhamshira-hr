@@ -387,12 +387,16 @@ export default function VideoCapture() {
                   </div>
                 )}
 
+                {/* DIQQAT: ustun (flex-col) ichida `flex-1` ishlatilmaydi —
+                    u `flex-basis: 0` beradi va tugmaning balandligini yeb
+                    qoʻyadi (telefonda tugmalar ingichka boʻlib qolardi).
+                    Kenglikni boʻlish faqat qator koʻrinishida kerak. */}
                 <div className="mt-4 flex flex-col gap-2.5 sm:flex-row-reverse">
                   <button
                     type="button"
                     onClick={addRecorded}
                     disabled={recordedTooShort || phase === "processing"}
-                    className={`h-[54px] flex-1 rounded-pill px-4 font-display text-[16.5px] font-bold transition-all duration-300 ${
+                    className={`h-[54px] w-full shrink-0 rounded-pill px-4 font-display text-[16.5px] font-bold transition-all duration-300 sm:w-auto sm:flex-1 ${
                       recordedTooShort || phase === "processing"
                         ? "cursor-not-allowed border-2 border-line bg-surface-2 text-mute"
                         : "btn-primary text-onbrand"
@@ -404,7 +408,7 @@ export default function VideoCapture() {
                     type="button"
                     onClick={discardRecorded}
                     disabled={phase === "processing"}
-                    className="h-[54px] flex-1 rounded-pill border-2 border-line bg-surface px-4 font-display text-[15.5px] font-bold text-ink transition-colors duration-200 hover:border-brand-400 disabled:opacity-60"
+                    className="h-[54px] w-full shrink-0 rounded-pill border-2 border-line bg-surface px-4 font-display text-[15.5px] font-bold text-ink transition-colors duration-200 hover:border-brand-400 disabled:opacity-60 sm:w-auto sm:flex-1"
                   >
                     Qayta yozish
                   </button>
