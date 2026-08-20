@@ -4,7 +4,7 @@ import PageLoadGate from "@/components/loading/PageLoadGate";
 import SkipLink from "@/lib/i18n/SkipLink";
 import { ThemeProvider } from "@/components/theme/ThemeProvider";
 import MotionProvider from "@/components/perf/MotionProvider";
-import { getDictionary, localeFromSegments } from "@/lib/i18n/server";
+import { getDictionary, localeFromParam } from "@/lib/i18n/server";
 /* Eslatma: uchala provider bitta layout chunk'iga tushadi (~22 KB gz).
    `next/dynamic` bilan ajratishga urinildi — Next baribir client
    komponentlarni layout chunk'iga qoʻshdi va ustiga lazy yuk qoʻshib,
@@ -55,13 +55,13 @@ const bodyCyrillic = Inter({
   preload: false,
 });
 
-type LocaleParams = { params: { locale?: string[] } };
+type LocaleParams = { params: { locale: string } };
 
 /* Metadata endi ochilgan sahifaning tiliga qarab hosil boʻladi.
    `alternates.languages` — qidiruv tizimiga qaysi til qaysi manzilda
    turishini bildiradi (hreflang). */
 export function generateMetadata({ params }: LocaleParams): Metadata {
-  const locale = localeFromSegments(params.locale);
+  const locale = localeFromParam(params.locale);
   if (!locale) return {};
   const t = getDictionary(locale);
 
@@ -115,7 +115,7 @@ export default function RootLayout({
   children,
   params,
 }: { children: React.ReactNode } & LocaleParams) {
-  const locale = localeFromSegments(params.locale);
+  const locale = localeFromParam(params.locale);
   if (!locale) notFound();
   /* Faqat shu tilning provider'i chiziladi — qolgan tillarning chunk'i
      brauzerga umuman yuklanmaydi */

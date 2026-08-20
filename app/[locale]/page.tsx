@@ -1,8 +1,8 @@
 import dynamic from "next/dynamic";
 import { Suspense } from "react";
 import { notFound } from "next/navigation";
-import { localeFromSegments } from "@/lib/i18n/server";
-import { DEFAULT_LOCALE, LOCALES } from "@/lib/i18n/config";
+import { localeFromParam } from "@/lib/i18n/server";
+import { LOCALES } from "@/lib/i18n/config";
 
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
@@ -30,16 +30,14 @@ const Footer = dynamic(() => import("@/components/footer/Footer"));
 /* Uchala til ham build vaqtida statik sahifaga aylanadi:
    "/" (uz), "/ru", "/cy". Server hech nimani qayta hisoblamaydi. */
 export function generateStaticParams() {
-  return LOCALES.map((locale) =>
-    locale === DEFAULT_LOCALE ? { locale: [] } : { locale: [locale] },
-  );
+  return LOCALES.map((locale) => ({ locale }));
 }
 
 /* Roʻyxatda yoʻq manzil (masalan "/foo") 404 qaytaradi */
 export const dynamicParams = false;
 
-export default function Page({ params }: { params: { locale?: string[] } }) {
-  if (!localeFromSegments(params.locale)) notFound();
+export default function Page({ params }: { params: { locale: string } }) {
+  if (!localeFromParam(params.locale)) notFound();
 
   return (
     <main id="asosiy" className="relative min-h-screen w-full overflow-hidden bg-page">

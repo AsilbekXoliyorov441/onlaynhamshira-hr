@@ -17,14 +17,16 @@ export function getDictionary(locale: Locale): Dictionary {
   return DICTIONARIES[locale];
 }
 
-/** `/` -> uz, `/ru` -> ru, `/cy` -> cy. Notoʻgʻri boʻlsa `null`. */
-export function localeFromSegments(segments: string[] | undefined): Locale | null {
-  if (!segments || segments.length === 0) return DEFAULT_LOCALE;
-  if (segments.length > 1) return null;
-  const [first] = segments;
-  /* Standart til faqat "/" da yashaydi — "/uz" nusxa sahifa yaratmasin */
-  if (first === DEFAULT_LOCALE) return null;
-  return isLocale(first) ? first : null;
+/**
+ * Marshrut segmentidan tilni oladi.
+ *
+ * Ichkarida barcha sahifalar til prefiksi bilan yashaydi (`/uz`, `/ru`,
+ * `/cy`) — shunda `app/[locale]/hamkor/...` kabi ichki sahifalar qoʻshsa
+ * boʻladi. Foydalanuvchi koʻradigan manzilda esa oʻzbekcha prefiksiz
+ * qoladi: `middleware.ts` `/` ni ichkarida `/uz` ga oʻgiradi.
+ */
+export function localeFromParam(locale: string | undefined): Locale | null {
+  return isLocale(locale) ? locale : null;
 }
 
 /** Til uchun sahifa manzili */
