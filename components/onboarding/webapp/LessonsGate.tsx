@@ -3,21 +3,22 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { loadEducation } from "@/lib/onboarding/education-session";
+import { loadVideo } from "@/lib/onboarding/video-store";
 
 /*
- * BR-E-005: "Testdan oʻtmagan foydalanuvchi Video xabar bosqichiga
- * kira olmaydi." Video bosqichining oʻzi (Stage 4) TZ kelgach quriladi.
+ * BR-V-016: "Video muvaffaqiyatli yuklanmasdan keyingi bosqich
+ * ochilmaydi." Batafsil video darsliklar bosqichining oʻzi (Stage 5)
+ * TZ kelgach quriladi.
  */
-export default function VideoGate() {
+export default function LessonsGate() {
   const router = useRouter();
   const [allowed, setAllowed] = useState<boolean | null>(null);
 
   useEffect(() => {
-    const { status } = loadEducation();
-    const ok = status === "COMPLETED" || status === "PASSED";
+    const { status } = loadVideo();
+    const ok = status === "UPLOADED" || status === "ACCEPTED" || status === "UNDER_REVIEW";
     setAllowed(ok);
-    if (!ok) router.replace("/hamkor/oquv");
+    if (!ok) router.replace("/hamkor/video");
   }, [router]);
 
   if (allowed !== true) {
@@ -31,13 +32,15 @@ export default function VideoGate() {
   return (
     <div className="onboarding-bg grid min-h-screen place-items-center px-5">
       <div className="max-w-[440px] text-center">
-        <span aria-hidden className="text-[42px]">🎥</span>
+        <span aria-hidden className="text-[42px]">
+          🎬
+        </span>
         <h1 className="mt-3 font-display text-[25px] font-extrabold text-ink">
-          Video xabar bosqichi tayyorlanmoqda
+          Video darsliklar tayyorlanmoqda
         </h1>
         <p className="mt-3 text-[15px] leading-relaxed text-body">
-          Education bosqichidan muvaffaqiyatli oʻtdingiz. Oʻzingiz haqingizda qisqa video
-          yuborish bosqichi yaqin kunlarda ochiladi.
+          Video xabaringiz qabul qilindi. Mobil ilova va buyurtmalar bilan ishlash boʻyicha
+          batafsil darsliklar yaqin kunlarda ochiladi.
         </p>
         <Link
           href="/"

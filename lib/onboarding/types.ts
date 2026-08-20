@@ -220,3 +220,55 @@ export type TestEvaluation = {
   /** notoʻgʻri javob berilgan mavzular (BR-E-015) */
   topicsToReview: string[];
 };
+
+/* ══════════════════════════════════════════════════════════════════
+   STAGE 4: Video xabar
+   ══════════════════════════════════════════════════════════════════ */
+
+/** TZ: 14. Statuslar */
+export type VideoStatus =
+  | "NOT_STARTED"
+  | "IN_PROGRESS"
+  | "RECORDING"
+  | "SELECTED"
+  | "PREVIEW"
+  | "UPLOADING"
+  | "UPLOADED"
+  | "UPLOAD_FAILED"
+  | "NOT_REVIEWED"
+  | "UNDER_REVIEW"
+  | "ACCEPTED"
+  | "RE_RECORD_REQUESTED"
+  | "REJECTED";
+
+/** TZ: 10. Videoni qayta yozish sabablari */
+export type ReRecordReason =
+  | "POOR_AUDIO_QUALITY"
+  | "FACE_NOT_VISIBLE"
+  | "TOO_SHORT"
+  | "CONTENT_MISMATCH"
+  | "SPECIALITY_NOT_MENTIONED"
+  | "MOTIVATION_NOT_EXPLAINED"
+  | "OTHER_PEOPLE_VISIBLE"
+  | "LOW_TECHNICAL_QUALITY"
+  | "OTHER";
+
+/** Tanlangan yoki yozilgan video haqidagi maʼlumot */
+export type VideoMeta = {
+  fileName: string;
+  mimeType: string;
+  fileSize: number;
+  durationSeconds: number;
+  hasAudio: boolean;
+  /** kamera orqali yozilganmi yoki galereyadan tanlanganmi */
+  source: "camera" | "gallery";
+};
+
+/** TZ: 17. Error holatlari — tekshiruv natijasi */
+export type VideoValidationError =
+  | "UNSUPPORTED_FORMAT"
+  | "FILE_TOO_LARGE"
+  | "TOO_SHORT"
+  | "TOO_LONG"
+  | "NO_AUDIO"
+  | "UNREADABLE";
