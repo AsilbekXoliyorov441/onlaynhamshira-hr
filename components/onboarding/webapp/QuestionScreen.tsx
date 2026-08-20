@@ -175,7 +175,7 @@ export default function QuestionScreen({ question }: { question: Question }) {
   }
 
   return (
-    <Shell stage="Qualification" current={question.index} total={QUALIFICATION_TOTAL} steps={STEP_LABELS}>
+    <Shell stage="Saralash" current={question.index} total={QUALIFICATION_TOTAL} steps={STEP_LABELS}>
       <h1 className="font-display text-[22px] font-extrabold leading-snug text-ink sm:text-[25px] lg:text-[29px]">
         {question.title}
       </h1>

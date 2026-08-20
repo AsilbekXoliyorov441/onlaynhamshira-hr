@@ -8,6 +8,9 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
    bosqichlar roʻyxati esa aynan shu balandlikdan pastda ochiladi. */
 export const HEADER_HEIGHT = 62;
 
+/* Kompyuterdagi tepa boshqaruv paneli: logotip qatori + bosqichlar zanjiri */
+export const DESKTOP_HEADER_HEIGHT = 116;
+
 /* ─────────────────────────── Progress ───────────────────────────
    Mobil ekranga 8 ta yorliq sigʻmaydi, shuning uchun ingichka chiziq +
    "3 / 8 savol" koʻrsatiladi; bosilganda toʻliq roʻyxat ochiladi. */
@@ -39,12 +42,12 @@ export function Progress({
         aria-expanded={open}
         className="flex w-full items-center justify-between gap-3 text-left"
       >
-        <span className="truncate font-display text-[13px] font-bold uppercase tracking-[0.08em] text-brand-700">
+        <span className="truncate font-display text-[12px] font-bold uppercase tracking-[0.06em] text-brand-700 sm:text-[13px] sm:tracking-[0.08em]">
           {stage}
         </span>
         {/* Strelka — qatorni bosish mumkinligini koʻrsatadi, aks holda
             foydalanuvchi bosqichlar roʻyxati borligini bilmaydi */}
-        <span className="flex shrink-0 items-center gap-1.5 text-[12.5px] font-semibold text-mute">
+        <span className="flex shrink-0 items-center gap-1 text-[11.5px] font-semibold text-mute sm:gap-1.5 sm:text-[12.5px]">
           {current} / {total} {unit} · {percent}%
           <svg
             viewBox="0 0 24 24"
@@ -77,7 +80,7 @@ export function Progress({
           />
           <div
             style={{ top: HEADER_HEIGHT }}
-            className="fixed inset-x-0 z-[36] max-h-[70vh] overflow-y-auto border-b border-line bg-surface px-5 pb-4 pt-4 shadow-[0_24px_48px_-24px_rgba(11,43,28,0.45)] sm:px-8"
+            className="fixed inset-x-0 z-[36] max-h-[70vh] overflow-y-auto border-b border-line bg-surface px-4 pb-4 pt-4 shadow-[0_24px_48px_-24px_rgba(11,43,28,0.45)] sm:px-8"
           >
             <div className="mx-auto max-w-[620px]">
               <StepList steps={steps} current={current} />
@@ -153,7 +156,7 @@ export function Choice({
         /* Nishon ataylab katta: butun qator bosiladi, balandligi 60px dan
            kam emas — telefonda erkin foydalanmaydigan foydalanuvchi ham
            aniq tegadi */
-        className={`flex w-full items-start gap-3.5 rounded-2xl border-2 p-[18px] text-left transition-colors duration-200 ${
+        className={`flex w-full items-start gap-3 rounded-2xl border-2 p-4 text-left transition-colors duration-200 sm:gap-3.5 sm:p-[18px] ${
           selected
             ? "border-brand-400 bg-brand-50"
             : "border-line bg-surface hover:border-brand-300"
@@ -172,7 +175,7 @@ export function Choice({
           )}
         </span>
         <span className="min-w-0 flex-1">
-          <span className="block text-[16px] font-semibold leading-snug text-ink">{label}</span>
+          <span className="block text-[15.5px] font-semibold leading-snug text-ink sm:text-[16px]">{label}</span>
           {hint && <span className="mt-1.5 block text-[13.5px] leading-snug text-mute">{hint}</span>}
         </span>
       </button>
@@ -250,16 +253,8 @@ export function Nav({
     return () => ro.disconnect();
   }, []);
 
-  const backInner = (
-    <>
-      <svg viewBox="0 0 24 24" aria-hidden className="h-[18px] w-[18px] shrink-0" fill="none">
-        <path d="M15 5l-7 7 7 7" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
-      </svg>
-      {backLabel}
-    </>
-  );
-  const backClass = `flex h-[56px] items-center justify-center gap-1.5 rounded-pill border-2 border-[color:var(--c-ink)]/25 bg-surface font-display text-[16px] font-bold text-ink shadow-[0_2px_0_rgba(11,43,28,0.06)] transition-colors duration-200 hover:border-brand-500 hover:text-brand-700 lg:h-[52px] lg:flex-none lg:px-8 ${
-    hasNext ? "flex-[0_0_38%]" : "flex-1"
+  const backClass = `flex h-[56px] items-center justify-center rounded-pill border-2 border-[color:var(--c-ink)]/25 bg-surface px-2 font-display text-[15px] font-bold text-ink shadow-[0_2px_0_rgba(11,43,28,0.06)] transition-colors duration-200 hover:border-brand-500 hover:text-brand-700 sm:text-[16px] lg:h-[52px] lg:flex-none lg:px-8 ${
+    hasNext ? "flex-[0_0_34%]" : "flex-1"
   }`;
 
   return (
@@ -269,7 +264,7 @@ export function Nav({
 
       <div
         ref={barRef}
-        className="fixed inset-x-0 bottom-0 z-30 border-t border-line bg-page px-5 pb-[max(14px,env(safe-area-inset-bottom))] pt-3 shadow-[0_-8px_24px_-16px_rgba(11,43,28,0.35)] sm:px-8 lg:static lg:z-auto lg:-mx-10 lg:mt-9 lg:bg-transparent lg:px-10 lg:pb-0 lg:pt-6 lg:shadow-none"
+        className="fixed inset-x-0 bottom-0 z-30 border-t border-line bg-page px-4 pb-[max(14px,env(safe-area-inset-bottom))] pt-3 shadow-[0_-8px_24px_-16px_rgba(11,43,28,0.35)] sm:px-8 lg:static lg:z-auto lg:-mx-10 lg:mt-9 lg:bg-transparent lg:px-10 lg:pb-0 lg:pt-6 lg:shadow-none"
       >
         <div className="mx-auto max-w-[620px] lg:max-w-none">
           {hasNext && nextDisabled && disabledHint && (
@@ -284,11 +279,11 @@ export function Nav({
             {hasBack &&
               (backHref ? (
                 <Link href={backHref} className={backClass}>
-                  {backInner}
+                  {backLabel}
                 </Link>
               ) : (
                 <button type="button" onClick={onBack} className={backClass}>
-                  {backInner}
+                  {backLabel}
                 </button>
               ))}
 
@@ -297,16 +292,13 @@ export function Nav({
               type="button"
               onClick={onNext}
               disabled={nextDisabled}
-              className={`flex h-[56px] flex-1 items-center justify-center gap-2 rounded-pill font-display text-[17px] font-bold transition-all duration-300 lg:h-[52px] lg:min-w-[230px] lg:flex-none lg:px-10 lg:text-[16px] ${
+              className={`flex h-[56px] min-w-0 flex-1 items-center justify-center rounded-pill px-3 font-display text-[15.5px] font-bold transition-all duration-300 sm:text-[17px] lg:h-[52px] lg:min-w-[230px] lg:flex-none lg:px-10 lg:text-[16px] ${
                 nextDisabled
                   ? "cursor-not-allowed border-2 border-line bg-surface-2 text-mute"
                   : "btn-primary text-onbrand hover:scale-[1.02] active:scale-100"
               }`}
             >
-              {nextLabel}
-              <svg viewBox="0 0 24 24" aria-hidden className="h-[18px] w-[18px] shrink-0" fill="none">
-                <path d="M9 5l7 7-7 7" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
+              <span className="truncate">{nextLabel}</span>
             </button>
             )}
           </div>

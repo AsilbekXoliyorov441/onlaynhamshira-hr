@@ -97,33 +97,15 @@ export default function VideoPreview() {
             <button
               type="button"
               onClick={() => again("record")}
-              className="flex h-[50px] items-center justify-center gap-2 rounded-pill border-2 border-line bg-surface font-display text-[15px] font-bold text-ink transition-colors duration-200 hover:border-brand-400"
+              className="grid h-[50px] place-items-center rounded-pill px-3 border-2 border-line bg-surface font-display text-[15px] font-bold text-ink transition-colors duration-200 hover:border-brand-400"
             >
-              <svg viewBox="0 0 24 24" aria-hidden className="h-[17px] w-[17px]" fill="none">
-                <path
-                  d="M19.5 12a7.5 7.5 0 1 1-2.3-5.4M19.5 4.5V9H15"
-                  stroke="currentColor"
-                  strokeWidth="1.9"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
               Qayta yozish
             </button>
             <button
               type="button"
               onClick={() => again("upload")}
-              className="flex h-[50px] items-center justify-center gap-2 rounded-pill border-2 border-line bg-surface font-display text-[15px] font-bold text-ink transition-colors duration-200 hover:border-brand-400"
+              className="grid h-[50px] place-items-center rounded-pill px-3 border-2 border-line bg-surface font-display text-[15px] font-bold text-ink transition-colors duration-200 hover:border-brand-400"
             >
-              <svg viewBox="0 0 24 24" aria-hidden className="h-[17px] w-[17px]" fill="none">
-                <path
-                  d="M12 16V5m0 0L8 9m4-4l4 4M5 18.5h14"
-                  stroke="currentColor"
-                  strokeWidth="1.9"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
               Yuklashni almashtirish
             </button>
           </div>

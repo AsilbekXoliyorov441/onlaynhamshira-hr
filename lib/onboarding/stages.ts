@@ -8,8 +8,8 @@ export const ONBOARDING_STAGES = [
   "Platforma",
   "Hamkorlik",
   "Talablar",
-  "Qualification",
-  "Education",
+  "Saralash",
+  "Oʻquv",
   "Video",
   "Yakun",
 ];

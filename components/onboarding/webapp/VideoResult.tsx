@@ -107,12 +107,9 @@ export default function VideoResult() {
           ) : (
             <Link
               href="/hamkor/darsliklar"
-              className="btn-primary flex h-[54px] items-center justify-center gap-2 rounded-pill font-display text-[16.5px] font-bold text-onbrand transition-transform duration-300 hover:scale-[1.02]"
+              className="btn-primary grid h-[54px] place-items-center rounded-pill px-4 font-display text-[16px] font-bold text-onbrand transition-transform duration-300 hover:scale-[1.02] sm:text-[16.5px]"
             >
               Batafsil video darsliklarga oʻtish
-              <svg viewBox="0 0 24 24" aria-hidden className="h-[18px] w-[18px]" fill="none">
-                <path d="M9 5l7 7-7 7" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
             </Link>
           )}
           <Link

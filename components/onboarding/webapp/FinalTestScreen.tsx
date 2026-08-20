@@ -65,7 +65,7 @@ export default function FinalTestScreen() {
 
   return (
     <Shell
-      stage="Education va Mini Test"
+      stage="Oʻquv va mini test"
       current={LESSON_TOTAL}
       total={LESSON_TOTAL}
       steps={STEP_LABELS}

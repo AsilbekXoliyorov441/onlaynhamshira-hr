@@ -94,7 +94,7 @@ export default function LessonScreen({ lesson }: { lesson: Lesson }) {
 
   return (
     <Shell
-      stage="Education va Mini Test"
+      stage="Oʻquv va mini test"
       current={lesson.index}
       total={LESSON_TOTAL}
       steps={STEP_LABELS}

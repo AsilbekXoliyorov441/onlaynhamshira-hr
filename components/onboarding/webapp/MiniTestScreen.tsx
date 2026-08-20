@@ -67,7 +67,7 @@ export default function MiniTestScreen({ test }: { test: MiniTest }) {
 
   return (
     <Shell
-      stage="Education va Mini Test"
+      stage="Oʻquv va mini test"
       current={lesson.index}
       total={LESSON_TOTAL}
       steps={STEP_LABELS}

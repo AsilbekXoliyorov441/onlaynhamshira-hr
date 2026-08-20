@@ -27,7 +27,7 @@ export default function Page() {
       title="Kimlar platformaga qoʻshilishi mumkin?"
       backHref="/hamkor/jarayon"
       nextHref="/hamkor/saralash"
-      nextLabel="Qualification boshlash"
+      nextLabel="Saralashni boshlash"
     >
       {/* Kompyuterda bir soʻzli talablar keng qatorda boʻsh koʻrinadi —
           ikki ustunga joylanadi */}

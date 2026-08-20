@@ -32,7 +32,7 @@ import { loadVideo, storeSelectedVideo, type VideoSession } from "@/lib/onboardi
  * ular kameraning ostida ixcham koʻrinishda.
  */
 
-type Phase = "idle" | "ready" | "recording" | "processing" | "denied";
+type Phase = "idle" | "ready" | "recording" | "recorded" | "processing" | "denied";
 type Tab = "record" | "upload";
 
 const MIME_CANDIDATES = [
@@ -57,6 +57,10 @@ export default function VideoCapture() {
   const [error, setError] = useState<string | null>(null);
   const [checking, setChecking] = useState(false);
   const [allTips, setAllTips] = useState(false);
+  /* Yozib boʻlingan, lekin hali qoʻshilmagan video */
+  const [recorded, setRecorded] = useState<{ blob: Blob; url: string; seconds: number } | null>(null);
+  /* Foydalanuvchi kamerani butunlay bloklab qoʻygan ("never allow") */
+  const [blocked, setBlocked] = useState(false);
 
   const videoRef = useRef<HTMLVideoElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
@@ -66,6 +70,9 @@ export default function VideoCapture() {
   const secondsRef = useRef(0);
   const galleryInput = useRef<HTMLInputElement>(null);
   const deviceCameraInput = useRef<HTMLInputElement>(null);
+  const attemptsRef = useRef(0);
+  /* effekt yozilgan videoni bilishi uchun (state emas — qayta ishga tushmasin) */
+  const recordedRef = useRef(false);
 
   useEffect(() => {
     const video = loadVideo();
@@ -102,7 +109,24 @@ export default function VideoCapture() {
           await videoRef.current.play().catch(() => undefined);
         }
         setPhase("ready");
-      } catch {
+      } catch (err) {
+        /* "Never allow" bosilgan boʻlsa qayta soʻrash oynasi umuman
+           chiqmaydi — buni aytib qoʻymasak, foydalanuvchi "Qayta urinish"
+           tugmasini bosaveradi va nima boʻlayotganini tushunmaydi. */
+        attemptsRef.current += 1;
+        const name = (err as { name?: string } | null)?.name;
+        let denied = name === "NotAllowedError" || name === "SecurityError";
+        try {
+          const status = await navigator.permissions.query({
+            name: "camera" as PermissionName,
+          });
+          if (status.state === "denied") denied = true;
+        } catch {
+          /* Permissions API yoʻq — ikkinchi urinish ham muvaffaqiyatsiz
+             boʻlsa, bloklangan deb hisoblaymiz */
+          if (attemptsRef.current > 1 && name === "NotAllowedError") denied = true;
+        }
+        setBlocked(denied && attemptsRef.current > 0);
         setPhase("denied");
       }
     },
@@ -113,7 +137,7 @@ export default function VideoCapture() {
      yorliqda kamerani yoqib qoʻyish qurilma quvvatini bekorga yeydi */
   useEffect(() => {
     if (!session) return;
-    if (tab !== "record") {
+    if (tab !== "record" || recordedRef.current) {
       stopStream();
       return;
     }
@@ -141,20 +165,39 @@ export default function VideoCapture() {
     [session, router, stopStream],
   );
 
-  const finishRecording = useCallback(
-    async (blob: Blob, recordedSeconds: number) => {
-      setPhase("processing");
-      const file = new File([blob], `video-xabar.${blob.type.includes("mp4") ? "mp4" : "webm"}`, {
-        type: blob.type,
-      });
-      const ok = await accept(file, "camera", recordedSeconds);
-      if (!ok) {
-        setPhase("ready");
-        setSeconds(0);
-      }
-    },
-    [accept],
-  );
+  /* Yozish tugagach DARROV keyingi ekranga oʻtilmaydi: video shu yerda
+     ochiq turadi, foydalanuvchi koʻrib chiqadi va "Qoʻshish"ni bosadi. */
+  const finishRecording = useCallback((blob: Blob, recordedSeconds: number) => {
+    stopStream();
+    recordedRef.current = true;
+    setRecorded({ blob, url: URL.createObjectURL(blob), seconds: recordedSeconds });
+    setPhase("recorded");
+  }, [stopStream]);
+
+  /* "Qoʻshish" — yozilgan videoni tekshirib, keyingi ekranga oʻtkazadi */
+  const addRecorded = async () => {
+    if (!recorded) return;
+    setPhase("processing");
+    const file = new File(
+      [recorded.blob],
+      `video-xabar.${recorded.blob.type.includes("mp4") ? "mp4" : "webm"}`,
+      { type: recorded.blob.type },
+    );
+    const ok = await accept(file, "camera", recorded.seconds);
+    if (!ok) setPhase("recorded");
+  };
+
+  /* "Qayta yozish" — yozilganini tashlab, kamerani qaytadan ochadi */
+  const discardRecorded = () => {
+    if (recorded) URL.revokeObjectURL(recorded.url);
+    recordedRef.current = false;
+    setRecorded(null);
+    setSeconds(0);
+    secondsRef.current = 0;
+    setError(null);
+    setPhase("idle");
+    openCamera(facing);
+  };
 
   const stopRecording = useCallback(() => {
     if (timerRef.current) window.clearInterval(timerRef.current);
@@ -215,6 +258,7 @@ export default function VideoCapture() {
   }
 
   const tooShort = seconds < VIDEO_LIMITS.minDurationSeconds;
+  const recordedTooShort = Boolean(recorded && recorded.seconds < VIDEO_LIMITS.minDurationSeconds);
   const shownTips = allTips ? VIDEO_RECORD_TIPS : VIDEO_RECORD_TIPS.slice(0, 4);
 
   return (
@@ -236,9 +280,6 @@ export default function VideoCapture() {
               className="mt-3 inline-flex items-center gap-1.5 text-[13.5px] font-bold text-brand-700 underline underline-offset-4"
             >
               Savollar bilan tanishish
-              <svg viewBox="0 0 24 24" aria-hidden className="h-[14px] w-[14px]" fill="none">
-                <path d="M9 5l7 7-7 7" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
             </Link>
           </div>
 
@@ -272,23 +313,93 @@ export default function VideoCapture() {
           {/* ── Yorliqlar ── */}
           <div role="tablist" className="flex gap-1 rounded-pill bg-surface-2 p-1">
             <TabButton active={tab === "record"} onClick={() => setTab("record")}>
-              Yozish (kamera orqali)
+              <span className="sm:hidden">Kamerada yozish</span>
+              <span className="hidden sm:inline">Yozish (kamera orqali)</span>
             </TabButton>
             <TabButton active={tab === "upload"} onClick={() => setTab("upload")}>
-              Yuklash (galereyadan)
+              <span className="sm:hidden">Fayl yuklash</span>
+              <span className="hidden sm:inline">Yuklash (galereyadan)</span>
             </TabButton>
           </div>
 
           {tab === "record" ? (
-            phase === "denied" ? (
+            recorded ? (
+              /* Yozib boʻlindi — video shu yerda ochiq turadi.
+                 "Qoʻshish" bosilmaguncha keyingi ekranga oʻtilmaydi. */
+              <>
+                <div className="mt-4 overflow-hidden rounded-[22px] bg-[#0B2B1C]">
+                  <video src={recorded.url} controls playsInline className="max-h-[52vh] w-full" />
+                </div>
+
+                <p className="mt-3 text-center text-[14px] font-medium text-body">
+                  Yozildi: {formatDuration(recorded.seconds)}. Videoni koʻrib chiqing —
+                  yuzingiz koʻrinyaptimi, ovozingiz eshitilyaptimi?
+                </p>
+
+                {recordedTooShort && (
+                  <div className="mt-3 rounded-2xl border-2 border-[#F0C36D] bg-[#FFF8E8] p-4 text-center">
+                    <p className="text-[14.5px] leading-relaxed text-[#7A5B14]">
+                      Video juda qisqa. Kamida {VIDEO_LIMITS.minDurationSeconds} soniya
+                      boʻlishi kerak — qayta yozing.
+                    </p>
+                  </div>
+                )}
+
+                <div className="mt-4 flex flex-col gap-2.5 sm:flex-row-reverse">
+                  <button
+                    type="button"
+                    onClick={addRecorded}
+                    disabled={recordedTooShort || phase === "processing"}
+                    className={`h-[54px] flex-1 rounded-pill px-4 font-display text-[16.5px] font-bold transition-all duration-300 ${
+                      recordedTooShort || phase === "processing"
+                        ? "cursor-not-allowed border-2 border-line bg-surface-2 text-mute"
+                        : "btn-primary text-onbrand"
+                    }`}
+                  >
+                    {phase === "processing" ? "Tekshirilmoqda…" : "Qoʻshish"}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={discardRecorded}
+                    disabled={phase === "processing"}
+                    className="h-[54px] flex-1 rounded-pill border-2 border-line bg-surface px-4 font-display text-[15.5px] font-bold text-ink transition-colors duration-200 hover:border-brand-400 disabled:opacity-60"
+                  >
+                    Qayta yozish
+                  </button>
+                </div>
+              </>
+            ) : phase === "denied" ? (
               <div className="mt-4 rounded-[22px] border border-line bg-surface-2 p-5 text-center">
                 <p className="font-display text-[16px] font-bold text-ink">
-                  Kamera ochilmadi
+                  {blocked ? "Kameraga ruxsat berilmagan" : "Kamera ochilmadi"}
                 </p>
-                <p className="mx-auto mt-2 max-w-[420px] text-[14.5px] leading-relaxed text-body">
-                  Brauzer yoki qurilma sozlamalaridan kamera va mikrofon ruxsatini yoqing.
-                  Yoki telefoningizning oʻz kamerasida yozib, faylni yuklang.
-                </p>
+                {blocked ? (
+                  /* "Never allow" bosilgan boʻlsa brauzer boshqa soʻramaydi —
+                     shuning uchun aynan nima qilish kerakligini yozamiz */
+                  <div className="mx-auto mt-3 max-w-[440px] rounded-2xl border-2 border-[#F0C36D] bg-[#FFF8E8] p-4 text-left">
+                    <p className="text-[14.5px] font-bold leading-relaxed text-[#7A5B14]">
+                      Siz kameradan foydalanishni cheklab qoʻygansiz.
+                    </p>
+                    <p className="mt-2 text-[14px] leading-relaxed text-[#7A5B14]">
+                      Brauzer endi ruxsat soʻramaydi — uni telefon sozlamalaridan
+                      oʻzingiz yoqishingiz kerak:
+                    </p>
+                    <ol className="mt-2.5 space-y-1.5 text-[14px] leading-relaxed text-[#7A5B14]">
+                      <li>1. Manzil satri yonidagi qulf belgisini bosing.</li>
+                      <li>2. “Kamera” va “Mikrofon” ni “Ruxsat berish” ga oʻzgartiring.</li>
+                      <li>3. Sahifani yangilang va qaytadan urinib koʻring.</li>
+                    </ol>
+                    <p className="mt-2.5 text-[14px] leading-relaxed text-[#7A5B14]">
+                      Bu qiyin boʻlsa — pastdagi “Telefon kamerasida yozish” tugmasidan
+                      foydalaning, u ruxsatsiz ham ishlaydi.
+                    </p>
+                  </div>
+                ) : (
+                  <p className="mx-auto mt-2 max-w-[420px] text-[14.5px] leading-relaxed text-body">
+                    Brauzer yoki qurilma sozlamalaridan kamera va mikrofon ruxsatini yoqing.
+                    Yoki telefoningizning oʻz kamerasida yozib, faylni yuklang.
+                  </p>
+                )}
                 <div className="mx-auto mt-5 flex max-w-[420px] flex-col gap-2.5">
                   <button
                     type="button"
@@ -336,7 +447,7 @@ export default function VideoCapture() {
                   <button
                     type="button"
                     onClick={phase === "recording" ? stopRecording : startRecording}
-                    disabled={phase === "processing" || (phase === "recording" && tooShort)}
+                    disabled={phase === "processing"}
                     aria-label={phase === "recording" ? "Yozishni toʻxtatish" : "Yozishni boshlash"}
                     className="absolute bottom-4 left-1/2 grid h-[64px] w-[64px] -translate-x-1/2 place-items-center rounded-full bg-white shadow-[0_10px_24px_-10px_rgba(0,0,0,0.6)] disabled:opacity-60"
                   >
@@ -370,12 +481,10 @@ export default function VideoCapture() {
                 </div>
 
                 <p className="mt-3 text-center text-[14px] font-medium text-body">
-                  {phase === "processing"
-                    ? "Video tayyorlanmoqda…"
-                    : phase === "recording"
+                  {phase === "recording"
                     ? tooShort
-                      ? `Yana ${VIDEO_LIMITS.minDurationSeconds - seconds} soniya gapiring — video kamida ${VIDEO_LIMITS.minDurationSeconds} soniya boʻlishi kerak`
-                      : "Tugaganda oq tugmani qayta bosing"
+                      ? `Yana ${VIDEO_LIMITS.minDurationSeconds - seconds} soniya gapiring (kamida ${VIDEO_LIMITS.minDurationSeconds} soniya). Toʻxtatish uchun oq tugmani bosing`
+                      : "Tugaganda oq tugmani bosing"
                     : "Yozishni boshlash uchun qizil tugmani bosing"}
                 </p>
               </>

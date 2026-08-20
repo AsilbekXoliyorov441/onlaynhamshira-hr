@@ -43,7 +43,7 @@ export default function Review() {
   }
 
   return (
-    <Shell stage="Qualification" current={QUALIFICATION_TOTAL} total={QUALIFICATION_TOTAL} steps={STEP_LABELS}>
+    <Shell stage="Saralash" current={QUALIFICATION_TOTAL} total={QUALIFICATION_TOTAL} steps={STEP_LABELS}>
       <h1 className="font-display text-[24px] font-extrabold leading-snug text-ink sm:text-[27px] lg:text-[31px]">
         Javoblaringizni tekshiring
       </h1>
