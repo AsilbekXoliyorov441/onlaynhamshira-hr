@@ -28,7 +28,9 @@ export default function Shell({
 
   return (
     <div className="min-h-screen bg-page">
-      <header className="sticky top-0 z-20 border-b border-line bg-page/95 backdrop-blur">
+      <header /* Toʻliq shaffofsiz: sensorli qurilmada backdrop-blur oʻchirilgan,
+         yarim shaffof fon ostidagi matnni koʻrsatib yuborardi */
+        className="sticky top-0 z-20 border-b border-line bg-page">
         <div className="mx-auto max-w-[560px] px-5 pb-3 pt-3.5 sm:px-8">
           <div className="flex items-center justify-between gap-3">
             <Link href="/" className="flex items-center gap-2" aria-label="Bosh sahifa">

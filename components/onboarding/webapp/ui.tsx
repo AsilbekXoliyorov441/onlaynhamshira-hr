@@ -105,7 +105,10 @@ export function Choice({
         role={multi ? "checkbox" : "radio"}
         aria-checked={selected}
         onClick={onSelect}
-        className={`flex w-full items-start gap-3 rounded-2xl border p-4 text-left transition-colors duration-200 ${
+        /* Nishon ataylab katta: butun qator bosiladi, balandligi 60px dan
+           kam emas — telefonda erkin foydalanmaydigan foydalanuvchi ham
+           aniq tegadi */
+        className={`flex w-full items-start gap-3.5 rounded-2xl border-2 p-[18px] text-left transition-colors duration-200 ${
           selected
             ? "border-brand-400 bg-brand-50"
             : "border-line bg-surface hover:border-brand-300"
@@ -113,19 +116,19 @@ export function Choice({
       >
         <span
           aria-hidden
-          className={`mt-[2px] grid h-[22px] w-[22px] shrink-0 place-items-center border-2 transition-colors duration-200 ${
+          className={`mt-[1px] grid h-[24px] w-[24px] shrink-0 place-items-center border-2 transition-colors duration-200 ${
             multi ? "rounded-[7px]" : "rounded-full"
           } ${selected ? "border-brand-500 bg-brand-500" : "border-[color:var(--c-line)] bg-surface"}`}
         >
           {selected && (
-            <svg viewBox="0 0 20 20" className="h-[13px] w-[13px]" fill="none">
+            <svg viewBox="0 0 20 20" className="h-[14px] w-[14px]" fill="none">
               <path d="M4 10.5l4 4 8-8.5" stroke="#fff" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           )}
         </span>
         <span className="min-w-0 flex-1">
-          <span className="block text-[15px] font-semibold leading-snug text-ink">{label}</span>
-          {hint && <span className="mt-1 block text-[13px] leading-snug text-mute">{hint}</span>}
+          <span className="block text-[16px] font-semibold leading-snug text-ink">{label}</span>
+          {hint && <span className="mt-1.5 block text-[13.5px] leading-snug text-mute">{hint}</span>}
         </span>
       </button>
       {children}
@@ -152,74 +155,74 @@ export function Notice({ children, tone = "info" }: { children: ReactNode; tone?
 }
 
 /* ─────────────────────────── Navigatsiya ───────────────────────────
-   Tugma pastda yopishib turadi — mobil'da uzun roʻyxat oxirigacha
-   scroll qilish shart emas. `safe-area` iPhone'dagi pastki chiziq uchun. */
+   Auditoriyaning katta qismi telefondan erkin foydalanmaydi, shuning
+   uchun:
+     — ikkala tugma ham SOʻZ bilan yozilgan (strelka ikonkasi yoʻq);
+     — nishon balandligi 56px, matn 17px — barmoq bilan aniq tegadi;
+     — asosiy tugma kengroq va yorqin, "Orqaga" esa qoʻshimcha koʻrinishda,
+       shunda qaysi biri "oldinga" ekani birinchi qarashda tushunarli;
+     — tugma faol boʻlmasa, NEGA faol emasligi yozib qoʻyiladi — aks holda
+       foydalanuvchi bosaveradi va nima boʻlayotganini tushunmaydi.
+   `safe-area` — iPhone'dagi pastki chiziq uchun. */
 export function Nav({
   backHref,
   onBack,
   onNext,
   nextLabel = "Keyingi",
   nextDisabled = false,
-  backLabel,
+  backLabel = "Orqaga",
+  disabledHint = "Davom etish uchun javobni tanlang",
 }: {
   backHref?: string;
   onBack?: () => void;
   onNext: () => void;
   nextLabel?: string;
   nextDisabled?: boolean;
-  /** berilsa, strelka oʻrniga matnli tugma chiziladi (TZ Q-09) */
   backLabel?: string;
+  /** tugma faol emasligining sababi */
+  disabledHint?: string;
 }) {
+  const hasBack = Boolean(backHref || onBack);
+
   return (
-    <div className="sticky bottom-0 z-10 -mx-5 mt-auto border-t border-line bg-page/95 px-5 pb-[max(16px,env(safe-area-inset-bottom))] pt-4 backdrop-blur sm:-mx-8 sm:px-8">
-      <div className="mx-auto flex max-w-[560px] flex-col gap-2.5 sm:flex-row-reverse sm:items-center">
-        <div className="flex items-center gap-3">
-        {(backHref || onBack) && !backLabel &&
-          (backHref ? (
-            <Link
-              href={backHref}
-              className="grid h-[52px] w-[52px] shrink-0 place-items-center rounded-pill border border-line bg-surface text-ink transition-colors duration-200 hover:border-brand-400"
-              aria-label="Orqaga"
-            >
-              <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none">
-                <path d="M15 5l-7 7 7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </Link>
-          ) : (
-            <button
-              type="button"
-              onClick={onBack}
-              aria-label="Orqaga"
-              className="grid h-[52px] w-[52px] shrink-0 place-items-center rounded-pill border border-line bg-surface text-ink transition-colors duration-200 hover:border-brand-400"
-            >
-              <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none">
-                <path d="M15 5l-7 7 7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </button>
-          ))}
-
-        <button
-          type="button"
-          onClick={onNext}
-          disabled={nextDisabled}
-          className={`h-[52px] flex-1 rounded-pill font-display text-[16px] font-bold transition-all duration-300 ${
-            nextDisabled
-              ? "cursor-not-allowed border border-line bg-surface-2 text-mute"
-              : "btn-primary text-onbrand hover:scale-[1.02] active:scale-100"
-          }`}
-        >
-          {nextLabel}
-        </button>
-        </div>
-
-        {backLabel && backHref && (
-          <Link
-            href={backHref}
-            className="grid h-[48px] place-items-center rounded-pill border border-line bg-surface font-display text-[15px] font-semibold text-ink transition-colors duration-200 hover:border-brand-400 sm:h-[52px] sm:flex-1"
-          >
-            {backLabel}
-          </Link>
+    <div className="sticky bottom-0 z-10 -mx-5 mt-auto border-t border-line bg-page px-5 pb-[max(14px,env(safe-area-inset-bottom))] pt-3.5 shadow-[0_-8px_24px_-16px_rgba(11,43,28,0.35)] sm:-mx-8 sm:px-8">
+      <div className="mx-auto max-w-[560px]">
+        {nextDisabled && disabledHint && (
+          <p className="mb-2.5 text-center text-[13.5px] font-medium text-mute">{disabledHint}</p>
         )}
+
+        <div className="flex items-stretch gap-3">
+          {hasBack &&
+            (backHref ? (
+              <Link
+                href={backHref}
+                className="grid h-[56px] flex-[0_0_34%] place-items-center rounded-pill border-2 border-line bg-surface font-display text-[16px] font-bold text-ink transition-colors duration-200 hover:border-brand-400"
+              >
+                {backLabel}
+              </Link>
+            ) : (
+              <button
+                type="button"
+                onClick={onBack}
+                className="h-[56px] flex-[0_0_34%] rounded-pill border-2 border-line bg-surface font-display text-[16px] font-bold text-ink transition-colors duration-200 hover:border-brand-400"
+              >
+                {backLabel}
+              </button>
+            ))}
+
+          <button
+            type="button"
+            onClick={onNext}
+            disabled={nextDisabled}
+            className={`h-[56px] flex-1 rounded-pill font-display text-[17px] font-bold transition-all duration-300 ${
+              nextDisabled
+                ? "cursor-not-allowed border-2 border-line bg-surface-2 text-mute"
+                : "btn-primary text-onbrand hover:scale-[1.02] active:scale-100"
+            }`}
+          >
+            {nextLabel}
+          </button>
+        </div>
       </div>
     </div>
   );

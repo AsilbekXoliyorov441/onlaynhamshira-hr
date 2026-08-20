@@ -88,6 +88,7 @@ export default function Review() {
         nextLabel="Tasdiqlash va natijani koʻrish"
         nextDisabled={busy}
         backLabel="Ortga qaytish"
+        disabledHint=""
       />
     </Shell>
   );
