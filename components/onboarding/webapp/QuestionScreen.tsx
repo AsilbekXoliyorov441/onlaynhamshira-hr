@@ -1,14 +1,14 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Shell from "./Shell";
 import RegionPicker from "./RegionPicker";
 import { Choice, Nav, Notice } from "./ui";
 import { QUALIFICATION_QUESTIONS, QUALIFICATION_TOTAL, PARTNERSHIP_TERMS, nextQuestion, previousQuestion } from "@/lib/onboarding/qualification";
 import { ANSWER_LABELS } from "@/lib/onboarding/describe";
 import { saveAnswer } from "@/lib/onboarding/api";
-import { answerFor, loadSession, saveSession, type Session } from "@/lib/onboarding/session";
+import { answerFor, loadSession, putAnswer, saveSession, type Session } from "@/lib/onboarding/session";
 import type { Answer, Option, Question, RegionSelection } from "@/lib/onboarding/types";
 
 /* Yon ustunda toʻliq savol matni emas, qisqa nom koʻrinadi */
@@ -25,14 +25,22 @@ export default function QuestionScreen({ question }: { question: Question }) {
   const [regions, setRegions] = useState<RegionSelection[]>([]);
   const [saving, setSaving] = useState(false);
 
+  /* Draftni saqlash uchun: sessiyaning eng soʻnggi nusxasi.
+     `state` emas, `ref` — chunki saqlash effekti qayta render
+     chaqirmasligi kerak, aks holda cheksiz aylanish boʻladi. */
+  const sessionRef = useRef<Session | null>(null);
+  const hydrated = useRef(false);
+
   /* Sessiyani tiklash — BR-Q-004 */
   useEffect(() => {
+    hydrated.current = false;
     const loaded = loadSession();
     if (loaded.status !== "IN_PROGRESS") {
       router.replace("/hamkor/saralash");
       return;
     }
     setSession(loaded);
+    sessionRef.current = loaded;
 
     const previous = answerFor(loaded, question.code);
     if (previous) {
@@ -42,10 +50,37 @@ export default function QuestionScreen({ question }: { question: Question }) {
       setRegions(previous.regions ?? []);
     }
     /* Joriy savolni belgilab qoʻyamiz — qaytib kelganda shu yerdan davom etadi */
-    saveSession({ ...loaded, currentQuestionCode: question.code });
+    const marked = { ...loaded, currentQuestionCode: question.code };
+    saveSession(marked);
+    sessionRef.current = marked;
+    hydrated.current = true;
   }, [question.code, router]);
 
   const multi = question.kind === "multi" || question.kind === "consent";
+
+  /* Tanlangan zahoti saqlaymiz — "Keyingi" bosilmasa ham. Foydalanuvchi
+     brauzerni yopib ketsa yoki telefonga qoʻngʻiroq kelsa, javob
+     yoʻqolmaydi va qaytganda oʻsha holida turadi. */
+  useEffect(() => {
+    const current = sessionRef.current;
+    if (!hydrated.current || !current) return;
+
+    const filled =
+      selected.length > 0 ||
+      regions.length > 0 ||
+      Boolean(subAnswer) ||
+      freeText.trim().length > 0;
+    if (!filled) return;
+
+    sessionRef.current = putAnswer(current, {
+      question_code: question.code,
+      answer: multi ? selected : selected[0] ?? "",
+      ...(freeText.trim() ? { answer_text: freeText.trim() } : {}),
+      ...(subAnswer ? { sub_answer: subAnswer } : {}),
+      ...(question.kind === "region" ? { regions } : {}),
+    });
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, [selected, freeText, subAnswer, regions]);
 
   const toggle = (code: string) => {
     setSelected((prev) =>

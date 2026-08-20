@@ -1,12 +1,12 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import VideoShell from "./VideoShell";
 import { Choice, Nav } from "./ui";
 import { VIDEO_CONSENTS, VIDEO_CONSENT_POINTS } from "@/lib/onboarding/video";
 import { saveConsent } from "@/lib/onboarding/video-api";
-import { loadVideo, type VideoSession } from "@/lib/onboarding/video-store";
+import { loadVideo, saveVideo, type VideoSession } from "@/lib/onboarding/video-store";
 
 /*
  * V-02: VIDEO_CONSENT
@@ -20,6 +20,8 @@ export default function VideoConsent() {
   const [checked, setChecked] = useState<Record<string, boolean>>({});
   const [busy, setBusy] = useState(false);
 
+  const hydrated = useRef(false);
+
   useEffect(() => {
     const video = loadVideo();
     if (video.status === "NOT_STARTED") {
@@ -28,7 +30,16 @@ export default function VideoConsent() {
     }
     setSession(video);
     setChecked(video.consents ?? {});
+    hydrated.current = true;
   }, [router]);
+
+  /* Belgilar qoʻyilgan zahoti saqlanadi — foydalanuvchi chiqib ketsa
+     ham qaytganda oʻsha holida turadi */
+  useEffect(() => {
+    if (!hydrated.current || !session) return;
+    saveVideo({ ...session, consents: checked });
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, [checked]);
 
   const allChecked = VIDEO_CONSENTS.every((c) => checked[c.field]);
 

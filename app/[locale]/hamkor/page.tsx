@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { LOCALES } from "@/lib/i18n/config";
 import InfoScreen from "@/components/onboarding/webapp/InfoScreen";
+import ResumeCard from "@/components/onboarding/webapp/ResumeCard";
 
 export function generateStaticParams() {
   return LOCALES.map((locale) => ({ locale }));
@@ -30,7 +31,10 @@ export default function Page() {
       nextHref="/hamkor/platforma"
       nextLabel="Boshlash"
     >
-      <p className="mt-5 text-[15px] font-semibold text-ink">Keyingi bosqichlarda siz:</p>
+      {/* Avval boshlab, yarmida chiqib ketgan boʻlsa — oʻsha joyiga qaytaradi */}
+      <ResumeCard />
+
+      <p className="mt-6 text-[15px] font-semibold text-ink">Keyingi bosqichlarda siz:</p>
       <ul className="mt-3 space-y-2.5">
         {STEPS.map((step) => (
           <li key={step} className="flex gap-3 text-[15px] leading-relaxed text-body">

@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import VideoShell from "./VideoShell";
+import VideoScriptCard from "./VideoScriptCard";
 import { VIDEO_ERRORS, VIDEO_LIMITS, formatDuration } from "@/lib/onboarding/video";
 import { validateVideo } from "@/lib/onboarding/video-validate";
 import { loadVideo, storeSelectedVideo, type VideoSession } from "@/lib/onboarding/video-store";
@@ -254,6 +255,11 @@ export default function VideoRecorder() {
               VIDEO_LIMITS.maxDurationSeconds / 60
             } daqiqagacha boʻlishi kerak`}
       </p>
+
+      {/* Kamera oldida nima deyishni unutmasin */}
+      <div className="mt-4">
+        <VideoScriptCard />
+      </div>
 
       {error && (
         <div className="mt-4 rounded-2xl border border-[#E8A2A2] bg-[#FDF3F3] p-4">

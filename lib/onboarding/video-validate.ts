@@ -7,13 +7,22 @@ import type { VideoMeta, VideoValidationError } from "./types";
  * Tanlangan yoki yozilgan videoni brauzerda tekshiradi — TZ V-04B
  * "Validation" va 17-boʻlimdagi xato holatlari.
  *
- * Tekshiriladi: format, hajm, oʻqilishi, davomiylik, ovoz mavjudligi.
+ * Tekshiriladi: format, hajm, oʻqilishi, davomiylik.
  *
- * Ovoz aniqlash haqida: brauzerlarda audio yoʻlini oʻqishning yagona
- * standart usuli yoʻq. Shu bois uchta belgidan foydalaniladi va
- * hech biri ishlamasa, video ovozli deb qabul qilinadi — notoʻgʻri
- * rad etishdan koʻra, serverda qayta tekshirgan maʼqul (BR-V-004).
+ * OVOZ TEKSHIRUVI HOZIRCHA OʻCHIRILGAN (BLOCK_ON_NO_AUDIO = false).
+ * Sabab: brauzerda audio yoʻlini metadata bosqichida ishonchli
+ * aniqlashning standart usuli yoʻq. `webkitAudioDecodedByteCount`
+ * hali hech narsa dekodlanmagani uchun DOIM 0 boʻladi — shu bois
+ * ovozi bor videolar ham "ovozsiz" deb rad etilardi.
+ * Endi ovoz faqat maʼlumot uchun aniqlanadi (`meta.hasAudio`),
+ * lekin hech qachon rad etilmaydi — ovozni server tomonda
+ * tekshirish toʻgʻriroq (BR-V-004).
+ *
+ * Qayta yoqish kerak boʻlsa: BLOCK_ON_NO_AUDIO ni `true` qiling.
  */
+
+/** Ovozsiz video rad etilsinmi? Hozircha yoʻq — yuqoridagi izohga qarang. */
+const BLOCK_ON_NO_AUDIO = false;
 
 export type ValidationResult =
   | { ok: true; meta: VideoMeta }
@@ -57,18 +66,16 @@ function readMetadata(
       window.clearTimeout(timer);
       const duration = Number.isFinite(video.duration) ? video.duration : 0;
 
-      /* Ovoz belgilarini uchta usulda qidiramiz */
+      /* Ovoz belgilari. `webkitAudioDecodedByteCount` ATAYLAB
+         ishlatilmaydi: metadata bosqichida hali hech narsa
+         dekodlanmagan boʻladi va u doim 0 qaytaradi. */
       const anyVideo = video as HTMLVideoElement & {
         mozHasAudio?: boolean;
-        webkitAudioDecodedByteCount?: number;
         audioTracks?: { length: number };
       };
       const signals = [
         anyVideo.mozHasAudio,
         anyVideo.audioTracks ? anyVideo.audioTracks.length > 0 : undefined,
-        typeof anyVideo.webkitAudioDecodedByteCount === "number"
-          ? anyVideo.webkitAudioDecodedByteCount > 0
-          : undefined,
       ].filter((s) => typeof s === "boolean") as boolean[];
 
       /* Hech qanday belgi yoʻq boʻlsa — ovozli deb hisoblaymiz */
@@ -107,8 +114,10 @@ export async function validateVideo(
     return { ok: false, error: "TOO_LONG" };
   }
 
-  /* 5. Ovoz (BR-V-014) */
-  if (!metadata.hasAudio) return { ok: false, error: "NO_AUDIO" };
+  /* 5. Ovoz (BR-V-014) — hozircha rad etilmaydi, yuqoridagi izohga qarang */
+  if (BLOCK_ON_NO_AUDIO && !metadata.hasAudio) {
+    return { ok: false, error: "NO_AUDIO" };
+  }
 
   return {
     ok: true,

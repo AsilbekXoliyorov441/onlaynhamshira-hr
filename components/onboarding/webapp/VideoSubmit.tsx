@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import VideoShell from "./VideoShell";
-import { Choice } from "./ui";
+import { Choice, Nav } from "./ui";
 import { formatDuration, formatSize } from "@/lib/onboarding/video";
 import { completeUpload, createUploadUrl, uploadVideo } from "@/lib/onboarding/video-api";
 import { getVideoBlob, loadVideo, saveVideo, type VideoSession } from "@/lib/onboarding/video-store";
@@ -167,27 +167,14 @@ export default function VideoSubmit() {
         />
       </div>
 
-      <div className="mt-8 flex flex-col gap-2.5">
-        <button
-          type="button"
-          onClick={submit}
-          disabled={!confirmed}
-          className={`h-[56px] rounded-pill font-display text-[17px] font-bold transition-all duration-300 ${
-            confirmed
-              ? "btn-primary text-onbrand hover:scale-[1.02]"
-              : "cursor-not-allowed border-2 border-line bg-surface-2 text-mute"
-          }`}
-        >
-          Yuborish
-        </button>
-        <button
-          type="button"
-          onClick={() => router.push("/hamkor/video/tekshirish")}
-          className="h-[56px] rounded-pill border-2 border-line bg-surface font-display text-[16px] font-bold text-ink transition-colors duration-200 hover:border-brand-400"
-        >
-          Ortga qaytish
-        </button>
-      </div>
+      <Nav
+        backHref="/hamkor/video/tekshirish"
+        backLabel="Orqaga"
+        onNext={submit}
+        nextLabel="Yuborish"
+        nextDisabled={!confirmed}
+        disabledHint="Yuborish uchun yuqoridagi katakchani belgilang"
+      />
     </VideoShell>
   );
 }

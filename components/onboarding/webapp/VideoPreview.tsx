@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import VideoShell from "./VideoShell";
-import { Notice } from "./ui";
+import { Nav, Notice } from "./ui";
 import { formatDuration, formatSize } from "@/lib/onboarding/video";
 import { replaceVideo } from "@/lib/onboarding/video-api";
 import { getVideoBlob, loadVideo, type VideoSession } from "@/lib/onboarding/video-store";
@@ -58,45 +58,56 @@ export default function VideoPreview() {
   return (
     <VideoShell>
       <h1 className="font-display text-[24px] font-extrabold leading-snug text-ink sm:text-[27px] lg:text-[31px]">
-        Videoni tekshiring
+        Videongiz tayyor — koʻrib chiqing
       </h1>
       <p className="mt-3 text-[15px] leading-relaxed text-body">
-        Videoda yuzingiz aniq koʻrinishi va ovozingiz tushunarli eshitilishiga ishonch hosil
-        qiling.
+        Videoni ijro eting va ikkita narsani tekshiring: yuzingiz aniq koʻrinyaptimi va
+        ovozingiz eshitilyaptimi. Telefon ovozini balandlatib qoʻying.
       </p>
 
       <div className="mt-5 overflow-hidden rounded-[24px] bg-[#0B2B1C]">
         <video src={url} controls playsInline className="max-h-[60vh] w-full" />
       </div>
 
-      <dl className="mt-5 space-y-2.5 rounded-2xl border border-line bg-surface p-4">
+      {/* Ovoz holati ATAYLAB koʻrsatilmaydi: brauzerda uni ishonchli
+          aniqlab boʻlmaydi va "aniqlanmadi" degan yozuv foydalanuvchini
+          bekorga qoʻrqitadi. Buning oʻrniga oddiy tekshiruv roʻyxati. */}
+      <ul className="mt-5 space-y-2.5">
+        {[
+          "Yuzim videoda aniq koʻrinyapti",
+          "Ovozim eshitilyapti va tushunarli",
+          "Ismim, mutaxassisligim va tajribam aytilgan",
+        ].map((item) => (
+          <li
+            key={item}
+            className="flex items-center gap-3 rounded-2xl border border-line bg-surface p-3.5"
+          >
+            <span aria-hidden className="grid h-[24px] w-[24px] shrink-0 place-items-center rounded-full bg-brand-500">
+              <svg viewBox="0 0 20 20" className="h-[12px] w-[12px]" fill="none">
+                <path d="M4 10.5l4 4 8-8.5" stroke="#fff" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </span>
+            <span className="text-[15px] font-semibold leading-snug text-ink">{item}</span>
+          </li>
+        ))}
+      </ul>
+
+      <dl className="mt-4 space-y-2.5 rounded-2xl border border-line bg-surface-2 p-4">
         <Row label="Davomiylik" value={formatDuration(meta.durationSeconds)} />
         <Row label="Fayl hajmi" value={formatSize(meta.fileSize)} />
-        <Row label="Format" value={meta.mimeType.replace("video/", "").toUpperCase()} />
-        <Row label="Ovoz" value={meta.hasAudio ? "mavjud" : "aniqlanmadi"} />
       </dl>
 
       <Notice>
-        Videoni bir marta koʻrib chiqish shart emas, lekin yuborishdan oldin tekshirib
-        olishni tavsiya qilamiz.
+        Video yoqmasa — pastdagi “{meta.source === "camera" ? "Qayta yozish" : "Boshqa video"}”
+        tugmasini bosing. Necha marta qayta yozsangiz ham boʻladi.
       </Notice>
 
-      <div className="mt-8 flex flex-col gap-2.5">
-        <button
-          type="button"
-          onClick={() => router.push("/hamkor/video/tasdiqlash")}
-          className="btn-primary h-[56px] rounded-pill font-display text-[17px] font-bold text-onbrand transition-transform duration-300 hover:scale-[1.02]"
-        >
-          Videoni tasdiqlash
-        </button>
-        <button
-          type="button"
-          onClick={pickAnother}
-          className="h-[56px] rounded-pill border-2 border-line bg-surface font-display text-[16px] font-bold text-ink transition-colors duration-200 hover:border-brand-400"
-        >
-          {meta.source === "camera" ? "Qayta yozish" : "Boshqa video tanlash"}
-        </button>
-      </div>
+      <Nav
+        onBack={pickAnother}
+        backLabel={meta.source === "camera" ? "Qayta yozish" : "Boshqa video"}
+        onNext={() => router.push("/hamkor/video/tasdiqlash")}
+        nextLabel="Video yaxshi, davom etish"
+      />
     </VideoShell>
   );
 }

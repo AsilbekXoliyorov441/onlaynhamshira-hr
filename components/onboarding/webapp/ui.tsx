@@ -1,7 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
+
+/* Telefondagi tepa panelning balandligi. Panel `fixed` boʻlgani uchun
+   bu son bir necha joyda kerak: Shell kontentga shuncha joy ajratadi,
+   bosqichlar roʻyxati esa aynan shu balandlikdan pastda ochiladi. */
+export const HEADER_HEIGHT = 62;
 
 /* ─────────────────────────── Progress ───────────────────────────
    Mobil ekranga 8 ta yorliq sigʻmaydi, shuning uchun ingichka chiziq +
@@ -12,6 +17,7 @@ export function Progress({
   total,
   steps,
   unit = "savol",
+  exitSlot,
 }: {
   stage: string;
   current: number;
@@ -19,6 +25,8 @@ export function Progress({
   steps: string[];
   /** "3 / 8 savol" yoki "3 / 8 bosqich" */
   unit?: string;
+  /** roʻyxat ichida koʻrsatiladigan "Saqlash va chiqish" tugmasi */
+  exitSlot?: ReactNode;
 }) {
   const [open, setOpen] = useState(false);
   const percent = Math.round((current / total) * 100);
@@ -29,9 +37,9 @@ export function Progress({
         type="button"
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
-        className="flex w-full items-center justify-between gap-3 py-1 text-left"
+        className="flex w-full items-center justify-between gap-3 text-left"
       >
-        <span className="font-display text-[13px] font-bold uppercase tracking-[0.08em] text-brand-700">
+        <span className="truncate font-display text-[13px] font-bold uppercase tracking-[0.08em] text-brand-700">
           {stage}
         </span>
         {/* Strelka — qatorni bosish mumkinligini koʻrsatadi, aks holda
@@ -56,7 +64,28 @@ export function Progress({
         />
       </div>
 
-      {open && <div className="mt-3">{<StepList steps={steps} current={current} />}</div>}
+      {/* Roʻyxat panelning ostidan tushadi — panel balandligi oʻzgarmaydi,
+          shu bois sahifa kontenti joyidan qimirlamaydi */}
+      {open && (
+        <>
+          <button
+            type="button"
+            aria-label="Yopish"
+            onClick={() => setOpen(false)}
+            style={{ top: HEADER_HEIGHT }}
+            className="fixed inset-x-0 bottom-0 z-[35] bg-[rgba(11,43,28,0.4)]"
+          />
+          <div
+            style={{ top: HEADER_HEIGHT }}
+            className="fixed inset-x-0 z-[36] max-h-[70vh] overflow-y-auto border-b border-line bg-surface px-5 pb-4 pt-4 shadow-[0_24px_48px_-24px_rgba(11,43,28,0.45)] sm:px-8"
+          >
+            <div className="mx-auto max-w-[620px]">
+              <StepList steps={steps} current={current} />
+              {exitSlot && <div className="mt-4 border-t border-line pt-4">{exitSlot}</div>}
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }
@@ -173,13 +202,17 @@ export function Notice({ children, tone = "info" }: { children: ReactNode; tone?
 /* ─────────────────────────── Navigatsiya ───────────────────────────
    Auditoriyaning katta qismi telefondan erkin foydalanmaydi, shuning
    uchun:
-     — ikkala tugma ham SOʻZ bilan yozilgan (strelka ikonkasi yoʻq);
+     — ikkala tugma ham SOʻZ bilan yozilgan;
+     — "Orqaga" ham yaxshi koʻrinadi: qalin chegara, oq fon, strelka
+       belgisi va katta nishon — foydalanuvchi qaytish yoʻlini har doim
+       topa oladi;
      — nishon balandligi 56px, matn 17px — barmoq bilan aniq tegadi;
-     — asosiy tugma kengroq va yorqin, "Orqaga" esa qoʻshimcha koʻrinishda,
-       shunda qaysi biri "oldinga" ekani birinchi qarashda tushunarli;
-     — tugma faol boʻlmasa, NEGA faol emasligi yozib qoʻyiladi — aks holda
-       foydalanuvchi bosaveradi va nima boʻlayotganini tushunmaydi.
-   `safe-area` — iPhone'dagi pastki chiziq uchun. */
+     — tugma faol boʻlmasa, NEGA faol emasligi yozib qoʻyiladi.
+
+   Telefonda panel `fixed`: sahifa qanchalik uzun boʻlmasin, tugmalar doim
+   koʻrinib turadi. Panel oqim (flow) dan chiqib ketgani uchun uning
+   oʻrniga xuddi shu balandlikdagi "boʻshliq" qoʻyiladi va ustiga yana
+   20px havo qoʻshiladi — kontent tugmalarga yopishib qolmaydi. */
 export function Nav({
   backHref,
   onBack,
@@ -191,7 +224,8 @@ export function Nav({
 }: {
   backHref?: string;
   onBack?: () => void;
-  onNext: () => void;
+  /** boʻlmasa — faqat "Orqaga" tugmasi butun kenglikda chiqadi */
+  onNext?: () => void;
   nextLabel?: string;
   nextDisabled?: boolean;
   backLabel?: string;
@@ -199,51 +233,82 @@ export function Nav({
   disabledHint?: string;
 }) {
   const hasBack = Boolean(backHref || onBack);
+  const hasNext = Boolean(onNext);
+  const barRef = useRef<HTMLDivElement>(null);
+  const [barHeight, setBarHeight] = useState(96);
+
+  /* Panel balandligi matnga qarab oʻzgaradi (izoh qatori bor-yoʻqligi),
+     shu bois oʻlchab turamiz */
+  useEffect(() => {
+    const el = barRef.current;
+    if (!el) return;
+    const measure = () => setBarHeight(el.offsetHeight);
+    measure();
+    if (typeof ResizeObserver === "undefined") return;
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
+  const backInner = (
+    <>
+      <svg viewBox="0 0 24 24" aria-hidden className="h-[18px] w-[18px] shrink-0" fill="none">
+        <path d="M15 5l-7 7 7 7" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+      {backLabel}
+    </>
+  );
+  const backClass = `flex h-[56px] items-center justify-center gap-1.5 rounded-pill border-2 border-[color:var(--c-ink)]/25 bg-surface font-display text-[16px] font-bold text-ink shadow-[0_2px_0_rgba(11,43,28,0.06)] transition-colors duration-200 hover:border-brand-500 hover:text-brand-700 lg:h-[52px] lg:flex-none lg:px-8 ${
+    hasNext ? "flex-[0_0_38%]" : "flex-1"
+  }`;
 
   return (
-    <div className="sticky bottom-0 z-10 -mx-5 mt-auto border-t border-line bg-page px-5 pb-[max(14px,env(safe-area-inset-bottom))] pt-3 shadow-[0_-8px_24px_-16px_rgba(11,43,28,0.35)] sm:-mx-8 sm:px-8 lg:static lg:-mx-10 lg:mt-9 lg:bg-transparent lg:px-10 lg:pb-0 lg:pt-6 lg:shadow-none">
-      <div className="mx-auto max-w-[620px] lg:max-w-none">
-        {nextDisabled && disabledHint && (
-          <p className="mb-2 text-center text-[13.5px] font-medium text-mute lg:mb-3 lg:text-right">
-            {disabledHint}
-          </p>
-        )}
+    <>
+      {/* Telefonda `fixed` panel uchun joy: balandligi + 20px havo */}
+      <div aria-hidden className="lg:hidden" style={{ height: barHeight + 20 }} />
 
-        {/* Kompyuterda tugmalar oʻngga tortiladi va butun kenglikka choʻzilmaydi;
-            telefonda esa "Keyingi" keng va yorqin — barmoq bilan aniq tegadi. */}
-        <div className="flex items-stretch gap-3 lg:justify-end lg:gap-3.5">
-          {hasBack &&
-            (backHref ? (
-              <Link
-                href={backHref}
-                className="grid h-[56px] flex-[0_0_34%] place-items-center rounded-pill border-2 border-line bg-surface font-display text-[16px] font-bold text-ink transition-colors duration-200 hover:border-brand-400 lg:h-[52px] lg:flex-none lg:px-9"
-              >
-                {backLabel}
-              </Link>
-            ) : (
-              <button
-                type="button"
-                onClick={onBack}
-                className="h-[56px] flex-[0_0_34%] rounded-pill border-2 border-line bg-surface font-display text-[16px] font-bold text-ink transition-colors duration-200 hover:border-brand-400 lg:h-[52px] lg:flex-none lg:px-9"
-              >
-                {backLabel}
-              </button>
-            ))}
+      <div
+        ref={barRef}
+        className="fixed inset-x-0 bottom-0 z-30 border-t border-line bg-page px-5 pb-[max(14px,env(safe-area-inset-bottom))] pt-3 shadow-[0_-8px_24px_-16px_rgba(11,43,28,0.35)] sm:px-8 lg:static lg:z-auto lg:-mx-10 lg:mt-9 lg:bg-transparent lg:px-10 lg:pb-0 lg:pt-6 lg:shadow-none"
+      >
+        <div className="mx-auto max-w-[620px] lg:max-w-none">
+          {hasNext && nextDisabled && disabledHint && (
+            <p className="mb-2 text-center text-[13.5px] font-medium text-mute lg:mb-3 lg:text-right">
+              {disabledHint}
+            </p>
+          )}
 
-          <button
-            type="button"
-            onClick={onNext}
-            disabled={nextDisabled}
-            className={`h-[56px] flex-1 rounded-pill font-display text-[17px] font-bold transition-all duration-300 lg:h-[52px] lg:min-w-[230px] lg:flex-none lg:px-10 lg:text-[16px] ${
-              nextDisabled
-                ? "cursor-not-allowed border-2 border-line bg-surface-2 text-mute"
-                : "btn-primary text-onbrand hover:scale-[1.02] active:scale-100"
-            }`}
-          >
-            {nextLabel}
-          </button>
+          {/* Kompyuterda tugmalar oʻngga tortiladi va butun kenglikka
+              choʻzilmaydi; telefonda "Keyingi" keng va yorqin. */}
+          <div className="flex items-stretch gap-3 lg:justify-end lg:gap-3.5">
+            {hasBack &&
+              (backHref ? (
+                <Link href={backHref} className={backClass}>
+                  {backInner}
+                </Link>
+              ) : (
+                <button type="button" onClick={onBack} className={backClass}>
+                  {backInner}
+                </button>
+              ))}
+
+            {hasNext && (
+            <button
+              type="button"
+              onClick={onNext}
+              disabled={nextDisabled}
+              className={`h-[56px] flex-1 rounded-pill font-display text-[17px] font-bold transition-all duration-300 lg:h-[52px] lg:min-w-[230px] lg:flex-none lg:px-10 lg:text-[16px] ${
+                nextDisabled
+                  ? "cursor-not-allowed border-2 border-line bg-surface-2 text-mute"
+                  : "btn-primary text-onbrand hover:scale-[1.02] active:scale-100"
+              }`}
+            >
+              {nextLabel}
+            </button>
+            )}
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

@@ -3,14 +3,16 @@
 import Link from "next/link";
 import { useState, type ReactNode } from "react";
 import { LogoMark } from "@/components/Icons";
-import { Progress, StepList } from "./ui";
+import { HEADER_HEIGHT, Progress, StepList } from "./ui";
 
 /*
  * Qualification ekranlarining umumiy ramkasi (TZ: "3. Umumiy interfeys").
  *
  * Ikki xil koʻrinish, bitta kod:
- *   — telefon (asosiy): tepada ixcham panel — logotip, progress chizigʻi
- *     va "Saqlash va chiqish". Bosqichlar roʻyxati bosilganda ochiladi.
+ *   — telefon (asosiy): tepada faqat progress chizigʻi boʻlgan `fixed`
+ *     panel. Logotip va "Saqlash va chiqish" u yerda yoʻq — ekran boʻyi
+ *     savolning oʻziga berilgan; chiqish tugmasi progress qatorini
+ *     bosganda ochiladigan bosqichlar roʻyxati ichida.
  *   — kompyuter (lg dan yuqori): chapda doimiy yon ustun — barcha
  *     bosqichlar bir vaqtda koʻrinadi, hech narsa bosish shart emas.
  *     Oʻng tomonda savolning oʻzi. Shunda keng ekranda kontent
@@ -83,27 +85,37 @@ export default function Shell({
         </div>
       </aside>
 
-      {/* ── Telefon: tepadagi ixcham panel ── */}
-      <header className="sticky top-0 z-20 border-b border-line bg-page lg:hidden">
-        <div className="mx-auto max-w-[620px] px-5 pb-2.5 pt-2.5 sm:px-8">
-          <div className="flex items-center justify-between gap-3">
-            <Link href="/" className="inline-flex" aria-label="Bosh sahifa">
-              <LogoMark aria-hidden gradientId="lm-top" className="h-[30px] w-auto" />
-            </Link>
-            {exitButton()}
-          </div>
-
-          <div className="mt-2.5">
-            <Progress stage={stage} current={current} total={total} steps={steps} unit={unit} />
-          </div>
+      {/* ── Telefon: faqat progress. Logotip va chiqish tugmasi bu yerdan
+             olib tashlandi — ekran boʻyi savolga berilsin. Chiqish tugmasi
+             progress qatorini bosganda ochiladigan roʻyxat ichida. ── */}
+      <header
+        style={{ height: HEADER_HEIGHT }}
+        className="fixed inset-x-0 top-0 z-40 flex items-center border-b border-line bg-page lg:hidden"
+      >
+        <div className="mx-auto w-full max-w-[620px] px-5 sm:px-8">
+          <Progress
+            stage={stage}
+            current={current}
+            total={total}
+            steps={steps}
+            unit={unit}
+            exitSlot={exitButton("w-full")}
+          />
         </div>
       </header>
 
       {/* Kompyuterda kontent oq kartochka ichida — kenglik cheklangan, tepadan
          boshlanadi (ekrandan ekranga sakramaydi). Telefonda kartochka yoʻq:
-         ramka ichida ramka boʻlib joy yemasin. */}
+         ramka ichida ramka boʻlib joy yemasin. Tepadagi joy — `fixed` panel
+         uchun (HEADER_HEIGHT) va ustiga 18px havo. */}
       <main className="w-full lg:px-8 lg:py-10 xl:px-12">
-        <div className="mx-auto flex min-h-[calc(100dvh-118px)] w-full max-w-[620px] flex-col px-5 pb-4 pt-6 sm:px-8 lg:min-h-0 lg:max-w-[740px] lg:rounded-[26px] lg:border lg:border-line lg:bg-surface lg:px-10 lg:pb-9 lg:pt-9 lg:shadow-[0_34px_80px_-52px_rgba(11,43,28,0.42)]">
+        <div className="mx-auto flex w-full max-w-[620px] flex-col px-5 pb-4 sm:px-8 lg:max-w-[740px] lg:rounded-[26px] lg:border lg:border-line lg:bg-surface lg:px-10 lg:pb-9 lg:pt-9 lg:shadow-[0_34px_80px_-52px_rgba(11,43,28,0.42)]">
+          {/* `fixed` panel uchun joy + 18px havo (kompyuterda panel yoʻq) */}
+          <div
+            aria-hidden
+            className="shrink-0 lg:hidden"
+            style={{ height: HEADER_HEIGHT + 18 }}
+          />
           {children}
         </div>
       </main>
