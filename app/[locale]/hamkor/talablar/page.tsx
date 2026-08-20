@@ -29,7 +29,9 @@ export default function Page() {
       nextHref="/hamkor/saralash"
       nextLabel="Qualification boshlash"
     >
-      <ul className="mt-6 space-y-2.5">
+      {/* Kompyuterda bir soʻzli talablar keng qatorda boʻsh koʻrinadi —
+          ikki ustunga joylanadi */}
+      <ul className="mt-6 space-y-2.5 lg:grid lg:grid-cols-2 lg:gap-2.5 lg:space-y-0">
         {REQUIREMENTS.map((r) => (
           <li key={r} className="flex items-center gap-3 rounded-2xl border border-line bg-surface p-4">
             <span

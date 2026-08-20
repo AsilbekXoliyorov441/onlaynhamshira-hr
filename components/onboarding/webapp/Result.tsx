@@ -126,7 +126,7 @@ export default function Result() {
 
             <p className="mt-4 text-[13.5px] leading-relaxed text-mute">{RETRY_NOTE}</p>
 
-            <div className="mt-7 flex flex-col gap-2.5">
+            <div className="mt-7 flex flex-col gap-2.5 lg:mx-auto lg:w-full lg:max-w-[440px]">
               <button
                 type="button"
                 onClick={reviewAnswers}

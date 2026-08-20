@@ -23,11 +23,13 @@ export default function Standalone({
 }) {
   return (
     <div className="onboarding-bg min-h-screen">
-      <div className="mx-auto flex min-h-screen w-full max-w-[760px] flex-col px-5 py-6 sm:px-8 lg:justify-center lg:py-16">
-        <div className="lg:rounded-[28px] lg:border lg:border-line lg:bg-surface lg:p-12 lg:shadow-[0_40px_90px_-50px_rgba(11,43,28,0.35)]">
+      {/* Kartochka oʻlchamlari Shell'dagi bilan bir xil — kirish ekranidan
+          savol ekraniga oʻtganda koʻrinish sakramaydi */}
+      <div className="mx-auto flex min-h-screen w-full max-w-[740px] flex-col px-5 py-6 sm:px-8 lg:justify-center lg:py-16">
+        <div className="lg:rounded-[26px] lg:border lg:border-line lg:bg-surface lg:px-10 lg:py-9 lg:shadow-[0_34px_80px_-52px_rgba(11,43,28,0.42)]">
           <div className="flex items-center gap-4">
             <Link href="/" className="inline-flex" aria-label="Bosh sahifa">
-              <LogoMark aria-hidden className="h-[38px] w-auto" />
+              <LogoMark aria-hidden gradientId="lm-standalone" className="h-[38px] w-auto" />
             </Link>
             {badge && (
               <span className="badge-pill inline-flex items-center rounded-pill px-3.5 py-[6px] text-[12.5px] font-semibold">

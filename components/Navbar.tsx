@@ -34,7 +34,7 @@ function HeaderBar({ sticky = false }: { sticky?: boolean }) {
           aria-label={t.nav.logoLabel}
           className="flex shrink-0 items-center text-[color:var(--logo-word)] transition-transform duration-300 hover:scale-105"
         >
-          <LogoMark aria-hidden className="h-[42px] w-auto" />
+          <LogoMark aria-hidden gradientId="lm-nav" className="h-[42px] w-auto" />
         </a>
 
         {/* Markaziy menyu */}

@@ -76,7 +76,7 @@ export default function VideoIntro() {
               Video administrator yoki HR mutaxassisi tomonidan koʻrib chiqiladi.
             </p>
 
-            <div className="glass-card mt-6 flex items-center gap-3 rounded-2xl p-4">
+            <div className="border border-line bg-surface-2 mt-6 flex items-center gap-3 rounded-2xl p-4">
               <span aria-hidden className="text-[20px]">
                 ⏱️
               </span>
@@ -86,7 +86,7 @@ export default function VideoIntro() {
         )}
 
         {ready && (
-          <div className="mt-8 flex flex-col gap-2.5">
+          <div className="mt-8 flex flex-col gap-2.5 lg:mx-auto lg:w-full lg:max-w-[440px]">
             {uploaded && !reRecordReason ? (
               <Link
                 href="/hamkor/video/natija"

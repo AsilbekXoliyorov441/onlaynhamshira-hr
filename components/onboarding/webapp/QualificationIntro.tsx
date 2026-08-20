@@ -48,13 +48,13 @@ export default function QualificationIntro() {
           maʼlumotlar hujjatlar asosida tekshiriladi.
         </p>
 
-        <div className="glass-card mt-6 flex items-center gap-3 rounded-2xl p-4">
+        <div className="border border-line bg-surface-2 mt-6 flex items-center gap-3 rounded-2xl p-4">
           <span aria-hidden className="text-[20px]">⏱️</span>
           <p className="text-[14.5px] font-semibold text-ink">Taxminiy vaqt: 3–5 daqiqa</p>
         </div>
 
         {ready && (
-          <div className="mt-8 flex flex-col gap-2.5">
+          <div className="mt-8 flex flex-col gap-2.5 lg:mx-auto lg:w-full lg:max-w-[440px]">
             {resumeSlug ? (
               <>
                 <button

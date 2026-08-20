@@ -58,7 +58,7 @@ export default function EducationIntro() {
           Savollarga toʻgʻri javob berib, keyingi bosqichga oʻtishingiz mumkin.
         </p>
 
-        <div className="glass-card mt-6 flex items-center gap-3 rounded-2xl p-4">
+        <div className="border border-line bg-surface-2 mt-6 flex items-center gap-3 rounded-2xl p-4">
           <span aria-hidden className="text-[20px]">⏱️</span>
           <p className="text-[14.5px] font-semibold text-ink">Taxminiy vaqt: 7–10 daqiqa</p>
         </div>
@@ -75,7 +75,7 @@ export default function EducationIntro() {
         </ol>
 
         {ready && (
-          <div className="mt-8 flex flex-col gap-2.5">
+          <div className="mt-8 flex flex-col gap-2.5 lg:mx-auto lg:w-full lg:max-w-[440px]">
             {resumeSlug ? (
               <button
                 type="button"

@@ -29,13 +29,23 @@ export function Progress({
         type="button"
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
-        className="flex w-full items-baseline justify-between gap-3 text-left"
+        className="flex w-full items-center justify-between gap-3 py-1 text-left"
       >
         <span className="font-display text-[13px] font-bold uppercase tracking-[0.08em] text-brand-700">
           {stage}
         </span>
-        <span className="shrink-0 text-[12.5px] font-semibold text-mute">
+        {/* Strelka — qatorni bosish mumkinligini koʻrsatadi, aks holda
+            foydalanuvchi bosqichlar roʻyxati borligini bilmaydi */}
+        <span className="flex shrink-0 items-center gap-1.5 text-[12.5px] font-semibold text-mute">
           {current} / {total} {unit} · {percent}%
+          <svg
+            viewBox="0 0 24 24"
+            aria-hidden
+            className={`h-4 w-4 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
+            fill="none"
+          >
+            <path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
         </span>
       </button>
 
@@ -191,18 +201,22 @@ export function Nav({
   const hasBack = Boolean(backHref || onBack);
 
   return (
-    <div className="sticky bottom-0 z-10 -mx-5 mt-auto border-t border-line bg-page px-5 pb-[max(14px,env(safe-area-inset-bottom))] pt-3.5 shadow-[0_-8px_24px_-16px_rgba(11,43,28,0.35)] sm:-mx-8 sm:px-8 lg:static lg:mx-0 lg:border-0 lg:bg-transparent lg:px-0 lg:pb-0 lg:pt-10 lg:shadow-none">
-      <div className="mx-auto max-w-[620px]">
+    <div className="sticky bottom-0 z-10 -mx-5 mt-auto border-t border-line bg-page px-5 pb-[max(14px,env(safe-area-inset-bottom))] pt-3 shadow-[0_-8px_24px_-16px_rgba(11,43,28,0.35)] sm:-mx-8 sm:px-8 lg:static lg:-mx-10 lg:mt-9 lg:bg-transparent lg:px-10 lg:pb-0 lg:pt-6 lg:shadow-none">
+      <div className="mx-auto max-w-[620px] lg:max-w-none">
         {nextDisabled && disabledHint && (
-          <p className="mb-2.5 text-center text-[13.5px] font-medium text-mute">{disabledHint}</p>
+          <p className="mb-2 text-center text-[13.5px] font-medium text-mute lg:mb-3 lg:text-right">
+            {disabledHint}
+          </p>
         )}
 
-        <div className="flex items-stretch gap-3">
+        {/* Kompyuterda tugmalar oʻngga tortiladi va butun kenglikka choʻzilmaydi;
+            telefonda esa "Keyingi" keng va yorqin — barmoq bilan aniq tegadi. */}
+        <div className="flex items-stretch gap-3 lg:justify-end lg:gap-3.5">
           {hasBack &&
             (backHref ? (
               <Link
                 href={backHref}
-                className="grid h-[56px] flex-[0_0_34%] place-items-center rounded-pill border-2 border-line bg-surface font-display text-[16px] font-bold text-ink transition-colors duration-200 hover:border-brand-400"
+                className="grid h-[56px] flex-[0_0_34%] place-items-center rounded-pill border-2 border-line bg-surface font-display text-[16px] font-bold text-ink transition-colors duration-200 hover:border-brand-400 lg:h-[52px] lg:flex-none lg:px-9"
               >
                 {backLabel}
               </Link>
@@ -210,7 +224,7 @@ export function Nav({
               <button
                 type="button"
                 onClick={onBack}
-                className="h-[56px] flex-[0_0_34%] rounded-pill border-2 border-line bg-surface font-display text-[16px] font-bold text-ink transition-colors duration-200 hover:border-brand-400"
+                className="h-[56px] flex-[0_0_34%] rounded-pill border-2 border-line bg-surface font-display text-[16px] font-bold text-ink transition-colors duration-200 hover:border-brand-400 lg:h-[52px] lg:flex-none lg:px-9"
               >
                 {backLabel}
               </button>
@@ -220,7 +234,7 @@ export function Nav({
             type="button"
             onClick={onNext}
             disabled={nextDisabled}
-            className={`h-[56px] flex-1 rounded-pill font-display text-[17px] font-bold transition-all duration-300 ${
+            className={`h-[56px] flex-1 rounded-pill font-display text-[17px] font-bold transition-all duration-300 lg:h-[52px] lg:min-w-[230px] lg:flex-none lg:px-10 lg:text-[16px] ${
               nextDisabled
                 ? "cursor-not-allowed border-2 border-line bg-surface-2 text-mute"
                 : "btn-primary text-onbrand hover:scale-[1.02] active:scale-100"

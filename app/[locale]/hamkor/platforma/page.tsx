@@ -46,7 +46,7 @@ export default function Page() {
 
       <div className="mt-7 grid grid-cols-2 gap-3">
         {CARDS.map((c) => (
-          <div key={c.label} className="glass-card rounded-2xl p-4 text-center">
+          <div key={c.label} className="border border-line bg-surface-2 rounded-2xl p-4 text-center">
             <span aria-hidden className="text-[26px]">{c.icon}</span>
             <p className="mt-2 text-[13.5px] font-semibold leading-snug text-ink">{c.label}</p>
           </div>

@@ -34,7 +34,8 @@ export default function MiniTestScreen({ test }: { test: MiniTest }) {
     setSession(loaded);
   }, [test.lesson, lesson.slug, router]);
 
-  const allAnswered = test.questions.every((q) => answers[q.code]);
+  const answered = test.questions.filter((q) => answers[q.code]).length;
+  const allAnswered = answered === test.questions.length;
 
   const check = () => {
     if (!session || !allAnswered) return;
@@ -167,7 +168,7 @@ export default function MiniTestScreen({ test }: { test: MiniTest }) {
           onNext={check}
           nextLabel="Javoblarni tekshirish"
           nextDisabled={!allAnswered}
-          disabledHint="Barcha savollarga javob bering"
+          disabledHint={`Yana ${test.questions.length - answered} ta savolga javob bering`}
         />
       )}
     </Shell>

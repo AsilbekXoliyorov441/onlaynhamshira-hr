@@ -94,7 +94,9 @@ export default function DevSkip() {
   };
 
   return (
-    <div className="fixed bottom-3 left-3 z-[60] print:hidden">
+    /* Oʻng tepada — pastdagi "Orqaga"/"Keyingi" tugmalarini ham,
+       chapdagi "Saqlash va chiqish"ni ham toʻsib qolmasin */
+    <div className="fixed right-3 top-1/2 z-[60] -translate-y-1/2 print:hidden">
       {open ? (
         <div className="w-[230px] rounded-2xl border-2 border-dashed border-[#D9A21B] bg-[#FFF8E8] p-3 shadow-[0_16px_36px_-20px_rgba(11,43,28,0.4)]">
           <p className="text-[11.5px] font-bold uppercase tracking-[0.08em] text-[#8A6410]">

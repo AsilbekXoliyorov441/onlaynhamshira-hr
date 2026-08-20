@@ -136,7 +136,7 @@ export default function Footer() {
           <div className="grid gap-12 lg:grid-cols-[1.15fr_1fr_1fr] lg:gap-10">
             {/* ===== Brend ===== */}
             <m.div variants={itemVariants}>
-              <LogoMark className="h-[42px] w-auto" wordFill="#EAF6F0" />
+              <LogoMark gradientId="lm-footer" className="h-[42px] w-auto" wordFill="#EAF6F0" />
               <p className="mt-5 max-w-[320px] text-[14px] leading-[1.65] text-[#A9C9BA]">
                 {t.footer.tagline}
               </p>

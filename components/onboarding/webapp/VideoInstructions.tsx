@@ -49,7 +49,9 @@ export default function VideoInstructions() {
         <p className="text-[15px] leading-relaxed text-body">{VIDEO_TASK}</p>
       </div>
 
-      <ul className="mt-6 space-y-2.5">
+      {/* Kompyuterda roʻyxatlar ikki ustunda — sahifa uzunligi ikki barobar
+          qisqaradi, "Davom etish" tugmasi koʻrinib turadi */}
+      <ul className="mt-6 space-y-2.5 lg:grid lg:grid-cols-2 lg:gap-2.5 lg:space-y-0">
         {VIDEO_CHECKLIST.map((item) => (
           <li
             key={item}
@@ -136,7 +138,7 @@ export default function VideoInstructions() {
       <h2 className="mt-8 font-display text-[17px] font-bold text-ink">
         Yozishdan oldin eʼtibor bering
       </h2>
-      <ul className="mt-3 space-y-2">
+      <ul className="mt-3 space-y-2 lg:grid lg:grid-cols-2 lg:gap-x-7 lg:gap-y-2 lg:space-y-0">
         {VIDEO_TIPS.map((tip) => (
           <li key={tip} className="flex gap-3 text-[15px] leading-relaxed text-body">
             <span aria-hidden className="mt-[9px] h-[6px] w-[6px] shrink-0 rounded-full bg-brand-300" />

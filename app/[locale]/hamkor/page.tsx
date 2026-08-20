@@ -40,7 +40,9 @@ export default function Page() {
         ))}
       </ul>
 
-      <div className="glass-card mt-6 flex items-center gap-3 rounded-2xl p-4">
+      {/* Oq kartochka ustida shaffof "glass" foni yoʻqolib ketadi —
+          shu bois oddiy chegara va toʻliq fon */}
+      <div className="mt-6 flex items-center gap-3 rounded-2xl border border-line bg-surface-2 p-4">
         <span aria-hidden className="text-[20px]">⏱️</span>
         <p className="text-[14.5px] font-semibold text-ink">
           Jarayon taxminan 15–20 daqiqa vaqt oladi

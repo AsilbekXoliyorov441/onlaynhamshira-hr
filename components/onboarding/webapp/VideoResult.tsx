@@ -84,7 +84,7 @@ export default function VideoResult() {
           </div>
         )}
 
-        <div className="mt-8 flex flex-col gap-2.5">
+        <div className="mt-8 flex flex-col gap-2.5 lg:mx-auto lg:w-full lg:max-w-[440px]">
           {failed ? (
             <>
               <button
